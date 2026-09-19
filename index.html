@@ -11,7 +11,7 @@ main{max-width:900px;margin:auto;padding:12px}.card{background:#fff;border-radiu
 .playerline{display:grid;grid-template-columns:40px 1fr auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid #edf1f5}.badge{width:34px;height:34px;border-radius:50%;background:#e5edf6;display:grid;place-items:center;font-weight:900}
 .hidden{display:none!important}.selection{display:grid;grid-template-columns:1fr 1fr;gap:7px}.pick{background:#fff;border:2px solid #dce4ee;border-radius:12px;padding:11px;text-align:left;font:inherit}.pick.on{border-color:#249b53;background:#edf9f1}.pick small{display:block;color:#64748b}
 .matchtop{background:#132641;color:#fff;margin:-12px -12px 9px;padding:8px 10px}.set{text-align:center;font-weight:900;margin-bottom:4px}.score{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap}.score b{font-size:29px}.score .btn{background:#fff;color:#132641;padding:8px 12px}
-.court{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.pbox{background:#fff;border-radius:15px;padding:9px}.pname{text-align:center;font-weight:900;margin-bottom:7px}.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.act{border:0;border-radius:9px;padding:13px 0;color:#fff;font-size:16px;font-weight:900}.s{background:#6558ce}.r{background:#3796cc}.c{background:#4da85d}.a{background:#e85a54}.b{background:#657180}.tools{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.last{text-align:center;color:#64748b;font-size:13px;min-height:18px;margin:8px}
+.court{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.pbox{background:#fff;border-radius:15px;padding:9px}.pname{text-align:center;font-weight:900;margin-bottom:7px}.lockbtn{width:100%;border:1px solid #d6dde6;background:#f7f9fb;border-radius:8px;padding:5px;margin-bottom:7px;font-size:12px;font-weight:800;color:#52606d}.lockbtn.locked{background:#fff3bf;border-color:#f2c94c;color:#5c4700}.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.act{border:0;border-radius:9px;padding:13px 0;color:#fff;font-size:16px;font-weight:900}.s{background:#6558ce}.r{background:#3796cc}.c{background:#4da85d}.a{background:#e85a54}.b{background:#657180}.tools{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.last{text-align:center;color:#64748b;font-size:13px;min-height:18px;margin:8px}
 .modalbg{display:none;position:fixed;inset:0;background:#0008;z-index:30;align-items:flex-end;justify-content:center}.modal{background:#fff;width:100%;max-width:600px;border-radius:22px 22px 0 0;padding:18px;max-height:90vh;overflow:auto}.values{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.val{border:0;border-radius:50px;padding:18px 0;font-size:23px;font-weight:900}.v0{background:#e53935;color:#fff}.v1{background:#ffd43b;color:#132641}.v2{background:#3182ce;color:#fff}.v3{background:#38a169;color:#fff}.servei-ace{background:#38a169;color:#fff}
 .summary{overflow:auto}.summary table{border-collapse:collapse;width:100%;font-size:13px}.summary th,.summary td{padding:7px;border-bottom:1px solid #e4e9ef;text-align:center}.summary th{background:#132641;color:#fff;position:sticky;top:0}
 @media(min-width:700px){.court{grid-template-columns:repeat(3,1fr)}.selection{grid-template-columns:repeat(3,1fr)}}
@@ -43,12 +43,21 @@ main{max-width:900px;margin:auto;padding:12px}.card{background:#fff;border-radiu
  <div class="card"><h2>6 inicials</h2><div class="selection" id="starterList"></div><p id="starterCount" class="muted"></p><button class="btn green wide" onclick="beginMatch()">Començar partit</button></div>
 </section>
 
+<section id="rotationSetup" class="hidden">
+ <div class="card"><h2>Rotació inicial</h2>
+ <p class="muted">Assigna les 6 inicials a les zones de pista. La xarxa és a dalt.</p>
+ <div id="rotationGrid" class="court"></div>
+ <h3 style="margin-top:16px">Qui fa el primer servei?</h3>
+ <div class="row"><button class="btn green" onclick="startWithServer('home')">🏐 Castellar</button><button class="btn light" onclick="startWithServer('away')">Rival</button></div>
+ </div>
+</section>
+
 <section id="match" class="hidden">
  <div class="matchtop"><div class="set">SET <span id="setNo">1</span> · <span id="rivalName"></span></div>
  <div class="score"><span>Castellar</span><button class="btn" onclick="point('home',-1)">−</button><b id="scHome">0</b><button class="btn" onclick="point('home',1)">+</button><span>·</span><button class="btn" onclick="point('away',-1)">−</button><b id="scAway">0</b><button class="btn" onclick="point('away',1)">+</button></div></div>
- <div class="muted" style="text-align:center;margin-bottom:8px">S · Servei &nbsp; R · Recepció &nbsp; C · Col·locació &nbsp; A · Atac &nbsp; B · Bloqueig</div>
+ <div id="serverInfo" class="muted" style="text-align:center;margin-bottom:5px"></div><div class="muted" style="text-align:center;margin-bottom:8px">S · Servei &nbsp; R · Recepció &nbsp; C · Col·locació &nbsp; A · Atac &nbsp; B · Bloqueig</div>
  <div class="court" id="court"></div><div class="last" id="last"></div>
- <div class="tools"><button class="btn light" onclick="undo()">↶ Desfer</button><button class="btn light" onclick="newSet()">Nou set</button><button class="btn green" onclick="openChange()">⇄ Canvi</button><button class="btn red" onclick="finishMatch()">🏁 Finalitzar</button></div>
+ <div class="tools"><button class="btn light" onclick="undo()">↶ Desfer</button><button class="btn light" onclick="newSet()">Nou set</button><button class="btn light" onclick="manualRotate()">↻ Rotar</button><button class="btn green" onclick="openChange()">⇄ Canvi</button><button class="btn red" onclick="finishMatch()">🏁 Finalitzar</button></div>
 </section>
 
 <section id="finished" class="hidden">
@@ -70,9 +79,9 @@ const initialRoster=[
 ];
 const actionInfo={
  S:{name:"Servei",values:[0,1,2],help:"0 = error · 1 = servei correcte · 2 = ace"},
- R:{name:"Recepció",values:[0,1,2,3],help:"0 = error · 1 = correcte · 2 = bo · 3 = perfecte"},
- C:{name:"Col·locació",values:[0,1,2,3],help:"0 = error · 1 = correcte · 2 = bo · 3 = perfecte"},
- A:{name:"Atac",values:[0,1,2,3],help:"0 = error · 1 = correcte · 2 = bo · 3 = perfecte"},
+ R:{name:"Recepció",values:[0,1,2,3],help:"0 = error · 1 = dolent · 2 = correcte · 3 = perfecte"},
+ C:{name:"Col·locació",values:[0,1,2,3],help:"0 = error · 1 = dolent · 2 = correcte · 3 = perfecte"},
+ A:{name:"Atac",values:[0,1,2,3],help:"0 = error · 1 = dolent · 2 = correcte · 3 = perfecte"},
  B:{name:"Bloqueig",values:[1,2,3],help:"1 = bloqueig · 2 = bloqueig bo · 3 = bloqueig + punt"}
 };
 let roster=JSON.parse(localStorage.getItem("sc_roster_v3")||"null")||initialRoster;
@@ -91,17 +100,101 @@ function addGuest(){let n=guestName.value.trim(),num=guestNum.value.trim(),team=
 function goStarters(){let chosen=call.filter(x=>x.selected);if(chosen.length<6){alert("Has de convocar com a mínim 6 jugadores.");return}starters=[];renderStarters(chosen);show("starters")}
 function renderStarters(chosen=call.filter(x=>x.selected)){starterList.innerHTML=chosen.map(p=>`<button class="pick ${starters.includes(p.id)?"on":""}" onclick="toggleStarter('${p.id}')"><b>${p.num} · ${p.n}</b>${p.guest?`<small>Puntual${p.team?" · "+p.team:""}</small>`:""}</button>`).join("");starterCount.textContent=`Seleccionades: ${starters.length} / 6`}
 function toggleStarter(id){if(starters.includes(id))starters=starters.filter(x=>x!=id);else if(starters.length<6)starters.push(id);renderStarters()}
-function beginMatch(){if(starters.length!==6){alert("Selecciona exactament 6 jugadores.");return}let chosen=call.filter(x=>x.selected);match={rival:rival.value.trim()||"Rival",date:matchDate.value,court:starters.map(id=>chosen.find(p=>p.id===id)),bench:chosen.filter(p=>!starters.includes(p.id)),home:0,away:0,set:1,events:[],setPlayers:{1:[...starters]}};saveMatch();show("match");renderMatch()}
-function renderMatch(){rivalName.textContent=match.rival;setNo.textContent=match.set;scHome.textContent=match.home;scAway.textContent=match.away;court.innerHTML=match.court.map((p,i)=>`<div class="pbox"><div class="pname">${p.num} · ${p.n}</div><div class="actions">${["S","R","C","A","B"].map(a=>`<button class="act ${a.toLowerCase()}" onclick="rate(${i},'${a}')">${a}</button>`).join("")}</div></div>`).join("");last.textContent=match.events.length?match.events.at(-1).text:"Encara no hi ha accions.";saveMatch()}
+let rotationDraft=[];
+function beginMatch(){
+ if(starters.length!==6){alert("Selecciona exactament 6 jugadores.");return}
+ let chosen=call.filter(x=>x.selected);
+ rotationDraft=starters.map(id=>chosen.find(p=>p.id===id));
+ renderRotationSetup();show("rotationSetup");
+}
+function renderRotationSetup(){
+ const zones=[4,3,2,5,6,1];
+ rotationGrid.innerHTML=zones.map((z,i)=>`<div class="pbox"><div class="muted">Zona ${z}</div><select id="rz${i}" onchange="rotationChanged(${i},this.value)">${rotationDraft.map((p,j)=>`<option value="${j}" ${j===i?"selected":""}>${p.num} · ${p.n}</option>`).join("")}</select></div>`).join("");
+}
+function rotationChanged(slot,val){
+ val=Number(val); let other=rotationDraft[slot]; rotationDraft[slot]=rotationDraft[val]; rotationDraft[val]=other; renderRotationSetup();
+}
+function startWithServer(server){
+ if(match && match.set>1){
+   match.court=rotationDraft.map(p=>({...p}));match.server=server;match.fixed=[];match.setPlayers[match.set]=match.court.map(p=>p.id);
+   match.events.push({type:"server",server,text:`Primer servei set ${match.set}: ${server==="home"?"Castellar":"rival"}`});
+ }else{
+   let chosen=call.filter(x=>x.selected);
+   match={rival:rival.value.trim()||"Rival",date:matchDate.value,court:rotationDraft.map(p=>({...p})),bench:chosen.filter(p=>!starters.includes(p.id)),home:0,away:0,set:1,server,fixed:[],events:[],setPlayers:{1:rotationDraft.map(p=>p.id)}};
+   match.events.push({type:"server",server,text:`Primer servei: ${server==="home"?"Castellar":"rival"}`});
+ }
+ saveMatch();show("match");renderMatch();
+}
+function renderMatch(){
+ rivalName.textContent=match.rival;setNo.textContent=match.set;scHome.textContent=match.home;scAway.textContent=match.away;
+ if(!Array.isArray(match.fixed))match.fixed=[];
+ const zones=[4,3,2,5,6,1];
+ serverInfo.textContent=`🏐 Serveix: ${match.server==="home"?"Castellar":"rival"}`;
+ court.innerHTML=match.court.map((p,i)=>{
+   const locked=match.fixed.includes(p.id);
+   return `<div class="pbox"><div class="muted">Zona ${zones[i]}</div><div class="pname">${p.num} · ${p.n}</div>
+   <button class="lockbtn ${locked?"locked":""}" onclick="toggleFixed(${i})">${locked?"🔒 Fixada":"🔓 Fixar"}</button>
+   <div class="actions">${["S","R","C","A","B"].map(a=>`<button class="act ${a.toLowerCase()}" onclick="rate(${i},'${a}')">${a}</button>`).join("")}</div></div>`;
+ }).join("");
+ last.textContent=match.events.length?match.events.at(-1).text:"Encara no hi ha accions.";saveMatch()
+}
+function toggleFixed(i){
+ if(!Array.isArray(match.fixed))match.fixed=[];
+ const p=match.court[i], wasFixed=match.fixed.includes(p.id);
+ if(wasFixed)match.fixed=match.fixed.filter(id=>id!==p.id); else match.fixed.push(p.id);
+ match.events.push({type:"fix",playerId:p.id,wasFixed,text:`${p.n}: ${wasFixed?"desfixada":"fixada"}`});
+ renderMatch();
+}
 function rate(i,a){pending={i,a};let p=match.court[i],info=actionInfo[a];valueTitle.textContent=`${info.name} — ${p.n}`;valueHelp.textContent=info.help;values.innerHTML="";for(let v of info.values){let b=document.createElement("button");b.className=`val v${v}`; if(a==="S" && v===2) b.classList.add("servei-ace"); b.textContent=v; b.onclick=()=>record(v);values.appendChild(b)}valueBg.style.display="flex"}
 function record(v){let p=match.court[pending.i],a=pending.a;match.events.push({type:"stat",date:match.date,rival:match.rival,set:match.set,num:p.num,player:p.n,guest:!!p.guest,team:p.team||"",action:a,actionName:actionInfo[a].name,value:v,text:`${p.n} · ${actionInfo[a].name} (${v})`});closeM("valueBg");renderMatch()}
-function point(side,d){let before=match[side];match[side]=Math.max(0,match[side]+d);match.events.push({type:"score",side,before,text:`Marcador: ${match.home}-${match.away}`});renderMatch()}
-function undo(){let e=match.events.pop();if(!e)return;if(e.type==="score")match[e.side]=e.before;if(e.type==="change"){match.court=e.court;match.bench=e.bench}renderMatch()}
-function newSet(){if(confirm("Començar un set nou?")){match.set++;match.home=0;match.away=0;match.setPlayers[match.set]=match.court.map(p=>p.id);match.events.push({type:"set",text:`Inici del set ${match.set}`});renderMatch()}}
+function rotateCourt(){
+ if(!Array.isArray(match.fixed))match.fixed=[];
+ // Ordre reglamentari de moviment: 2 → 1 → 6 → 5 → 4 → 3 → 2.
+ // Les jugadores fixades es queden a la seva zona; les altres roten saltant els llocs fixats.
+ const cycle=[2,5,4,3,0,1];
+ const moving=cycle.filter(i=>!match.fixed.includes(match.court[i].id));
+ if(moving.length<2)return;
+ const old=match.court.slice();
+ for(let k=0;k<moving.length;k++){
+   const from=moving[k],to=moving[(k+1)%moving.length];
+   match.court[to]=old[from];
+ }
+}
+function point(side,d){
+ let before=match[side],beforeServer=match.server,beforeCourt=match.court.map(x=>({...x})),beforeFixed=[...(match.fixed||[])];
+ if(d>0){
+   match[side]++;
+   if(side==="home" && match.server==="away"){rotateCourt();match.server="home"}
+   else if(side==="away" && match.server==="home"){match.server="away"}
+ }else{
+   match[side]=Math.max(0,match[side]-1);
+ }
+ match.events.push({type:"score",side,before,beforeServer,beforeCourt,beforeFixed,text:`Marcador: ${match.home}-${match.away}${d>0&&side==="home"&&beforeServer==="away"?" · Castellar rota":""}`});
+ renderMatch();
+}
+function manualRotate(){let beforeCourt=match.court.map(x=>({...x})),beforeFixed=[...(match.fixed||[])];rotateCourt();match.events.push({type:"rotate",beforeCourt,beforeFixed,text:"Rotació manual"});renderMatch()}
+function undo(){
+ let e=match.events.pop();if(!e)return;
+ if(e.type==="score"){match[e.side]=e.before;if(e.beforeServer)match.server=e.beforeServer;if(e.beforeCourt)match.court=e.beforeCourt;if(e.beforeFixed)match.fixed=e.beforeFixed}
+ if(e.type==="rotate"){match.court=e.beforeCourt;if(e.beforeFixed)match.fixed=e.beforeFixed}
+ if(e.type==="change"){match.court=e.court;match.bench=e.bench;if(e.fixed)match.fixed=e.fixed}
+ if(e.type==="fix"){
+   if(!Array.isArray(match.fixed))match.fixed=[];
+   if(e.wasFixed){if(!match.fixed.includes(e.playerId))match.fixed.push(e.playerId)}
+   else match.fixed=match.fixed.filter(id=>id!==e.playerId);
+ }
+ renderMatch()
+}
+function newSet(){if(confirm("Començar un set nou?")){
+ match.set++;match.home=0;match.away=0;
+ rotationDraft=match.court.map(p=>({...p}));
+ match.events.push({type:"set",text:`Inici del set ${match.set}`});
+ renderRotationSetup();show("rotationSetup");
+}}
 function openChange(){out=inn=null;changeContent.innerHTML=`<h4>Surt de pista</h4><div class="selection">${match.court.map((p,i)=>`<button class="pick" id="o${i}" onclick="pickO(${i})">${p.num} · ${p.n}</button>`).join("")}</div><h4 style="margin-top:14px">Entra a pista</h4><div class="selection">${match.bench.map((p,i)=>`<button class="pick" id="i${i}" onclick="pickI(${i})">${p.num} · ${p.n}</button>`).join("")}</div>`;confirmChange.disabled=true;changeBg.style.display="flex"}
 function pickO(i){out=i;document.querySelectorAll('[id^=o]').forEach(x=>x.classList.remove("on"));document.getElementById("o"+i).classList.add("on");confirmChange.disabled=(out===null||inn===null)}
 function pickI(i){inn=i;document.querySelectorAll('[id^=i]').forEach(x=>x.classList.remove("on"));document.getElementById("i"+i).classList.add("on");confirmChange.disabled=(out===null||inn===null)}
-function doChange(){let oc=match.court.map(x=>({...x})),ob=match.bench.map(x=>({...x})),po=match.court[out],pi=match.bench[inn];match.court[out]=pi;match.bench[inn]=po;match.events.push({type:"change",court:oc,bench:ob,text:`Canvi: surt ${po.n} · entra ${pi.n}`});closeM("changeBg");renderMatch()}
+function doChange(){let oc=match.court.map(x=>({...x})),ob=match.bench.map(x=>({...x})),of=[...(match.fixed||[])],po=match.court[out],pi=match.bench[inn];match.court[out]=pi;match.bench[inn]=po;match.fixed=(match.fixed||[]).filter(id=>id!==po.id);match.events.push({type:"change",court:oc,bench:ob,fixed:of,text:`Canvi: surt ${po.n} · entra ${pi.n}`});closeM("changeBg");renderMatch()}
 function closeM(id){document.getElementById(id).style.display="none"}
 function finishMatch(){if(!confirm("Finalitzar el partit? Podràs revisar i exportar totes les accions."))return;localStorage.setItem("sc_last_match",JSON.stringify(match));renderFinished();show("finished")}
 function renderFinished(){let stats=match.events.filter(e=>e.type==="stat");finishInfo.innerHTML=`<b>Castellar – ${match.rival}</b><br><span class="muted">${match.date||""} · ${stats.length} accions registrades</span>`;let players=[...new Map([...match.court,...match.bench].map(p=>[p.id,p])).values()];let h=`<table><tr><th>Jugadora</th><th>S</th><th>R</th><th>C</th><th>A</th><th>B</th></tr>`;for(let p of players){h+=`<tr><td>${p.num} · ${p.n}</td>`;for(let a of ["S","R","C","A","B"])h+=`<td>${stats.filter(e=>e.player===p.n&&e.action===a).length}</td>`;h+="</tr>"}summary.innerHTML=h+"</table>"}
