@@ -259,5 +259,5 @@ function downloadODS(){
 function csvCell(v){return '"'+String(v??"").replaceAll('"','""')+'"'}
 function downloadCSV(){let rows=[["Data","Rival","Set","Dorsal","Jugadora","Tipus","Equip origen","Acció","Valor"]];for(let e of match.events.filter(x=>x.type==="stat"))rows.push([e.date,e.rival,e.set,e.num,e.player,e.guest?"Puntual":"Habitual",e.team,e.actionName,e.value]);let csv="\uFEFF"+rows.map(r=>r.map(csvCell).join(";")).join("\n");let blob=new Blob([csv],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`Stats_Castellar_${match.rival.replace(/[^a-z0-9à-ÿ]+/gi,"_")}_${match.date}.csv`;a.click();URL.revokeObjectURL(a.href)}
 renderHome();
-</script><footer style="text-align:center;color:#8a96a3;font-size:12px;padding:18px 10px 24px">Creat per Jordi Corominas</footer>
+</script><footer style="text-align:center;color:#8a96a3;font-size:12px;padding:18px 10px 24px">Creat per Curu</footer>
 </body></html>
