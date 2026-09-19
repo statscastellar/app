@@ -45,6 +45,11 @@ main{max-width:900px;margin:auto;padding:12px}.card{background:#fff;border-radiu
  <div class="card"><h2>6 inicials</h2><div class="selection" id="starterList"></div><p id="starterCount" class="muted"></p><button class="btn green wide" onclick="beginMatch()">Començar partit</button></div>
 </section>
 
+<section id="setStarters" class="hidden">
+ <div class="card"><h2 id="setStartersTitle">6 inicials del nou set</h2><p class="muted">Tria les 6 jugadores que començaran aquest set.</p>
+ <div class="selection" id="setStarterList"></div><p id="setStarterCount" class="muted"></p>
+ <button class="btn green wide" onclick="confirmSetStarters()">Següent: rotació inicial</button></div>
+</section>
 <section id="rotationSetup" class="hidden">
  <div class="card"><h2>Rotació inicial</h2>
  <p class="muted">Assigna les 6 inicials a les zones de pista. La xarxa és a dalt.</p>
@@ -108,6 +113,10 @@ function goStarters(){let chosen=call.filter(x=>x.selected);if(chosen.length<6){
 function renderStarters(chosen=call.filter(x=>x.selected)){starterList.innerHTML=chosen.map(p=>`<button class="pick ${starters.includes(p.id)?"on":""}" onclick="toggleStarter('${p.id}')"><b>${p.num} · ${p.n}</b>${p.guest?`<small>Puntual${p.team?" · "+p.team:""}</small>`:""}</button>`).join("");starterCount.textContent=`Seleccionades: ${starters.length} / 6`}
 function toggleStarter(id){if(starters.includes(id))starters=starters.filter(x=>x!=id);else if(starters.length<6)starters.push(id);renderStarters()}
 let rotationDraft=[];
+let newSetStarters=[];
+function renderSetStarters(){const all=[...match.court,...match.bench];setStartersTitle.textContent=`6 inicials · SET ${match.set}`;setStarterList.innerHTML=all.map(p=>`<button class="pick ${newSetStarters.includes(p.id)?"on":""}" onclick="toggleNewSetStarter('${p.id}')"><b>${p.num} · ${p.n}</b></button>`).join("");setStarterCount.textContent=`Seleccionades: ${newSetStarters.length} / 6`}
+function toggleNewSetStarter(id){if(newSetStarters.includes(id))newSetStarters=newSetStarters.filter(x=>x!==id);else if(newSetStarters.length<6)newSetStarters.push(id);renderSetStarters()}
+function confirmSetStarters(){if(newSetStarters.length!==6){alert("Selecciona exactament 6 jugadores.");return}const all=[...match.court,...match.bench];rotationDraft=newSetStarters.map(id=>all.find(p=>p.id===id));renderRotationSetup();show("rotationSetup")}
 function beginMatch(){
  if(starters.length!==6){alert("Selecciona exactament 6 jugadores.");return}
  let chosen=call.filter(x=>x.selected);
@@ -123,7 +132,8 @@ function rotationChanged(slot,val){
 }
 function startWithServer(server){
  if(match && match.set>1){
-   match.court=rotationDraft.map(p=>({...p}));match.server=server;match.fixed=[];match.setPlayers[match.set]=match.court.map(p=>p.id);
+   const all=[...match.court,...match.bench],selectedIds=rotationDraft.map(p=>p.id);
+   match.court=rotationDraft.map(p=>({...p}));match.bench=all.filter(p=>!selectedIds.includes(p.id));match.server=server;match.fixed=[];match.setPlayers[match.set]=match.court.map(p=>p.id);
    match.events.push({type:"server",server,text:`Primer servei set ${match.set}: ${server==="home"?"Castellar":"rival"}`});
  }else{
    let chosen=call.filter(x=>x.selected);
@@ -204,10 +214,9 @@ function undo(){
  renderMatch()
 }
 function newSet(){if(confirm("Començar un set nou?")){
- match.set++;match.home=0;match.away=0;
- rotationDraft=match.court.map(p=>({...p}));
- match.events.push({type:"set",text:`Inici del set ${match.set}`});
- renderRotationSetup();show("rotationSetup");
+ match.set++;match.home=0;match.away=0;newSetStarters=[];
+ match.events.push({type:"set",text:`Preparació del set ${match.set}`});
+ renderSetStarters();show("setStarters");
 }}
 function openChange(){out=inn=null;changeContent.innerHTML=`<h4>Surt de pista</h4><div class="selection">${match.court.map((p,i)=>`<button class="pick" id="o${i}" onclick="pickO(${i})">${p.num} · ${p.n}</button>`).join("")}</div><h4 style="margin-top:14px">Entra a pista</h4><div class="selection">${match.bench.map((p,i)=>`<button class="pick" id="i${i}" onclick="pickI(${i})">${p.num} · ${p.n}</button>`).join("")}</div>`;confirmChange.disabled=true;changeBg.style.display="flex"}
 function pickO(i){out=i;document.querySelectorAll('[id^=o]').forEach(x=>x.classList.remove("on"));document.getElementById("o"+i).classList.add("on");confirmChange.disabled=(out===null||inn===null)}
