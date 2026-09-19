@@ -12,7 +12,7 @@ main{max-width:900px;margin:auto;padding:12px}.card{background:#fff;border-radiu
 .hidden{display:none!important}.selection{display:grid;grid-template-columns:1fr 1fr;gap:7px}.pick{background:#fff;border:2px solid #dce4ee;border-radius:12px;padding:11px;text-align:left;font:inherit}.pick.on{border-color:#249b53;background:#edf9f1}.pick small{display:block;color:#64748b}
 .matchtop{background:#132641;color:#fff;margin:-12px -12px 9px;padding:8px 10px}.set{text-align:center;font-weight:900;margin-bottom:4px}.score{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap}.score b{font-size:29px}.score .btn{background:#fff;color:#132641;padding:8px 12px}
 .court{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.pbox{background:#fff;border-radius:15px;padding:9px}.pname{text-align:center;font-weight:900;margin-bottom:7px}.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.act{border:0;border-radius:9px;padding:13px 0;color:#fff;font-size:16px;font-weight:900}.s{background:#6558ce}.r{background:#3796cc}.c{background:#4da85d}.a{background:#e85a54}.b{background:#657180}.tools{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.last{text-align:center;color:#64748b;font-size:13px;min-height:18px;margin:8px}
-.modalbg{display:none;position:fixed;inset:0;background:#0008;z-index:30;align-items:flex-end;justify-content:center}.modal{background:#fff;width:100%;max-width:600px;border-radius:22px 22px 0 0;padding:18px;max-height:90vh;overflow:auto}.values{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.val{border:0;border-radius:50px;padding:18px 0;font-size:23px;font-weight:900}.v0{background:#ffd43b;color:#132641}.v1{background:#3182ce;color:#fff}.v2{background:#38a169;color:#fff}.v3{background:#176b37;color:#fff}
+.modalbg{display:none;position:fixed;inset:0;background:#0008;z-index:30;align-items:flex-end;justify-content:center}.modal{background:#fff;width:100%;max-width:600px;border-radius:22px 22px 0 0;padding:18px;max-height:90vh;overflow:auto}.values{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.val{border:0;border-radius:50px;padding:18px 0;font-size:23px;font-weight:900}.v0{background:#e53935;color:#fff}.v1{background:#ffd43b;color:#132641}.v2{background:#3182ce;color:#fff}.v3{background:#38a169;color:#fff}
 .summary{overflow:auto}.summary table{border-collapse:collapse;width:100%;font-size:13px}.summary th,.summary td{padding:7px;border-bottom:1px solid #e4e9ef;text-align:center}.summary th{background:#132641;color:#fff;position:sticky;top:0}
 @media(min-width:700px){.court{grid-template-columns:repeat(3,1fr)}.selection{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:450px){.brand{font-size:17px}.nav .btn{padding:8px 9px}.tools{grid-template-columns:1fr 1fr}}
@@ -69,11 +69,11 @@ const initialRoster=[
  {num:16,n:"Ainhoa"},{num:18,n:"Ària"},{num:28,n:"Mariona"},{num:66,n:"Núria"}
 ];
 const actionInfo={
- S:{name:"Servei",max:2,help:"0 = error · 1 = servei correcte · 2 = ace"},
- R:{name:"Recepció",max:3,help:"Valora de 0 a 3 segons el full d'estadístiques"},
- C:{name:"Col·locació",max:3,help:"Valora de 0 a 3 segons el full d'estadístiques"},
- A:{name:"Atac",max:3,help:"Valora de 0 a 3 segons el full d'estadístiques"},
- B:{name:"Bloqueig",max:2,help:"0 = bloqueig fora · 1 = bloqueig · 2 = bloqueig + punt"}
+ S:{name:"Servei",values:[0,1,2],help:"0 = error · 1 = servei correcte · 2 = ace"},
+ R:{name:"Recepció",values:[0,1,2,3],help:"0 = error · 1 = correcte · 2 = bo · 3 = perfecte"},
+ C:{name:"Col·locació",values:[0,1,2,3],help:"0 = error · 1 = correcte · 2 = bo · 3 = perfecte"},
+ A:{name:"Atac",values:[0,1,2,3],help:"0 = error · 1 = correcte · 2 = bo · 3 = perfecte"},
+ B:{name:"Bloqueig",values:[1,2,3],help:"1 = bloqueig · 2 = bloqueig bo · 3 = bloqueig + punt"}
 };
 let roster=JSON.parse(localStorage.getItem("sc_roster_v3")||"null")||initialRoster;
 let call=[],starters=[],guestId=0,match=null,pending=null,out=null,inn=null;
@@ -93,7 +93,7 @@ function renderStarters(chosen=call.filter(x=>x.selected)){starterList.innerHTML
 function toggleStarter(id){if(starters.includes(id))starters=starters.filter(x=>x!=id);else if(starters.length<6)starters.push(id);renderStarters()}
 function beginMatch(){if(starters.length!==6){alert("Selecciona exactament 6 jugadores.");return}let chosen=call.filter(x=>x.selected);match={rival:rival.value.trim()||"Rival",date:matchDate.value,court:starters.map(id=>chosen.find(p=>p.id===id)),bench:chosen.filter(p=>!starters.includes(p.id)),home:0,away:0,set:1,events:[],setPlayers:{1:[...starters]}};saveMatch();show("match");renderMatch()}
 function renderMatch(){rivalName.textContent=match.rival;setNo.textContent=match.set;scHome.textContent=match.home;scAway.textContent=match.away;court.innerHTML=match.court.map((p,i)=>`<div class="pbox"><div class="pname">${p.num} · ${p.n}</div><div class="actions">${["S","R","C","A","B"].map(a=>`<button class="act ${a.toLowerCase()}" onclick="rate(${i},'${a}')">${a}</button>`).join("")}</div></div>`).join("");last.textContent=match.events.length?match.events.at(-1).text:"Encara no hi ha accions.";saveMatch()}
-function rate(i,a){pending={i,a};let p=match.court[i],info=actionInfo[a];valueTitle.textContent=`${info.name} — ${p.n}`;valueHelp.textContent=info.help;values.innerHTML="";for(let v=0;v<=info.max;v++){let b=document.createElement("button");b.className=`val v${v}`;b.textContent=v;b.onclick=()=>record(v);values.appendChild(b)}valueBg.style.display="flex"}
+function rate(i,a){pending={i,a};let p=match.court[i],info=actionInfo[a];valueTitle.textContent=`${info.name} — ${p.n}`;valueHelp.textContent=info.help;values.innerHTML="";for(let v of info.values){let b=document.createElement("button");b.className=`val v${v}`;b.textContent=v;b.onclick=()=>record(v);values.appendChild(b)}valueBg.style.display="flex"}
 function record(v){let p=match.court[pending.i],a=pending.a;match.events.push({type:"stat",date:match.date,rival:match.rival,set:match.set,num:p.num,player:p.n,guest:!!p.guest,team:p.team||"",action:a,actionName:actionInfo[a].name,value:v,text:`${p.n} · ${actionInfo[a].name} (${v})`});closeM("valueBg");renderMatch()}
 function point(side,d){let before=match[side];match[side]=Math.max(0,match[side]+d);match.events.push({type:"score",side,before,text:`Marcador: ${match.home}-${match.away}`});renderMatch()}
 function undo(){let e=match.events.pop();if(!e)return;if(e.type==="score")match[e.side]=e.before;if(e.type==="change"){match.court=e.court;match.bench=e.bench}renderMatch()}
