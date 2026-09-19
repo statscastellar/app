@@ -10,7 +10,7 @@ main{max-width:900px;margin:auto;padding:12px}.card{background:#fff;border-radiu
 .row{display:flex;gap:7px;margin:7px 0;align-items:center}.row input{min-width:0;flex:1;padding:11px;border:1px solid #ccd6e2;border-radius:10px;font:inherit}
 .playerline{display:grid;grid-template-columns:40px 1fr auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid #edf1f5}.badge{width:34px;height:34px;border-radius:50%;background:#e5edf6;display:grid;place-items:center;font-weight:900}
 .hidden{display:none!important}.selection{display:grid;grid-template-columns:1fr 1fr;gap:7px}.pick{background:#fff;border:2px solid #dce4ee;border-radius:12px;padding:11px;text-align:left;font:inherit}.pick.on{border-color:#249b53;background:#edf9f1}.pick small{display:block;color:#64748b}
-.matchtop{background:#132641;color:#fff;margin:-12px -12px 9px;padding:8px 10px}.set{text-align:center;font-weight:900;margin-bottom:4px}.score{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap}.score b{font-size:29px}.score .btn{background:#fff;color:#132641;padding:8px 12px}
+.matchtop{background:#132641;color:#fff;margin:-12px -12px 9px;padding:9px 10px 11px}.set{text-align:center;font-weight:900;margin-bottom:7px}.scoreboard{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}.teamScore{text-align:center}.teamName{font-weight:900;min-height:22px;margin-bottom:4px}.scoreControls{display:flex;justify-content:center;align-items:center;gap:7px}.scoreControls b{font-size:29px;min-width:32px}.scoreControls .btn{background:#fff;color:#132641;padding:8px 12px}
 .court{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.pbox{background:#fff;border-radius:15px;padding:9px}.pname{text-align:center;font-weight:900;margin-bottom:7px}.lockbtn{width:100%;border:1px solid #d6dde6;background:#f7f9fb;border-radius:8px;padding:5px;margin-bottom:7px;font-size:12px;font-weight:800;color:#52606d}.lockbtn.locked{background:#fff3bf;border-color:#f2c94c;color:#5c4700}.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.act{border:0;border-radius:9px;padding:13px 0;color:#fff;font-size:16px;font-weight:900}.s{background:#6558ce}.r{background:#3796cc}.c{background:#4da85d}.a{background:#e85a54}.b{background:#657180}.tools{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.last{text-align:center;color:#64748b;font-size:13px;min-height:18px;margin:8px}
 .modalbg{display:none;position:fixed;inset:0;background:#0008;z-index:30;align-items:flex-end;justify-content:center}.modal{background:#fff;width:100%;max-width:600px;border-radius:22px 22px 0 0;padding:18px;max-height:90vh;overflow:auto}.values{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.val{border:0;border-radius:50px;padding:18px 0;font-size:23px;font-weight:900}.v0{background:#e53935;color:#fff}.v1{background:#ffd43b;color:#132641}.v2{background:#3182ce;color:#fff}.v3{background:#38a169;color:#fff}.servei-ace{background:#38a169;color:#fff}
 .summary{overflow:auto}.summary table{border-collapse:collapse;width:100%;font-size:13px}.summary th,.summary td{padding:7px;border-bottom:1px solid #e4e9ef;text-align:center}.summary th{background:#132641;color:#fff;position:sticky;top:0}
@@ -32,6 +32,8 @@ main{max-width:900px;margin:auto;padding:12px}.card{background:#fff;border-radiu
 
 <section id="setup" class="hidden">
  <div class="card"><h2>Nou partit</h2><div class="row"><input id="rival" placeholder="Equip rival"><input id="matchDate" type="date"></div>
+ <h3 style="margin-top:14px">On es juga?</h3>
+ <div class="row"><button id="venueHomeBtn" class="btn green" onclick="setVenue('home')">🏠 A casa</button><button id="venueAwayBtn" class="btn light" onclick="setVenue('away')">🚌 Camp rival</button></div>
  <h3>Convocatòria</h3><p class="muted">Toca les jugadores convocades.</p><div class="selection" id="callup"></div></div>
  <div class="card"><h3>Jugadora puntual</h3><p class="muted">Només quedarà vinculada a aquest partit.</p>
  <div class="row"><input id="guestNum" type="number" placeholder="Dorsal"><input id="guestName" placeholder="Nom"></div>
@@ -53,8 +55,11 @@ main{max-width:900px;margin:auto;padding:12px}.card{background:#fff;border-radiu
 </section>
 
 <section id="match" class="hidden">
- <div class="matchtop"><div class="set">SET <span id="setNo">1</span> · <span id="rivalName"></span></div>
- <div class="score"><span>Castellar</span><button class="btn" onclick="point('home',-1)">−</button><b id="scHome">0</b><button class="btn" onclick="point('home',1)">+</button><span>·</span><button class="btn" onclick="point('away',-1)">−</button><b id="scAway">0</b><button class="btn" onclick="point('away',1)">+</button></div></div>
+ <div class="matchtop"><div class="set">SET <span id="setNo">1</span></div>
+ <div class="scoreboard">
+  <div class="teamScore"><div class="teamName" id="teamLeftName">Castellar</div><div class="scoreControls"><button class="btn" id="leftMinus">−</button><b id="scoreLeft">0</b><button class="btn" id="leftPlus">+</button></div></div>
+  <div class="teamScore"><div class="teamName" id="teamRightName">Rival</div><div class="scoreControls"><button class="btn" id="rightMinus">−</button><b id="scoreRight">0</b><button class="btn" id="rightPlus">+</button></div></div>
+ </div></div>
  <div id="serverInfo" class="muted" style="text-align:center;margin-bottom:5px"></div><div class="muted" style="text-align:center;margin-bottom:8px">S · Servei &nbsp; R · Recepció &nbsp; C · Col·locació &nbsp; A · Atac &nbsp; B · Bloqueig</div>
  <div class="court" id="court"></div><div class="last" id="last"></div>
  <div class="tools"><button class="btn light" onclick="undo()">↶ Desfer</button><button class="btn light" onclick="newSet()">Nou set</button><button class="btn light" onclick="manualRotate()">↻ Rotar</button><button class="btn green" onclick="openChange()">⇄ Canvi</button><button class="btn red" onclick="finishMatch()">🏁 Finalitzar</button></div>
@@ -93,7 +98,9 @@ function renderHome(){homeRoster.innerHTML=roster.map(p=>`<div class="playerline
 function renderRoster(){rosterList.innerHTML=roster.map((p,i)=>`<div class="playerline"><div class="badge">${p.num}</div><b>${p.n}</b><button class="btn red" onclick="removeRoster(${i})">×</button></div>`).join("")}
 function addRoster(){let n=newName.value.trim(),num=newNum.value.trim();if(!n||!num)return;roster.push({n,num:Number(num)});saveRoster();newName.value="";newNum.value="";renderRoster()}
 function removeRoster(i){if(confirm("Eliminar aquesta jugadora de la plantilla habitual?")){roster.splice(i,1);saveRoster();renderRoster()}}
-function startSetup(){call=roster.map((p,i)=>({...p,id:"r"+i,selected:false,guest:false}));rival.value="";matchDate.value=new Date().toISOString().slice(0,10);renderCall();show("setup")}
+let venueChoice="home";
+function setVenue(v){venueChoice=v;venueHomeBtn.className="btn "+(v==="home"?"green":"light");venueAwayBtn.className="btn "+(v==="away"?"green":"light")}
+function startSetup(){call=roster.map((p,i)=>({...p,id:"r"+i,selected:false,guest:false}));rival.value="";matchDate.value=new Date().toISOString().slice(0,10);setVenue("home");renderCall();show("setup")}
 function renderCall(){callup.innerHTML=call.map((p,i)=>`<button class="pick ${p.selected?"on":""}" onclick="toggleCall(${i})"><b>${p.num} · ${p.n}</b>${p.guest?`<small>Puntual${p.team?" · "+p.team:""}</small>`:""}</button>`).join("")}
 function toggleCall(i){call[i].selected=!call[i].selected;renderCall()}
 function addGuest(){let n=guestName.value.trim(),num=guestNum.value.trim(),team=guestTeam.value.trim();if(!n||!num)return;call.push({n,num:Number(num),team,id:"g"+(++guestId),selected:true,guest:true});guestName.value="";guestNum.value="";guestTeam.value="";renderCall()}
@@ -120,16 +127,26 @@ function startWithServer(server){
    match.events.push({type:"server",server,text:`Primer servei set ${match.set}: ${server==="home"?"Castellar":"rival"}`});
  }else{
    let chosen=call.filter(x=>x.selected);
-   match={rival:rival.value.trim()||"Rival",date:matchDate.value,court:rotationDraft.map(p=>({...p})),bench:chosen.filter(p=>!starters.includes(p.id)),home:0,away:0,set:1,server,fixed:[],events:[],setPlayers:{1:rotationDraft.map(p=>p.id)}};
+   match={rival:rival.value.trim()||"Rival",date:matchDate.value,venue:venueChoice,court:rotationDraft.map(p=>({...p})),bench:chosen.filter(p=>!starters.includes(p.id)),home:0,away:0,set:1,server,fixed:[],events:[],setPlayers:{1:rotationDraft.map(p=>p.id)}};
    match.events.push({type:"server",server,text:`Primer servei: ${server==="home"?"Castellar":"rival"}`});
  }
  saveMatch();show("match");renderMatch();
 }
 function renderMatch(){
- rivalName.textContent=match.rival;setNo.textContent=match.set;scHome.textContent=match.home;scAway.textContent=match.away;
+ setNo.textContent=match.set;
+ if(!match.venue)match.venue="home";
+ const castellarLeft=match.venue==="home";
+ teamLeftName.textContent=castellarLeft?"Castellar":match.rival;
+ teamRightName.textContent=castellarLeft?match.rival:"Castellar";
+ scoreLeft.textContent=castellarLeft?match.home:match.away;
+ scoreRight.textContent=castellarLeft?match.away:match.home;
+ leftMinus.onclick=()=>point(castellarLeft?"home":"away",-1);
+ leftPlus.onclick=()=>point(castellarLeft?"home":"away",1);
+ rightMinus.onclick=()=>point(castellarLeft?"away":"home",-1);
+ rightPlus.onclick=()=>point(castellarLeft?"away":"home",1);
  if(!Array.isArray(match.fixed))match.fixed=[];
  const zones=[4,3,2,5,6,1];
- serverInfo.textContent=`🏐 Serveix: ${match.server==="home"?"Castellar":"rival"}`;
+ serverInfo.textContent=`${match.venue==="home"?"🏠 A casa":"🚌 Camp rival"} · 🏐 Serveix: ${match.server==="home"?"Castellar":match.rival}`;
  court.innerHTML=match.court.map((p,i)=>{
    const locked=match.fixed.includes(p.id);
    return `<div class="pbox"><div class="muted">Zona ${zones[i]}</div><div class="pname">${p.num} · ${p.n}</div>
@@ -197,7 +214,7 @@ function pickI(i){inn=i;document.querySelectorAll('[id^=i]').forEach(x=>x.classL
 function doChange(){let oc=match.court.map(x=>({...x})),ob=match.bench.map(x=>({...x})),of=[...(match.fixed||[])],po=match.court[out],pi=match.bench[inn];match.court[out]=pi;match.bench[inn]=po;match.fixed=(match.fixed||[]).filter(id=>id!==po.id);match.events.push({type:"change",court:oc,bench:ob,fixed:of,text:`Canvi: surt ${po.n} · entra ${pi.n}`});closeM("changeBg");renderMatch()}
 function closeM(id){document.getElementById(id).style.display="none"}
 function finishMatch(){if(!confirm("Finalitzar el partit? Podràs revisar i exportar totes les accions."))return;localStorage.setItem("sc_last_match",JSON.stringify(match));renderFinished();show("finished")}
-function renderFinished(){let stats=match.events.filter(e=>e.type==="stat");finishInfo.innerHTML=`<b>Castellar – ${match.rival}</b><br><span class="muted">${match.date||""} · ${stats.length} accions registrades</span>`;let players=[...new Map([...match.court,...match.bench].map(p=>[p.id,p])).values()];let h=`<table><tr><th>Jugadora</th><th>S</th><th>R</th><th>C</th><th>A</th><th>B</th></tr>`;for(let p of players){h+=`<tr><td>${p.num} · ${p.n}</td>`;for(let a of ["S","R","C","A","B"])h+=`<td>${stats.filter(e=>e.player===p.n&&e.action===a).length}</td>`;h+="</tr>"}summary.innerHTML=h+"</table>"}
+function renderFinished(){let stats=match.events.filter(e=>e.type==="stat");let teams=match.venue==="away"?`${match.rival} – Castellar`:`Castellar – ${match.rival}`;finishInfo.innerHTML=`<b>${teams}</b><br><span class="muted">${match.date||""} · ${match.venue==="away"?"Camp rival":"A casa"} · ${stats.length} accions registrades</span>`;let players=[...new Map([...match.court,...match.bench].map(p=>[p.id,p])).values()];let h=`<table><tr><th>Jugadora</th><th>S</th><th>R</th><th>C</th><th>A</th><th>B</th></tr>`;for(let p of players){h+=`<tr><td>${p.num} · ${p.n}</td>`;for(let a of ["S","R","C","A","B"])h+=`<td>${stats.filter(e=>e.player===p.n&&e.action===a).length}</td>`;h+="</tr>"}summary.innerHTML=h+"</table>"}
 function csvCell(v){return '"'+String(v??"").replaceAll('"','""')+'"'}
 function downloadCSV(){let rows=[["Data","Rival","Set","Dorsal","Jugadora","Tipus","Equip origen","Acció","Valor"]];for(let e of match.events.filter(x=>x.type==="stat"))rows.push([e.date,e.rival,e.set,e.num,e.player,e.guest?"Puntual":"Habitual",e.team,e.actionName,e.value]);let csv="\uFEFF"+rows.map(r=>r.map(csvCell).join(";")).join("\n");let blob=new Blob([csv],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`Stats_Castellar_${match.rival.replace(/[^a-z0-9à-ÿ]+/gi,"_")}_${match.date}.csv`;a.click();URL.revokeObjectURL(a.href)}
 renderHome();
