@@ -153,7 +153,8 @@ function renderMatch(){
    <button class="lockbtn ${locked?"locked":""}" onclick="toggleFixed(${i})">${locked?"🔒 Fixada":"🔓 Fixar"}</button>
    <div class="actions">${["S","R","C","A","B"].map(a=>`<button class="act ${a.toLowerCase()}" onclick="rate(${i},'${a}')">${a}</button>`).join("")}</div></div>`;
  }).join("");
- last.textContent=match.events.length?match.events.at(-1).text:"Encara no hi ha accions.";saveMatch()
+ let visibleLast=[...match.events].reverse().find(e=>["stat","change","rotate","fix"].includes(e.type));
+ last.textContent=visibleLast?visibleLast.text:"Encara no hi ha accions.";saveMatch()
 }
 function toggleFixed(i){
  if(!Array.isArray(match.fixed))match.fixed=[];
