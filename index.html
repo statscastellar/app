@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#10243f">
+<title>Stats Castellar</title>
+<style>
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#eef3f8;color:#10243f}
+header{background:#10243f;color:white;padding:14px 16px;position:sticky;top:0;z-index:5}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}.brand{font-weight:800;font-size:20px}.set{font-weight:800}
+.score{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:10px}.score b{font-size:34px;min-width:40px;text-align:center}
+.score button,.toolbar button,.modal button{border:0;border-radius:12px;padding:12px 14px;font-weight:750;font-size:16px}
+.plus{background:#fff;color:#10243f}.undo{background:#ef5350;color:white}
+main{padding:10px;max-width:900px;margin:auto}.hint{text-align:center;font-size:13px;color:#607086;margin:4px 0 10px}
+.court{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.player{background:white;border-radius:16px;padding:10px;box-shadow:0 2px 8px #00000010}
+.pname{text-align:center;font-weight:800;font-size:18px;margin-bottom:8px}.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.action{border:0;border-radius:10px;padding:14px 0;color:white;font-size:18px;font-weight:900}.r{background:#2196d3}.c{background:#43a65a}.a{background:#ef5350}.d{background:#ff922b}.s{background:#665bd4}.b{background:#667281}
+.toolbar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.toolbar button{background:white;color:#10243f}.toolbar .change{background:#25a95b;color:white}
+.last{font-size:13px;text-align:center;margin:10px;color:#607086;min-height:18px}
+.modalbg{display:none;position:fixed;inset:0;background:#0008;z-index:20;align-items:flex-end;justify-content:center}.modal{background:white;width:100%;max-width:600px;border-radius:22px 22px 0 0;padding:18px}
+.modal h3{text-align:center;margin:0 0 14px}.values{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.val{font-size:25px!important;color:white}.v0{background:#ef5350}.v1{background:#ffc12e;color:#10243f!important}.v2{background:#43a65a}.v3{background:#197744}.close{width:100%;margin-top:12px;background:#e8edf3;color:#10243f}
+.changegrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.choice{background:#edf2f7;color:#10243f}.choice.sel{outline:3px solid #25a95b}.confirm{width:100%;margin-top:12px;background:#25a95b;color:white}
+@media(min-width:700px){.court{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<header>
+ <div class="top"><div class="brand">🏐 Stats Castellar</div><div class="set">SET <span id="setNo">1</span></div><button class="undo" onclick="undo()">↶ Desfer</button></div>
+ <div class="score"><span>Castellar</span><button class="plus" onclick="point('home',-1)">−</button><b id="home">0</b><button class="plus" onclick="point('home',1)">+</button><span>·</span><button class="plus" onclick="point('away',-1)">−</button><b id="away">0</b><button class="plus" onclick="point('away',1)">+</button><span>Rival</span></div>
+</header>
+<main>
+ <div class="hint">Toca una acció i després el valor. R/C/A/D = 0–3 · S/B = 0–2</div>
+ <div class="court" id="court"></div>
+ <div class="last" id="last">Encara no hi ha accions.</div>
+ <div class="toolbar"><button onclick="newSet()">Nou set</button><button class="change" onclick="openChange()">⇄ Canvi</button></div>
+</main>
+<div class="modalbg" id="valueBg"><div class="modal"><h3 id="valueTitle"></h3><div class="values" id="values"></div><button class="close" onclick="closeModal('valueBg')">Cancel·lar</button></div></div>
+<div class="modalbg" id="changeBg"><div class="modal"><h3>Canvi de jugadora</h3><div class="changegrid" id="changeGrid"></div><button class="confirm" id="confirmChange" onclick="confirmChange()" disabled>Confirmar canvi</button><button class="close" onclick="closeModal('changeBg')">Cancel·lar</button></div></div>
+<script>
+const initial=["Aran","Aria","Nora","Mariona","Núria","Yveth"];
+const bench=["Isona","Laia","Carla","Júlia","Paula","Berta"];
+let state=JSON.parse(localStorage.getItem("statsCastellar")||"null")||{court:[...initial],bench:[...bench],home:0,away:0,set:1,events:[]};
+let pending=null, out=null, inn=null;
+const labels={R:"Recepció",C:"Col·locació",A:"Atac",D:"Defensa",S:"Servei",B:"Bloqueig"};
+function save(){localStorage.setItem("statsCastellar",JSON.stringify(state))}
+function render(){
+ document.getElementById("home").textContent=state.home;document.getElementById("away").textContent=state.away;document.getElementById("setNo").textContent=state.set;
+ court.innerHTML=state.court.map((p,i)=>`<div class="player"><div class="pname">${p}</div><div class="actions">${["R","C","A","D","S","B"].map(x=>`<button class="action ${x.toLowerCase()}" onclick="rate(${i},'${x}')">${x}</button>`).join("")}</div></div>`).join("");
+ const e=state.events.at(-1); last.textContent=e?e.text:"Encara no hi ha accions."; save();
+}
+function rate(i,a){pending={i,a};valueTitle.textContent=`${labels[a]} — ${state.court[i]}`;let max=(a=="S"||a=="B")?2:3;values.innerHTML="";for(let v=0;v<=max;v++){let b=document.createElement("button");b.className=`val v${v}`;b.textContent=v;b.onclick=()=>record(v);values.appendChild(b)}valueBg.style.display="flex"}
+function record(v){let p=state.court[pending.i],a=pending.a;state.events.push({type:"stat",player:p,action:a,value:v,set:state.set,text:`${p} · ${labels[a]} (${v})`});closeModal("valueBg");render()}
+function point(side,n){let before=state[side];state[side]=Math.max(0,state[side]+n);state.events.push({type:"score",side,before,text:`Marcador: ${state.home}-${state.away}`});render()}
+function undo(){let e=state.events.pop();if(!e)return;if(e.type=="score")state[e.side]=e.before;if(e.type=="change"){state.court=e.court;state.bench=e.bench}render()}
+function newSet(){if(confirm("Començar un set nou?")){state.set++;state.home=0;state.away=0;state.events.push({type:"set",text:`Inici del set ${state.set}`});render()}}
+function openChange(){out=inn=null;changeGrid.innerHTML=`<div><b>Surt</b>${state.court.map((p,i)=>`<button class="choice" id="out${i}" onclick="pickOut(${i})">${p}</button>`).join("")}</div><div><b>Entra</b>${state.bench.map((p,i)=>`<button class="choice" id="in${i}" onclick="pickIn(${i})">${p}</button>`).join("")}</div>`;changeBg.style.display="flex";confirmChange.disabled=true}
+function pickOut(i){out=i;document.querySelectorAll('[id^=out]').forEach(x=>x.classList.remove("sel"));document.getElementById("out"+i).classList.add("sel");checkChange()}
+function pickIn(i){inn=i;document.querySelectorAll('[id^=in]').forEach(x=>x.classList.remove("sel"));document.getElementById("in"+i).classList.add("sel");checkChange()}
+function checkChange(){confirmChange.disabled=(out===null||inn===null)}
+function confirmChange(){let oldC=[...state.court],oldB=[...state.bench],pout=state.court[out],pin=state.bench[inn];state.court[out]=pin;state.bench[inn]=pout;state.events.push({type:"change",court:oldC,bench:oldB,text:`Canvi: surt ${pout} · entra ${pin}`});closeModal("changeBg");render()}
+function closeModal(id){document.getElementById(id).style.display="none"}
+render();
+</script>
+</body></html>
