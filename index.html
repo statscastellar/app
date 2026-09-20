@@ -83,7 +83,6 @@ main{max-width:900px;margin:auto;padding:12px}.card{background:#fff;border-radiu
  <div class="card"><button class="btn primary wide" onclick="downloadODS()">⬇️ Exportar estadístiques (.ods)</button>
  <p class="muted">Aquest registre conserva cada acció. El següent pas serà generar directament l'Excel final amb el mateix disseny del full de l'entrenadora.</p></div>
 </section>
-<div class="muted" style="text-align:center;padding:4px 0 18px">Creat per Jordi Corominas</div>
 </main>
 
 <div class="modalbg" id="valueBg"><div class="modal"><h3 id="valueTitle"></h3><p id="valueHelp" class="muted"></p><div class="values" id="values"></div><button class="btn light wide" style="margin-top:12px" onclick="closeM('valueBg')">Cancel·lar</button></div></div>
@@ -272,8 +271,9 @@ function areaCell(x){return x.pct===null?"—":fmt(x.pct)}
 function describeRating(r){
  let best=Object.entries(r.areas).filter(([,x])=>x.pct!==null&&x.n>0).sort((a,b)=>b[1].pct-a[1].pct)[0];
  let bestText=best?`Destaca especialment en ${actionInfo[best[0]].name.toLowerCase()} (${fmt(best[1].pct)}/100).`:"";
- let prod=r.production>=80?"La seva incidència per set és molt alta.":r.production>=60?"Manté una bona incidència en el joc.":"La producció per set és més limitada.";
- return `${bestText} ${prod} Registra ${r.direct} punts directes en ${r.sets} set${r.sets===1?"":"s"}.`;
+ let prod=r.production>=80?"La seva incidència per set és molt alta.":r.production>=60?"Manté una bona incidència en el joc.":"La seva aportació es concentra especialment en les accions destacades anteriorment.";
+ let directText=r.direct>0?` Aporta ${r.direct} punt${r.direct===1?"":"s"} directe${r.direct===1?"":"s"} en ${r.sets} set${r.sets===1?"":"s"}.`:` Mostra una aportació basada principalment en la continuïtat i la qualitat de les accions de joc.`;
+ return `${bestText} ${prod}${directText}`;
 }
 function renderFinished(){
  let stats=match.events.filter(e=>e.type==="stat");
@@ -307,7 +307,45 @@ const ODS_TEMPLATE={"mimetype":"YXBwbGljYXRpb24vdm5kLm9hc2lzLm9wZW5kb2N1bWVudC5z
 function b64bytes(s){let b=atob(s),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a}
 function crc32(a){let c=-1;for(let i=0;i<a.length;i++){c^=a[i];for(let k=0;k<8;k++)c=(c>>>1)^((c&1)?0xEDB88320:0)}return(c^-1)>>>0}
 function zipStore(files){let parts=[],central=[],off=0,enc=new TextEncoder();for(const [name,data] of Object.entries(files)){let n=enc.encode(name),crc=crc32(data),h=new Uint8Array(30+n.length),v=new DataView(h.buffer);v.setUint32(0,0x04034b50,true);v.setUint16(4,20,true);v.setUint16(6,0x800,true);v.setUint16(8,0,true);v.setUint32(14,crc,true);v.setUint32(18,data.length,true);v.setUint32(22,data.length,true);v.setUint16(26,n.length,true);h.set(n,30);parts.push(h,data);let ch=new Uint8Array(46+n.length),cv=new DataView(ch.buffer);cv.setUint32(0,0x02014b50,true);cv.setUint16(4,20,true);cv.setUint16(6,20,true);cv.setUint16(8,0x800,true);cv.setUint16(10,0,true);cv.setUint32(16,crc,true);cv.setUint32(20,data.length,true);cv.setUint32(24,data.length,true);cv.setUint16(28,n.length,true);cv.setUint32(42,off,true);ch.set(n,46);central.push(ch);off+=h.length+data.length}let cs=central.reduce((n,x)=>n+x.length,0),end=new Uint8Array(22),ev=new DataView(end.buffer);ev.setUint32(0,0x06054b50,true);ev.setUint16(8,central.length,true);ev.setUint16(10,central.length,true);ev.setUint32(12,cs,true);ev.setUint32(16,off,true);return new Blob([...parts,...central,end],{type:"application/vnd.oasis.opendocument.spreadsheet"})}
-function odsCell(doc,sheetName,row,col){const T="urn:oasis:names:tc:opendocument:xmlns:table:1.0";let tabs=[...doc.getElementsByTagNameNS(T,"table")],tab=tabs.find(t=>t.getAttributeNS(T,"name")===sheetName),rows=[...tab.children].filter(x=>x.localName==="table-row"),cells=[...rows[row-1].children].filter(x=>x.localName==="table-cell"||x.localName==="covered-table-cell");return cells[col-1]}
+function odsCell(doc,sheetName,row,col){
+ const T="urn:oasis:names:tc:opendocument:xmlns:table:1.0";
+ let tabs=[...doc.getElementsByTagNameNS(T,"table")],
+     tab=tabs.find(t=>t.getAttributeNS(T,"name")===sheetName);
+ if(!tab)throw new Error("No s'ha trobat el full "+sheetName);
+ let rows=[...tab.childNodes].filter(x=>x.nodeType===1&&x.localName==="table-row"),
+     r=rows[row-1];
+ if(!r)throw new Error(`No s'ha trobat la fila ${row} de ${sheetName}`);
+ let cells=[...r.childNodes].filter(x=>x.nodeType===1&&(x.localName==="table-cell"||x.localName==="covered-table-cell"));
+ let pos=1;
+ for(const cell of cells){
+   let rep=parseInt(cell.getAttributeNS(T,"number-columns-repeated")||"1",10);
+   if(col>=pos && col<pos+rep){
+     if(rep===1)return cell;
+     // Les plantilles ODS compacten moltes columnes buides en una sola cel·la repetida.
+     // La separem en tres blocs (abans / cel·la objectiu / després) per poder editar
+     // la columna lògica correcta també a Safari/iPhone.
+     let before=col-pos, after=rep-before-1, target=cell.cloneNode(true);
+     target.removeAttributeNS(T,"number-columns-repeated");
+     if(before>0){
+       let b=cell.cloneNode(true);
+       if(before===1)b.removeAttributeNS(T,"number-columns-repeated");
+       else b.setAttributeNS(T,"table:number-columns-repeated",String(before));
+       r.insertBefore(b,cell);
+     }
+     r.insertBefore(target,cell);
+     if(after>0){
+       let a=cell.cloneNode(true);
+       if(after===1)a.removeAttributeNS(T,"number-columns-repeated");
+       else a.setAttributeNS(T,"table:number-columns-repeated",String(after));
+       r.insertBefore(a,cell);
+     }
+     r.removeChild(cell);
+     return target;
+   }
+   pos+=rep;
+ }
+ throw new Error(`No s'ha trobat la cel·la ${sheetName}!${row},${col}`);
+}
 function odsSet(doc,sheet,row,col,val){const O="urn:oasis:names:tc:opendocument:xmlns:office:1.0",X="urn:oasis:names:tc:opendocument:xmlns:text:1.0",T="urn:oasis:names:tc:opendocument:xmlns:table:1.0",c=odsCell(doc,sheet,row,col);c.removeAttributeNS(T,"formula");while(c.firstChild)c.removeChild(c.firstChild);let p=doc.createElementNS(X,"text:p");p.textContent=String(val??"");c.appendChild(p);if(typeof val==="number"){c.setAttributeNS(O,"office:value-type","float");c.setAttributeNS(O,"office:value",String(val))}else{c.setAttributeNS(O,"office:value-type","string");c.removeAttributeNS(O,"value")}}
 function formatDateDMY(s){if(!s)return "";let p=String(s).split("-");return p.length===3?`${p[2]}-${p[1]}-${p[0]}`:s}
 function downloadODS(){
