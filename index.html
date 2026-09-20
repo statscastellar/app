@@ -233,11 +233,17 @@ function closeM(id){document.getElementById(id).style.display="none"}
 function finishMatch(){if(!confirm("Finalitzar el partit? Podràs revisar i exportar totes les accions."))return;localStorage.setItem("sc_last_match",JSON.stringify(match));renderFinished();show("finished")}
 function actionPct(a,vals){
  const n=vals.length;if(!n)return null;
+ if(a==="A"){
+   const punts=vals.filter(v=>Number(v)===3).length;
+   const errors=vals.filter(v=>Number(v)===0).length;
+   return 50+50*((punts-errors)/n);
+ }
  let sum=0;
- for(const v of vals){
-  if(a==="S")sum+=(v===0?0:v===1?50:100);
-  else if(a==="B")sum+=(v===1?0:v===2?50:100);
-  else sum+=(v===0?0:v===1?100/3:v===2?200/3:100);
+ for(const raw of vals){
+   const v=Number(raw);
+   if(a==="S") sum+=(v===0?0:v===1?50:100);
+   else if(a==="B") sum+=(v===1?0:v===2?50:100);
+   else sum+=(v===0?0:v===1?100/3:v===2?200/3:100);
  }
  return sum/n;
 }
@@ -269,57 +275,90 @@ function playerRating(p,stats){
 function fmt(x){return Number(x).toFixed(1).replace(".",",")}
 function areaCell(x){return x.pct===null?"—":fmt(x.pct)}
 function describeRating(r){
- const labels={S:"servei",R:"recepció",C:"col·locació",A:"atac",B:"bloqueig"};
+ const L={S:"servei",R:"recepció",C:"col·locació",A:"atac",B:"bloqueig"};
+ const vals={};
+ for(const k of ["S","R","C","A","B"]){
+   vals[k]=stats.filter(e=>e.player===r.name && e.action===k).map(e=>Number(e.value));
+ }
+ const cnt=(k,v)=>vals[k].filter(x=>x===v).length;
+ const n=k=>vals[k].length;
+ const pct=(x,total)=>total?Math.round(x/total*100):0;
  const areas=Object.entries(r.areas)
    .filter(([k,x])=>x.pct!==null && x.n>=3)
-   .map(([k,x])=>({k,label:labels[k],pct:x.pct,n:x.n}))
-   .sort((a,b)=>b.pct-a.pct);
+   .map(([k,x])=>({k,label:L[k],score:x.pct,n:x.n}))
+   .sort((a,b)=>b.score-a.score);
+ const best=areas[0], worst=areas[areas.length-1];
+ const strong=areas.filter(x=>x.score>=70);
+ const weak=areas.filter(x=>x.score<50);
+ let out=[];
 
- if(!areas.length){
-   return `Ha participat en ${r.sets} set${r.sets===1?"":"s"}, però encara hi ha poques accions registrades per extreure conclusions sòlides per àrees.`;
+ // Entrada: escull la dada que millor defineix el partit de la jugadora.
+ if(r.actionsPerSet>=23){
+   out.push(`Ha tingut molt pes en el joc: ${r.actions} accions en ${r.sets} set${r.sets===1?"":"s"} (${fmt(r.actionsPerSet)} per set).`);
+ }else if(r.efficiency>=75){
+   out.push(`Ha fet un partit de molta eficiència tècnica (${fmt(r.efficiency)}/100) en ${r.actions} accions.`);
+ }else if(strong.length>=3){
+   out.push(`Ha ofert un partit molt complet, amb registres sòlids en diverses facetes del joc.`);
+ }else if(r.actionsPerSet<15){
+   out.push(`Ha tingut una intervenció més reduïda: ${r.actions} accions en ${r.sets} set${r.sets===1?"":"s"} (${fmt(r.actionsPerSet)} per set).`);
+ }else if(best){
+   out.push(`${L[best.k].charAt(0).toUpperCase()+L[best.k].slice(1)} ha estat la seva faceta més destacada (${fmt(best.score)}/100).`);
  }
 
- const best=areas[0], second=areas[1], worst=areas[areas.length-1];
- const strong=areas.filter(x=>x.pct>=70);
- const weak=areas.filter(x=>x.pct<50);
- const gap=best.pct-worst.pct;
- let parts=[];
-
- // Fortalesa: diferents construccions segons el perfil per evitar informes clònics.
- if(strong.length>=3){
-   parts.push(`Ofereix un rendiment molt complet, amb bons registres especialment en ${strong[0].label}, ${strong[1].label} i ${strong[2].label}.`);
- }else if(strong.length===2){
-   parts.push(`Les seves principals fortaleses en aquest partit han estat ${strong[0].label} (${fmt(strong[0].pct)}) i ${strong[1].label} (${fmt(strong[1].pct)}).`);
- }else if(strong.length===1){
-   parts.push(`Sobresurt especialment en ${strong[0].label}, on registra ${fmt(strong[0].pct)}/100.`);
- }else if(second && Math.abs(best.pct-second.pct)<8){
-   parts.push(`Ha tingut una aportació força equilibrada, amb ${best.label} i ${second.label} com les facetes més consistents.`);
- }else{
-   parts.push(`${best.label.charAt(0).toUpperCase()+best.label.slice(1)} ha estat la seva faceta més sòlida del partit (${fmt(best.pct)}/100).`);
+ // Detalls concrets: prioritza comptatges reals, no frases genèriques.
+ const details=[];
+ if(n("S")>=3){
+   const aces=cnt("S",2), err=cnt("S",0);
+   if(aces>=3 || err===0) details.push(`al servei suma ${aces} ace${aces===1?"":"s"} de ${n("S")} (${pct(aces,n("S"))}%)${err===0?", sense errors":`, amb ${err} error${err===1?"":"s"}`}`);
+   else if(err>=2) details.push(`al servei registra ${err} errors en ${n("S")} intents`);
+ }
+ if(n("R")>=3){
+   const perf=cnt("R",3), err=cnt("R",0);
+   if(perf>=3 || err===0) details.push(`en recepció té ${perf} perfecte${perf===1?"":"s"} de ${n("R")}${err===0?" sense cap error":`, amb ${err} error${err===1?"":"s"}`}`);
+   else if(err>=2) details.push(`en recepció acumula ${err} errors en ${n("R")} accions`);
+ }
+ if(n("C")>=3){
+   const perf=cnt("C",3), err=cnt("C",0);
+   if(perf>=4 || (err===0 && perf>=2)) details.push(`en col·locació, ${perf} de ${n("C")} són valor 3 (${pct(perf,n("C"))}%)${err===0?" i no comet cap error":""}`);
+   else if(err>=2) details.push(`en col·locació té ${err} errors en ${n("C")} accions`);
+ }
+ if(n("A")>=3){
+   const punts=cnt("A",3), err=cnt("A",0);
+   if(punts>=3) details.push(`en atac aconsegueix ${punts} valoracions de 3 en ${n("A")} atacs${err?`, amb ${err} error${err===1?"":"s"}`:""}`);
+   else if(err>=3) details.push(`en atac registra ${err} errors en ${n("A")} intents`);
+ }
+ if(n("B")>=3){
+   const punts=cnt("B",3);
+   if(punts) details.push(`en bloqueig obté ${punts} punt${punts===1?"":"s"} directe${punts===1?"":"s"} en ${n("B")} accions`);
  }
 
- // Millora: només amb una mostra mínima i quan les dades realment ho indiquen.
+ if(details.length){
+   // N'ensenya com a màxim tres, prioritzant les dades que realment caracteritzen el partit.
+   out.push(`En concret, ${details.slice(0,3).join("; ")}.`);
+ }
+
+ // Lectura constructiva del marge de millora, només amb mostres de 3+ accions.
  if(weak.length>=2){
-   const w=weak.slice().sort((a,b)=>a.pct-b.pct);
-   parts.push(`El principal marge de creixement apareix en ${w[0].label} i ${w[1].label}; guanyar regularitat en aquestes accions ajudaria a elevar la seva valoració global.`);
+   const w=weak.slice().sort((a,b)=>a.score-b.score);
+   out.push(`El marge de millora més clar és en ${w[0].label} i ${w[1].label}; guanyar regularitat en aquestes dues facetes faria més completa la seva aportació global.`);
  }else if(weak.length===1){
-   parts.push(`La ${weak[0].label} és l'aspecte amb més marge de millora; progressar en aquesta faceta faria més completa la seva aportació.`);
- }else if(gap>=25 && worst.pct<65){
-   parts.push(`Tot i el bon nivell en altres facetes, la ${worst.label} és la que més condiciona la nota global i és on té més recorregut de millora.`);
- }else if(areas.length>=3 && gap<15){
-   parts.push(`Els registres són força regulars entre les diferents facetes, sense cap àrea que penalitzi clarament el conjunt.`);
+   out.push(`La ${weak[0].label} és l'aspecte que més penalitza la seva valoració; millorar-hi la regularitat faria més complet el seu rendiment global.`);
+ }else if(best && worst && best.score-worst.score>=25 && worst.score<65){
+   out.push(`El rendiment és bo en diverses àrees, però la ${worst.label} queda per sota de la resta i és la faceta amb més recorregut de millora.`);
+ }else if(areas.length>=3 && best.score-worst.score<15){
+   out.push(`El seu rendiment és força equilibrat entre les diferents facetes valorades.`);
  }
 
- // Incidència/producció: només s'afegeix quan aporta informació real.
+ // Producció només quan explica de debò el partit.
  if(r.directPerSet>=4){
-   parts.push(`A més, té una incidència directa molt alta en el marcador, amb ${fmt(r.directPerSet)} punts directes per set.`);
- }else if(r.actionsPerSet>=22 && r.production>=70){
-   parts.push(`La seva participació és elevada: intervé en ${fmt(r.actionsPerSet)} accions per set i manté una producció alta.`);
+   out.push(`Aquesta qualitat també es tradueix al marcador: ${r.direct} punts directes, ${fmt(r.directPerSet)} per set.`);
+ }else if(r.actionsPerSet>=22 && r.efficiency<65){
+   out.push(`El volum d'intervenció és alt; el següent pas és convertir una proporció més gran d'aquestes accions en valoracions altes.`);
  }else if(r.directPerSet>=2.5 && r.direct>=4){
-   parts.push(`També aporta pes ofensiu al marcador, amb ${r.direct} punts directes en ${r.sets} set${r.sets===1?"":"s"}.`);
+   out.push(`Aporta, a més, ${r.direct} punts directes en ${r.sets} set${r.sets===1?"":"s"} (${fmt(r.directPerSet)} per set).`);
  }
 
- return parts.join(" ");
+ return out.join(" ");
 }
 function renderFinished(){
  let stats=match.events.filter(e=>e.type==="stat");
