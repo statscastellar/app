@@ -277,8 +277,9 @@ function areaCell(x){return x.pct===null?"—":fmt(x.pct)}
 function describeRating(r){
  const L={S:"servei",R:"recepció",C:"col·locació",A:"atac",B:"bloqueig"};
  const vals={};
+ const reportStats=match.events.filter(e=>e.type==="stat");
  for(const k of ["S","R","C","A","B"]){
-   vals[k]=stats.filter(e=>e.player===r.name && e.action===k).map(e=>Number(e.value));
+   vals[k]=reportStats.filter(e=>e.player===r.p.n && e.action===k).map(e=>Number(e.value));
  }
  const cnt=(k,v)=>vals[k].filter(x=>x===v).length;
  const n=k=>vals[k].length;
@@ -376,7 +377,8 @@ function renderFinished(){
  methodology.innerHTML=`<div class="ratingbox"><div class="formula">Nota final = 70% Eficiència tècnica + 30% Producció</div>
  <p><b>Eficiència tècnica (70%)</b>: valora totes les accions registrades i les pondera pel nombre real d'accions de cada àrea.</p>
  <p><b>Servei:</b> 0 error = 0 · 1 correcte = 50 · 2 ace = 100.<br>
- <b>Recepció, col·locació i atac:</b> 0 error = 0 · 1 dolenta = 33,3 · 2 positiva = 66,7 · 3 perfecta = 100.<br>
+ <b>Recepció i col·locació:</b> 0 error = 0 · 1 dolenta = 33,3 · 2 positiva = 66,7 · 3 perfecta = 100.<br>
+ <b>Atac:</b> 50 + 50 × ((valoracions 3 − errors 0) / intents). Els valors 1 i 2 són neutres en aquest índex.<br>
  <b>Bloqueig:</b> 1 fora = 0 · 2 bloqueig = 50 · 3 bloqueig + punt = 100.</p>
  <p><b>Producció (30%)</b>: 50% volum d'accions/set + 50% punts directes/set. 25 accions/set = 100 i 5 punts directes/set = 100. Els valors superiors queden limitats a 100.</p>
  <p><b>Punt directe</b> = ace + atac de valor 3 + bloqueig de valor 3.</p>
