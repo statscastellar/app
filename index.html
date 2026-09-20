@@ -269,11 +269,57 @@ function playerRating(p,stats){
 function fmt(x){return Number(x).toFixed(1).replace(".",",")}
 function areaCell(x){return x.pct===null?"—":fmt(x.pct)}
 function describeRating(r){
- let best=Object.entries(r.areas).filter(([,x])=>x.pct!==null&&x.n>0).sort((a,b)=>b[1].pct-a[1].pct)[0];
- let bestText=best?`Destaca especialment en ${actionInfo[best[0]].name.toLowerCase()} (${fmt(best[1].pct)}/100).`:"";
- let prod=r.production>=80?"La seva incidència per set és molt alta.":r.production>=60?"Manté una bona incidència en el joc.":"La seva aportació es concentra especialment en les accions destacades anteriorment.";
- let directText=r.direct>0?` Aporta ${r.direct} punt${r.direct===1?"":"s"} directe${r.direct===1?"":"s"} en ${r.sets} set${r.sets===1?"":"s"}.`:` Mostra una aportació basada principalment en la continuïtat i la qualitat de les accions de joc.`;
- return `${bestText} ${prod}${directText}`;
+ const labels={S:"servei",R:"recepció",C:"col·locació",A:"atac",B:"bloqueig"};
+ const areas=Object.entries(r.areas)
+   .filter(([k,x])=>x.pct!==null && x.n>=3)
+   .map(([k,x])=>({k,label:labels[k],pct:x.pct,n:x.n}))
+   .sort((a,b)=>b.pct-a.pct);
+
+ if(!areas.length){
+   return `Ha participat en ${r.sets} set${r.sets===1?"":"s"}, però encara hi ha poques accions registrades per extreure conclusions sòlides per àrees.`;
+ }
+
+ const best=areas[0], second=areas[1], worst=areas[areas.length-1];
+ const strong=areas.filter(x=>x.pct>=70);
+ const weak=areas.filter(x=>x.pct<50);
+ const gap=best.pct-worst.pct;
+ let parts=[];
+
+ // Fortalesa: diferents construccions segons el perfil per evitar informes clònics.
+ if(strong.length>=3){
+   parts.push(`Ofereix un rendiment molt complet, amb bons registres especialment en ${strong[0].label}, ${strong[1].label} i ${strong[2].label}.`);
+ }else if(strong.length===2){
+   parts.push(`Les seves principals fortaleses en aquest partit han estat ${strong[0].label} (${fmt(strong[0].pct)}) i ${strong[1].label} (${fmt(strong[1].pct)}).`);
+ }else if(strong.length===1){
+   parts.push(`Sobresurt especialment en ${strong[0].label}, on registra ${fmt(strong[0].pct)}/100.`);
+ }else if(second && Math.abs(best.pct-second.pct)<8){
+   parts.push(`Ha tingut una aportació força equilibrada, amb ${best.label} i ${second.label} com les facetes més consistents.`);
+ }else{
+   parts.push(`${best.label.charAt(0).toUpperCase()+best.label.slice(1)} ha estat la seva faceta més sòlida del partit (${fmt(best.pct)}/100).`);
+ }
+
+ // Millora: només amb una mostra mínima i quan les dades realment ho indiquen.
+ if(weak.length>=2){
+   const w=weak.slice().sort((a,b)=>a.pct-b.pct);
+   parts.push(`El principal marge de creixement apareix en ${w[0].label} i ${w[1].label}; guanyar regularitat en aquestes accions ajudaria a elevar la seva valoració global.`);
+ }else if(weak.length===1){
+   parts.push(`La ${weak[0].label} és l'aspecte amb més marge de millora; progressar en aquesta faceta faria més completa la seva aportació.`);
+ }else if(gap>=25 && worst.pct<65){
+   parts.push(`Tot i el bon nivell en altres facetes, la ${worst.label} és la que més condiciona la nota global i és on té més recorregut de millora.`);
+ }else if(areas.length>=3 && gap<15){
+   parts.push(`Els registres són força regulars entre les diferents facetes, sense cap àrea que penalitzi clarament el conjunt.`);
+ }
+
+ // Incidència/producció: només s'afegeix quan aporta informació real.
+ if(r.directPerSet>=4){
+   parts.push(`A més, té una incidència directa molt alta en el marcador, amb ${fmt(r.directPerSet)} punts directes per set.`);
+ }else if(r.actionsPerSet>=22 && r.production>=70){
+   parts.push(`La seva participació és elevada: intervé en ${fmt(r.actionsPerSet)} accions per set i manté una producció alta.`);
+ }else if(r.directPerSet>=2.5 && r.direct>=4){
+   parts.push(`També aporta pes ofensiu al marcador, amb ${r.direct} punts directes en ${r.sets} set${r.sets===1?"":"s"}.`);
+ }
+
+ return parts.join(" ");
 }
 function renderFinished(){
  let stats=match.events.filter(e=>e.type==="stat");
