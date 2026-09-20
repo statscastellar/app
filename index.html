@@ -204,7 +204,7 @@ function point(side,d){
  }else{
    match[side]=Math.max(0,match[side]-1);
  }
- match.events.push({type:"score",side,before,beforeServer,beforeCourt,beforeFixed,text:`Marcador: ${match.home}-${match.away}${d>0&&side==="home"&&beforeServer==="away"?" · Castellar rota":""}`});
+ match.events.push({type:"score",side,delta:d,set:match.set,courtIds:beforeCourt.map(p=>p.id),before,beforeServer,beforeCourt,beforeFixed,text:`Marcador: ${match.home}-${match.away}${d>0&&side==="home"&&beforeServer==="away"?" · Castellar rota":""}`});
  renderMatch();
 }
 function manualRotate(){let beforeCourt=match.court.map(x=>({...x})),beforeFixed=[...(match.fixed||[])];rotateCourt();match.events.push({type:"rotate",beforeCourt,beforeFixed,text:"Rotació manual"});renderMatch()}
@@ -447,6 +447,18 @@ function odsCell(doc,sheetName,row,col){
 }
 function odsSet(doc,sheet,row,col,val){const O="urn:oasis:names:tc:opendocument:xmlns:office:1.0",X="urn:oasis:names:tc:opendocument:xmlns:text:1.0",T="urn:oasis:names:tc:opendocument:xmlns:table:1.0",c=odsCell(doc,sheet,row,col);c.removeAttributeNS(T,"formula");while(c.firstChild)c.removeChild(c.firstChild);let p=doc.createElementNS(X,"text:p");p.textContent=String(val??"");c.appendChild(p);if(typeof val==="number"){c.setAttributeNS(O,"office:value-type","float");c.setAttributeNS(O,"office:value",String(val))}else{c.setAttributeNS(O,"office:value-type","string");c.removeAttributeNS(O,"value")}}
 function formatDateDMY(s){if(!s)return "";let p=String(s).split("-");return p.length===3?`${p[2]}-${p[1]}-${p[0]}`:s}
+function setParticipation(p,set){
+ // Percentatge dels punts disputats del set en què la jugadora era a pista.
+ // Només fem servir punts registrats amb la nova traça (set + courtIds).
+ const pts=(match.events||[]).filter(e=>e.type==="score"&&e.delta>0&&Number(e.set)===Number(set)&&Array.isArray(e.courtIds));
+ if(pts.length){
+   const on=pts.filter(e=>e.courtIds.includes(p.id)).length;
+   if(on===0 && !(match.setPlayers?.[set]||[]).includes(p.id))return "";
+   return Math.round((on/pts.length)*100)+"%";
+ }
+ // Compatibilitat amb partits antics: no inventem un percentatge que no podem reconstruir.
+ return (match.setPlayers?.[set]||[]).includes(p.id) ? "X" : "";
+}
 function downloadODS(){
  try{
   const dec=new TextDecoder(),enc=new TextEncoder(),files={};for(const [n,b] of Object.entries(ODS_TEMPLATE))files[n]=b64bytes(b);
@@ -462,10 +474,12 @@ function downloadODS(){
   all.slice(0,14).forEach((p,i)=>{
     let r=10+i,pr=7+i,setsPlayed=Object.keys(match.setPlayers||{}).filter(s=>(match.setPlayers[s]||[]).includes(p.id)).length;
     odsSet(doc,"Full de partit",r,2,Number(p.num)||p.num);odsSet(doc,"Full de partit",r,3,p.n);
-    for(let set=1;set<=5;set++)if((match.setPlayers?.[set]||[]).includes(p.id))odsSet(doc,"Full de partit",r,3+set,"X");
+    for(let set=1;set<=5;set++){let part=setParticipation(p,set);if(part)odsSet(doc,"Full de partit",r,3+set,part)}
     for(const [a,vals] of Object.entries(maps))for(const [v,c] of Object.entries(vals)){let same=stats.filter(x=>x.player===p.n&&String(x.num)===String(p.num)&&x.action===a&&String(x.value)===String(v)).length;odsSet(doc,"Full de partit",r,c,same)}
     odsSet(doc,"Percentatges",pr,2,Number(p.num)||p.num);odsSet(doc,"Percentatges",pr,3,p.n);odsSet(doc,"Percentatges",pr,4,setsPlayed);
   });
+  // Llegenda: els sets mostren el percentatge real de punts disputats amb la jugadora a pista.
+  odsSet(doc,"Full de partit",26,2,"Participació per set: el percentatge indica quants dels punts disputats en aquell set la jugadora ha estat a pista. 100% = set complet; un percentatge inferior indica que ha entrat o sortit per un canvi; cel·la buida = no ha jugat el set. Es calcula automàticament a partir de l'alineació inicial, els canvis i el marcador.");
   // TOTAL EQUIP / SETS = nombre real de sets disputats, no la suma dels sets de les jugadores.
   odsSet(doc,"Percentatges",24,4,scores.length);
   files["content.xml"]=enc.encode(new XMLSerializer().serializeToString(doc));let blob=zipStore(files),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`Stats_Castellar_${match.rival.replace(/[^a-z0-9à-ÿ]+/gi,"_")}_${match.date}.ods`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
