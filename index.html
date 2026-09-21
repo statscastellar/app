@@ -11,7 +11,7 @@ main{max-width:900px;margin:auto;padding:12px}.card{background:#fff;border-radiu
 .playerline{display:grid;grid-template-columns:40px 1fr auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid #edf1f5}.badge{width:34px;height:34px;border-radius:50%;background:#e5edf6;display:grid;place-items:center;font-weight:900}
 .hidden{display:none!important}.selection{display:grid;grid-template-columns:1fr 1fr;gap:7px}.pick{background:#fff;border:2px solid #dce4ee;border-radius:12px;padding:11px;text-align:left;font:inherit}.pick.on{border-color:#249b53;background:#edf9f1}.pick small{display:block;color:#64748b}
 .matchtop{background:#132641;color:#fff;margin:-12px -12px 9px;padding:9px 10px 11px}.set{text-align:center;font-weight:900;margin-bottom:7px}.scoreboard{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}.teamScore{text-align:center}.teamName{font-weight:900;min-height:22px;margin-bottom:4px}.scoreControls{display:flex;justify-content:center;align-items:center;gap:7px}.scoreControls b{font-size:29px;min-width:32px}.scoreControls .btn{background:#fff;color:#132641;padding:8px 12px}
-.court{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.pbox{background:#fff;border-radius:15px;padding:9px}.pname{text-align:center;font-weight:900;margin-bottom:7px}.lockbtn{width:100%;border:1px solid #d6dde6;background:#f7f9fb;border-radius:8px;padding:5px;margin-bottom:7px;font-size:12px;font-weight:800;color:#52606d}.lockbtn.locked{background:#fff3bf;border-color:#f2c94c;color:#5c4700}.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.act{border:0;border-radius:9px;padding:13px 0;color:#fff;font-size:16px;font-weight:900}.s{background:#6558ce}.r{background:#3796cc}.c{background:#4da85d}.a{background:#e85a54}.b{background:#657180}.tools{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.last{text-align:center;color:#64748b;font-size:13px;min-height:18px;margin:8px}
+.court{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.pbox{background:#fff;border-radius:15px;padding:9px}.pname{text-align:center;font-weight:900;margin-bottom:7px}.lockbtn{width:100%;border:1px solid #d6dde6;background:#f7f9fb;border-radius:8px;padding:5px;margin-bottom:7px;font-size:12px;font-weight:800;color:#52606d}.lockbtn.locked{background:#fff3bf;border-color:#f2c94c;color:#5c4700}.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:5px}.act{border:0;border-radius:9px;padding:12px 4px;color:#fff;font-size:13px;font-weight:900}.s{background:#6558ce}.r{background:#3796cc}.c{background:#4da85d}.a{background:#e85a54}.b{background:#657180}.tools{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.last{text-align:center;color:#64748b;font-size:13px;min-height:18px;margin:8px}
 .modalbg{display:none;position:fixed;inset:0;background:#0008;z-index:30;align-items:flex-end;justify-content:center}.modal{background:#fff;width:100%;max-width:600px;border-radius:22px 22px 0 0;padding:18px;max-height:90vh;overflow:auto}.values{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.val{border:0;border-radius:50px;padding:18px 0;font-size:23px;font-weight:900}.v0{background:#e53935;color:#fff}.v1{background:#ffd43b;color:#132641}.v2{background:#3182ce;color:#fff}.v3{background:#38a169;color:#fff}.servei-ace{background:#38a169;color:#fff}
 .summary{overflow:auto}.summary table{border-collapse:collapse;width:100%;font-size:13px}.summary th,.summary td{padding:7px;border-bottom:1px solid #e4e9ef;text-align:center}.summary th{background:#132641;color:#fff;position:sticky;top:0}
 .ratingbox{background:#f7f9fc;border:1px solid #dfe7f0;border-radius:13px;padding:12px;margin-top:10px}
@@ -69,7 +69,7 @@ main{max-width:900px;margin:auto;padding:12px}.card{background:#fff;border-radiu
   <div class="teamScore"><div class="teamName" id="teamLeftName">Castellar</div><div class="scoreControls"><button class="btn" id="leftMinus">−</button><b id="scoreLeft">0</b><button class="btn" id="leftPlus">+</button></div></div>
   <div class="teamScore"><div class="teamName" id="teamRightName">Rival</div><div class="scoreControls"><button class="btn" id="rightMinus">−</button><b id="scoreRight">0</b><button class="btn" id="rightPlus">+</button></div></div>
  </div></div>
- <div id="serverInfo" class="muted" style="text-align:center;margin-bottom:5px"></div><div class="muted" style="text-align:center;margin-bottom:8px">S · Servei &nbsp; R · Recepció &nbsp; C · Col·locació &nbsp; A · Atac &nbsp; B · Bloqueig</div>
+ <div id="serverInfo" class="muted" style="text-align:center;margin-bottom:8px"></div>
  <div class="court" id="court"></div><div class="last" id="last"></div>
  <div class="tools"><button class="btn light" onclick="undo()">↶ Desfer</button><button class="btn light" onclick="newSet()">Nou set</button><button class="btn light" onclick="manualRotate()">↻ Rotar</button><button class="btn green" onclick="openChange()">⇄ Canvi</button><button class="btn red" onclick="finishMatch()">🏁 Finalitzar</button></div>
 </section>
@@ -168,7 +168,7 @@ function renderMatch(){
    const locked=match.fixed.includes(p.id);
    return `<div class="pbox"><div class="muted">Zona ${zones[i]}</div><div class="pname">${p.num} · ${p.n}</div>
    <button class="lockbtn ${locked?"locked":""}" onclick="toggleFixed(${i})">${locked?"🔒 Fixada":"🔓 Fixar"}</button>
-   <div class="actions">${["S","R","C","A","B"].map(a=>`<button class="act ${a.toLowerCase()}" onclick="rate(${i},'${a}')">${a}</button>`).join("")}</div></div>`;
+   <div class="actions">${["S","R","C","A","B"].map(a=>`<button class="act ${a.toLowerCase()}" onclick="rate(${i},'${a}')">${actionInfo[a].name}</button>`).join("")}</div></div>`;
  }).join("");
  let visibleLast=[...match.events].reverse().find(e=>["stat","change","rotate","fix"].includes(e.type));
  last.textContent=visibleLast?visibleLast.text:"Encara no hi ha accions.";saveMatch()
@@ -181,7 +181,16 @@ function toggleFixed(i){
  renderMatch();
 }
 function rate(i,a){pending={i,a};let p=match.court[i],info=actionInfo[a];valueTitle.textContent=`${info.name} — ${p.n}`;valueHelp.textContent=info.help;values.innerHTML="";for(let v of info.values){let b=document.createElement("button");b.className=`val v${v}`; if(a==="S" && v===2) b.classList.add("servei-ace"); if(a==="B") b.className="val "+(v===1?"v0":v===2?"v1":"v3"); b.textContent=v; b.onclick=()=>record(v);values.appendChild(b)}valueBg.style.display="flex"}
-function record(v){let p=match.court[pending.i],a=pending.a;match.events.push({type:"stat",date:match.date,rival:match.rival,set:match.set,num:p.num,player:p.n,guest:!!p.guest,team:p.team||"",action:a,actionName:actionInfo[a].name,value:v,text:`${p.n} · ${actionInfo[a].name} (${v})`});closeM("valueBg");renderMatch()}
+function record(v){
+ let p=match.court[pending.i],a=pending.a;
+ match.events.push({type:"stat",date:match.date,rival:match.rival,set:match.set,num:p.num,player:p.n,guest:!!p.guest,team:p.team||"",action:a,actionName:actionInfo[a].name,value:v,text:`${p.n} · ${actionInfo[a].name} (${v})`});
+ closeM("valueBg");
+ const castellarPoint=(a==="S"&&Number(v)===2)||(a==="A"&&Number(v)===3)||(a==="B"&&Number(v)===3);
+ const rivalPoint=(a==="B"&&Number(v)===1)||(a!=="B"&&Number(v)===0);
+ if(castellarPoint) point("home",1,true);
+ else if(rivalPoint) point("away",1,true);
+ else renderMatch();
+}
 function rotateCourt(){
  if(!Array.isArray(match.fixed))match.fixed=[];
  // Ordre reglamentari de moviment: 2 → 1 → 6 → 5 → 4 → 3 → 2.
@@ -195,7 +204,7 @@ function rotateCourt(){
    match.court[to]=old[from];
  }
 }
-function point(side,d){
+function point(side,d,fromStat=false){
  let before=match[side],beforeServer=match.server,beforeCourt=match.court.map(x=>({...x})),beforeFixed=[...(match.fixed||[])];
  if(d>0){
    match[side]++;
@@ -204,13 +213,16 @@ function point(side,d){
  }else{
    match[side]=Math.max(0,match[side]-1);
  }
- match.events.push({type:"score",side,delta:d,set:match.set,courtIds:beforeCourt.map(p=>p.id),before,beforeServer,beforeCourt,beforeFixed,text:`Marcador: ${match.home}-${match.away}${d>0&&side==="home"&&beforeServer==="away"?" · Castellar rota":""}`});
+ match.events.push({type:"score",side,delta:d,fromStat,set:match.set,courtIds:beforeCourt.map(p=>p.id),before,beforeServer,beforeCourt,beforeFixed,text:`Marcador: ${match.home}-${match.away}${d>0&&side==="home"&&beforeServer==="away"?" · Castellar rota":""}`});
  renderMatch();
 }
 function manualRotate(){let beforeCourt=match.court.map(x=>({...x})),beforeFixed=[...(match.fixed||[])];rotateCourt();match.events.push({type:"rotate",beforeCourt,beforeFixed,text:"Rotació manual"});renderMatch()}
 function undo(){
  let e=match.events.pop();if(!e)return;
- if(e.type==="score"){match[e.side]=e.before;if(e.beforeServer)match.server=e.beforeServer;if(e.beforeCourt)match.court=e.beforeCourt;if(e.beforeFixed)match.fixed=e.beforeFixed}
+ if(e.type==="score"){
+   match[e.side]=e.before;if(e.beforeServer)match.server=e.beforeServer;if(e.beforeCourt)match.court=e.beforeCourt;if(e.beforeFixed)match.fixed=e.beforeFixed;
+   if(e.fromStat && match.events.length && match.events[match.events.length-1].type==="stat")match.events.pop();
+ }
  if(e.type==="rotate"){match.court=e.beforeCourt;if(e.beforeFixed)match.fixed=e.beforeFixed}
  if(e.type==="change"){match.court=e.court;match.bench=e.bench;if(e.fixed)match.fixed=e.fixed}
  if(e.type==="fix"){
