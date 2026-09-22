@@ -2,7 +2,7 @@
 <html lang="ca">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#132641"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Stats Castellar"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>Stats Castellar · v1.6.11</title>
+<meta name="theme-color" content="#132641"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Stats Castellar"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>Stats Castellar · v1.6.12</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#eef3f8;color:#132641}
 header{background:#132641;color:#fff;padding:11px 12px;position:sticky;top:0;z-index:10}.head{max-width:900px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:8px}.brand{font-weight:900;font-size:20px}.nav{display:flex;gap:6px}.btn{border:0;border-radius:11px;padding:12px 14px;font-weight:800;cursor:pointer}.light{background:#e8eef5;color:#132641}.primary{background:#0965c2;color:#fff}.green{background:#249b53;color:#fff}.red{background:#e95752;color:#fff}.wide{width:100%}
@@ -255,7 +255,7 @@ body:has(#home:not(.hidden)) main{margin:0!important;padding:0!important;max-wid
 
 
 <style id="home-center-fix-v164">
-/* Únic canvi v1.6.11: centrar verticalment la portada sense tocar-ne el disseny. */
+/* Únic canvi v1.6.12: centrar verticalment la portada sense tocar-ne el disseny. */
 #home:not(.hidden){
   min-height:100svh!important;
   display:flex!important;
@@ -283,7 +283,7 @@ body:has(#home:not(.hidden)) main{margin:0!important;padding:0!important;max-wid
 
 
 <style id="home-fullscreen-orange-v165">
-/* v1.6.11 — només adaptació de la portada a la pantalla */
+/* v1.6.12 — només adaptació de la portada a la pantalla */
 html:has(#home:not(.hidden)),
 body:has(#home:not(.hidden)){
   margin:0!important;
@@ -596,9 +596,50 @@ body:not(:has(#home:not(.hidden))) header::after{
 }
 </style>
 
+
+<style id="teams-final-v1612">
+/* El botó EQUIPS substitueix TOT el botó rasteritzat de Plantilla */
+#home:not(.hidden) .homeTeamButton{
+  left:5.51%!important;
+  top:70.88%!important;
+  width:86.52%!important;
+  height:6.13%!important;
+  border-radius:17px!important;
+  overflow:hidden!important;
+  background:linear-gradient(90deg,#d61d22 0%,#e32227 55%,#dc2024 100%)!important;
+}
+#home:not(.hidden) .homeTeamText{font-size:clamp(19px,4.1vw,31px)!important}
+
+/* Llista d'equips */
+#teams .teamRow{
+  display:grid;
+  grid-template-columns:1fr 48px;
+  gap:8px;
+  margin-bottom:10px;
+}
+#teams .teamRow .teamCard{margin:0!important}
+#teams .deleteTeamBtn{
+  border:1px solid #d0d5dd;
+  border-radius:14px;
+  background:#fff;
+  color:#c62828;
+  font-size:21px;
+  font-weight:800;
+  min-height:58px;
+  padding:0;
+}
+#teams .baseTeamRow{grid-template-columns:1fr}
+#teams .teamCard{
+  background:#000!important;
+  color:#58a9ff!important;
+}
+#teams .teamCard .teamArrow{color:#58a9ff!important}
+#teams .teamAddCard{margin-top:14px!important}
+</style>
+
 </head>
 <body>
-<header><div class="head"><div class="brand">🏐 Stats Castellar <span style="font-size:12px;opacity:.72;font-weight:700;white-space:nowrap">v1.6.11</span></div><div class="nav"><button class="btn light" onclick="show('home')">Inici</button><button class="btn light" onclick="show('roster')">Plantilla</button></div></div></header>
+<header><div class="head"><div class="brand">🏐 Stats Castellar <span style="font-size:12px;opacity:.72;font-weight:700;white-space:nowrap">v1.6.12</span></div><div class="nav"><button class="btn light" onclick="show('home')">Inici</button><button class="btn light" onclick="show('roster')">Plantilla</button></div></div></header>
 <main>
 <section id="home">
   <div class="homeExactMockup">
@@ -606,7 +647,7 @@ body:not(:has(#home:not(.hidden))) header::after{
     <button class="mockHotspot hsNew" onclick="startSetup()" aria-label="Nou partit"></button>
     <button class="mockHotspot hsHistory" onclick="show('history')" aria-label="Historial de partits"></button>
     <button class="mockHotspot hsRecover" onclick="show('recover')" aria-label="Recuperar partit"></button>
-    <button class="homeTeamButton" type="button" onclick="show('teams')" aria-label="Equip">
+    <button class="homeTeamButton" type="button" onclick="show('teams')" aria-label="Equips">
       <span class="homeTeamIcon" aria-hidden="true">
         <svg viewBox="0 0 64 52" role="img">
           <circle cx="32" cy="13" r="10"></circle>
@@ -617,12 +658,12 @@ body:not(:has(#home:not(.hidden))) header::after{
           <path d="M62 46v-7c0-8-4-13-11-13-4 0-7 2-9 5 3 4 4 9 4 15z"></path>
         </svg>
       </span>
-      <span class="homeTeamText">EQUIP</span>
+      <span class="homeTeamText">EQUIPS</span>
       <span class="homeTeamChevron">›</span>
     </button>
     <button class="mockHotspot hsSettings" onclick="show('settings')" aria-label="Configuració"></button>
     <div class="homeVersionFooter" aria-hidden="true">
-      <div class="homeVersionRow">VERSIÓ 1.6.11</div>
+      <div class="homeVersionRow">VERSIÓ 1.6.12</div>
       <div class="homeCredit">Creat per Curu</div>
     </div>
 </div>
@@ -644,7 +685,7 @@ body:not(:has(#home:not(.hidden))) header::after{
     <div class="settingsBlock">
       <h3>Informació</h3>
       <div class="settingsInfoRow"><span>Aplicació</span><strong>Stats Castellar</strong></div>
-      <div class="settingsInfoRow"><span>Versió</span><strong>1.6.11</strong></div>
+      <div class="settingsInfoRow"><span>Versió</span><strong>1.6.12</strong></div>
       <div class="settingsInfoRow"><span>Club</span><strong>F.S. Castellar Volei</strong></div>
       <div class="settingsInfoRow"><span>Creat per</span><strong>Curu</strong></div>
     </div>
@@ -654,9 +695,11 @@ body:not(:has(#home:not(.hidden))) header::after{
 <section id="teams" class="hidden">
   <h2>Equip</h2>
   <div class="teamPicker">
-    <button class="teamCard" type="button" onclick="show('roster')">
-      <span>Infantil A</span><span class="teamArrow">›</span>
-    </button>
+    <div class="teamRow baseTeamRow">
+      <button class="teamCard" type="button" onclick="show('roster')">
+        <span>Infantil A</span><span class="teamArrow">›</span>
+      </button>
+    </div>
     <button class="teamAddCard" type="button" onclick="addClubTeam()">
       <span class="teamAddPlus">＋</span><span>Afegir equip</span>
     </button>
@@ -1531,43 +1574,72 @@ show("home");
 </script>
 
 
-<script id="club-teams-v101">
+<script id="club-teams-v1612">
 (function(){
   const KEY='statsCastellarExtraTeams';
 
   function readTeams(){
-    try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}
+    try{
+      const a=JSON.parse(localStorage.getItem(KEY)||'[]');
+      return Array.isArray(a)?a:[];
+    }catch(e){ return []; }
   }
-  function saveTeams(a){localStorage.setItem(KEY,JSON.stringify(a))}
+  function saveTeams(a){ localStorage.setItem(KEY,JSON.stringify(a)); }
+
   function renderExtraTeams(){
     const picker=document.querySelector('#teams .teamPicker');
     const add=picker&&picker.querySelector('.teamAddCard');
     if(!picker||!add)return;
-    picker.querySelectorAll('.extraTeamCard').forEach(x=>x.remove());
-    readTeams().forEach(name=>{
+
+    picker.querySelectorAll('.extraTeamRow').forEach(x=>x.remove());
+
+    readTeams().forEach((name,index)=>{
+      const row=document.createElement('div');
+      row.className='teamRow extraTeamRow';
+
       const b=document.createElement('button');
-      b.type='button'; b.className='teamCard extraTeamCard';
+      b.type='button';
+      b.className='teamCard';
       b.innerHTML='<span></span><span class="teamArrow">›</span>';
       b.querySelector('span').textContent=name;
-      b.onclick=()=>alert('La plantilla de '+name+' encara està buida. En una propera ampliació hi podrem afegir jugadores.');
-      picker.insertBefore(b,add);
+      b.onclick=()=>alert('L’equip '+name+' està creat. La plantilla pròpia d’aquest equip s’incorporarà a la següent fase.');
+
+      const del=document.createElement('button');
+      del.type='button';
+      del.className='deleteTeamBtn';
+      del.setAttribute('aria-label','Eliminar '+name);
+      del.textContent='×';
+      del.onclick=(ev)=>{
+        ev.stopPropagation();
+        if(!confirm('Eliminar l’equip “'+name+'”?'))return;
+        const teams=readTeams();
+        teams.splice(index,1);
+        saveTeams(teams);
+        renderExtraTeams();
+      };
+
+      row.appendChild(b);
+      row.appendChild(del);
+      picker.insertBefore(row,add);
     });
   }
+
   window.addClubTeam=function(){
     const name=prompt("Nom de l'equip:");
     if(!name||!name.trim())return;
     const clean=name.trim();
     const teams=readTeams();
-    if(teams.some(x=>x.toLowerCase()===clean.toLowerCase())){
-      alert("Aquest equip ja existeix."); return;
+    if(clean.toLowerCase()==='infantil a' || teams.some(x=>String(x).toLowerCase()===clean.toLowerCase())){
+      alert("Aquest equip ja existeix.");
+      return;
     }
-    teams.push(clean); saveTeams(teams); renderExtraTeams();
+    teams.push(clean);
+    saveTeams(teams);
+    renderExtraTeams();
   };
+
+  window.renderExtraTeams=renderExtraTeams;
   document.addEventListener('DOMContentLoaded',renderExtraTeams);
-  const oldShow=window.show;
-  if(typeof oldShow==='function'){
-    window.show=function(id){const r=oldShow.apply(this,arguments);if(id==='teams')setTimeout(renderExtraTeams,0);return r}
-  }
 })();
 </script>
 
@@ -1575,7 +1647,7 @@ show("home");
 <script id="backup-settings-v102">
 function backupStatsCastellar(){
   try{
-    const data={format:"stats-castellar-backup",version:"1.6.11",created:new Date().toISOString(),localStorage:{}};
+    const data={format:"stats-castellar-backup",version:"1.6.12",created:new Date().toISOString(),localStorage:{}};
     for(let i=0;i<localStorage.length;i++){
       const k=localStorage.key(i);
       data.localStorage[k]=localStorage.getItem(k);
@@ -1628,6 +1700,58 @@ function restoreStatsCastellar(input){
         if(s && s.id!=='home') goBackStats();
       });
     }
+  });
+})();
+</script>
+
+
+<script id="navigation-stack-v1612">
+(function(){
+  const stack=[];
+  let goingBack=false;
+
+  function currentSectionId(){
+    const s=Array.from(document.querySelectorAll('main > section'))
+      .find(x=>!x.classList.contains('hidden'));
+    return s?s.id:null;
+  }
+
+  const originalShow=window.show;
+  window.show=function(id){
+    const current=currentSectionId();
+    if(!goingBack && current && current!==id){
+      if(stack[stack.length-1]!==current) stack.push(current);
+    }
+    const result=originalShow.apply(this,arguments);
+    if(id==='teams' && window.renderExtraTeams) setTimeout(window.renderExtraTeams,0);
+    return result;
+  };
+
+  window.statsBack=function(){
+    const current=currentSectionId();
+    let previous=null;
+    while(stack.length && !previous){
+      const candidate=stack.pop();
+      if(candidate && candidate!==current && document.getElementById(candidate)) previous=candidate;
+    }
+    if(!previous) previous='home';
+    goingBack=true;
+    try{ window.show(previous); }
+    finally{ goingBack=false; }
+  };
+
+  /* Anul·lem el controlador antic de la barra i fem que ‹ Enrere segueixi la pila real */
+  document.addEventListener('DOMContentLoaded',function(){
+    const h=document.querySelector('header');
+    if(!h)return;
+    h.addEventListener('click',function(e){
+      const s=currentSectionId();
+      if(s && s!=='home'){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        window.statsBack();
+      }
+    },true);
   });
 })();
 </script>
