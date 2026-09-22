@@ -2,7 +2,7 @@
 <html lang="ca">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#132641"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Stats Castellar"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>Stats Castellar · v1.5.13</title>
+<meta name="theme-color" content="#132641"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Stats Castellar"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>Stats Castellar · v1.5.14</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#eef3f8;color:#132641}
 header{background:#132641;color:#fff;padding:11px 12px;position:sticky;top:0;z-index:10}.head{max-width:900px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:8px}.brand{font-weight:900;font-size:20px}.nav{display:flex;gap:6px}.btn{border:0;border-radius:11px;padding:12px 14px;font-weight:800;cursor:pointer}.light{background:#e8eef5;color:#132641}.primary{background:#0965c2;color:#fff}.green{background:#249b53;color:#fff}.red{background:#e95752;color:#fff}.wide{width:100%}
@@ -172,7 +172,7 @@ body.home-mode footer{background:#eef3f8}
 
 </head>
 <body>
-<header><div class="head"><div class="brand">🏐 Stats Castellar <span style="font-size:12px;opacity:.72;font-weight:700;white-space:nowrap">v1.5.13</span></div><div class="nav"><button class="btn light" onclick="show('home')">Inici</button><button class="btn light" onclick="show('roster')">Plantilla</button></div></div></header>
+<header><div class="head"><div class="brand">🏐 Stats Castellar <span style="font-size:12px;opacity:.72;font-weight:700;white-space:nowrap">v1.5.14</span></div><div class="nav"><button class="btn light" onclick="show('home')">Inici</button><button class="btn light" onclick="show('roster')">Plantilla</button></div></div></header>
 <main>
 <section id="home">
  <div class="homeHero">
@@ -185,7 +185,7 @@ body.home-mode footer{background:#eef3f8}
    <button class="btn wide" onclick="showSettings()" style="background:transparent!important;background-color:transparent!important;color:#132a46!important;border:1px solid rgba(19,42,70,.22)!important;box-shadow:none!important">⚙️ Configuració</button>
   </div>
   <div class="homeStatus" id="homeStatus"></div>
-  <div class="muted" style="margin-top:18px">v1.5.13</div>
+  <div class="muted" style="margin-top:18px">v1.5.14</div>
  </div>
 </section>
 <section id="recover" class="hidden"><div class="card"><div class="sectionTop"><button class="btn light" onclick="show('home')">← Enrere</button><h2>Recuperar partit</h2><button class="btn light" onclick="show('home')">⌂ Inici</button></div><div id="recoverContent"></div></div></section>
@@ -845,17 +845,18 @@ function sharePDF(){
  }catch(err){alert("No s'ha pogut preparar el PDF: "+err.message);console.error(err)}
 }
 
+
 function pdfWin(s){
  const map={"À":"\\300","Á":"\\301","È":"\\310","É":"\\311","Í":"\\315","Ò":"\\322","Ó":"\\323","Ú":"\\332",
  "à":"\\340","á":"\\341","è":"\\350","é":"\\351","í":"\\355","ò":"\\362","ó":"\\363","ú":"\\372",
- "Ç":"\\307","ç":"\\347","ï":"\\357","ü":"\\374","·":"\\267","’":"'","“":'"',"”":'"',"–":"-","—":"-"};
+ "Ç":"\\307","ç":"\\347","Ï":"\\317","ï":"\\357","Ü":"\\334","ü":"\\374","·":"\\267","’":"'","“":'"',"”":'"',"–":"-","—":"-"};
  return String(s??"").replace(/[\\()]/g,m=>"\\"+m).replace(/[^\x20-\x7E]/g,ch=>map[ch]||"?");
 }
 function buildDirectPDF(){
- const W=842,H=595, objs=[null], pages=[];
+ const W=842,H=595, objs=[null];
  const add=o=>(objs.push(o),objs.length-1);
- const font=add("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>");
- const bold=add("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>");
+ const font=add("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>");
+ const bold=add("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>");
 
  const players=[...match.court,...match.bench].filter((p,i,a)=>a.findIndex(q=>q.id===p.id)===i)
    .sort((a,b)=>(Number(a.num)||999)-(Number(b.num)||999));
@@ -868,54 +869,112 @@ function buildDirectPDF(){
  const pct=(p,a,v)=>{let d=defs.find(x=>x[0]===a),t=d[2].reduce((n,z)=>n+count(p,a,z),0);return t?Math.round(count(p,a,v)*100/t)+"%":""};
  const teamPct=(a,v)=>{let d=defs.find(x=>x[0]===a),t=players.reduce((n,p)=>n+d[2].reduce((q,z)=>q+count(p,a,z),0),0),n=players.reduce((q,p)=>q+count(p,a,v),0);return t?Math.round(n*100/t)+"%":""};
 
- function page(title,percent){
+ // Colors equivalents al full ODS
+ const C={
+   blue:"0.12 0.34 0.50", paleBlue:"0.82 0.89 0.93", grid:"0.42 0.53 0.59",
+   red:"0.94 0.38 0.35", yellow:"0.96 0.78 0.31", lightBlue:"0.35 0.67 0.86", green:"0.39 0.68 0.31",
+   cream:"1 0.95 0.76", note:"0.90 0.94 0.96", team:"0.84 0.91 0.79", black:"0 0 0"
+ };
+ const valColor=(a,v)=>{
+   v=Number(v);
+   if(a==="S") return v===0?C.red:v===1?C.yellow:C.green;
+   if(a==="B") return v===1?C.red:v===2?C.yellow:C.green;
+   return v===0?C.red:v===1?C.yellow:v===2?C.lightBlue:C.green;
+ };
+
+ function makePage(title,percent){
    let c=[];
-   const txt=(x,y,s,size=7,b=false)=>c.push(`BT /F${b?2:1} ${size} Tf ${x} ${H-y} Td (${pdfWin(s)}) Tj ET`);
-   const rect=(x,y,w,h,fill=null,stroke="0.55 0.62 0.68")=>{
-     if(fill)c.push(`${fill} rg ${x} ${H-y-h} ${w} ${h} re f`);
-     c.push(`${stroke} RG ${x} ${H-y-h} ${w} ${h} re S`);
+   const txt=(x,y,s,size=7,b=false,rgb=C.black)=>c.push(`${rgb} rg BT /F${b?2:1} ${size} Tf ${x} ${H-y} Td (${pdfWin(s)}) Tj ET`);
+   const centered=(x,y,w,s,size=6,b=false,rgb=C.black)=>{
+     // Aproximació suficient per Helvetica, només per centrar xifres curtes.
+     let tw=String(s??"").length*size*0.52;
+     txt(x+Math.max(2,(w-tw)/2),y,s,size,b,rgb);
    };
-   txt(42,38,title,15,true); c.push(`0.14 0.34 0.51 RG 42 ${H-45} 410 3 re f`);
-   rect(42,53,758,28,"1 0.95 0.78","1 0.95 0.78");
-   txt(48,65,`Equip: F.S. Castellar Volei    Rival: ${match.rival}    Resultat: ${result}`,7,true);
-   txt(48,77,`Data: ${formatDateDMY(match.date)}    Lloc: ${match.venue==="away"?"Camp rival":"Casa"}`,7);
+   const rect=(x,y,w,h,fill=null,stroke=C.grid,lw=.55)=>{
+     if(fill)c.push(`${fill} rg ${x} ${H-y-h} ${w} ${h} re f`);
+     if(stroke)c.push(`${lw} w ${stroke} RG ${x} ${H-y-h} ${w} ${h} re S`);
+   };
 
-   let x=42,y=92,rowH=20;
-   let widths=percent?[30,70,34,...Array(18).fill(34.65)]:[30,70,...Array(5).fill(27),38,...Array(18).fill(26.9)];
-   let headers=percent?["DORSAL","NOM","SETS",...defs.flatMap(d=>d[2].map(v=>String(v)))]
-                      :["DORSAL","NOM","S1","S2","S3","S4","S5","TOTAL",...defs.flatMap(d=>d[2].map(v=>String(v)))];
+   txt(42,35,title,14,true,C.blue);
+   c.push(`${C.blue} rg 42 ${H-43} 390 3 re f`);
+   rect(42,51,758,28,C.cream,null);
+   txt(48,63,`Equip: F.S. Castellar Volei    Rival: ${match.rival}    Resultat: ${result}`,7,true);
+   txt(48,75,`Data: ${formatDateDMY(match.date)}    Lloc: ${match.venue==="away"?"Camp rival":"Casa"}`,7);
+
+   let x=42,y=91,rowH=20;
+   let prefix=percent?[30,72,34]:[30,72,27,27,27,27,27,38];
+   let actionW=percent?34.55:26.75;
+   let widths=[...prefix,...Array(18).fill(actionW)];
+   // Ajust exacte a 758
+   widths[widths.length-1]+=758-widths.reduce((a,b)=>a+b,0);
+
+   let prefixHeaders=percent?["DORSAL","NOM","SETS"]:["DORSAL","NOM","S1","S2","S3","S4","S5","TOTAL"];
    let xx=x;
-   headers.forEach((h,i)=>{rect(xx,y,widths[i],rowH,"0.84 0.91 0.95");txt(xx+2,y+13,h,5.2,true);xx+=widths[i]});
-   y+=rowH;
+   prefixHeaders.forEach((h,i)=>{
+     rect(xx,y,widths[i],rowH,C.paleBlue);
+     centered(xx,y+13,widths[i],h,4.9,true,C.black);
+     xx+=widths[i];
+   });
+   let wi=prefix.length;
+   for(const [a,name,vals] of defs){
+     for(const v of vals){
+       rect(xx,y,widths[wi],rowH,valColor(a,v));
+       centered(xx,y+13,widths[wi],String(v),6,true,C.black);
+       xx+=widths[wi++];
+     }
+   }
 
+   y+=rowH;
    for(const p of players){
-     xx=x;
-     let vals=percent?[p.num,p.n,String(Math.round(equivalentSetsForPlayer(p)*100)/100).replace(".",","),
-       ...defs.flatMap(d=>d[2].map(v=>pct(p,d[0],v)))]
-       :[p.num,p.n,...[1,2,3,4,5].map(n=>setParticipation(p,n)||""),
-       String(Math.round(equivalentSetsForPlayer(p)*100)/100).replace(".",","),
-       ...defs.flatMap(d=>d[2].map(v=>count(p,d[0],v)))];
-     vals.forEach((v,i)=>{rect(xx,y,widths[i],rowH,null);txt(xx+2,y+13,String(v),i===1?6.2:5.6,i===1);xx+=widths[i]});
+     xx=x; wi=0;
+     let pre=percent
+       ?[p.num,p.n,String(Math.round(equivalentSetsForPlayer(p)*100)/100).replace(".",",")]
+       :[p.num,p.n,...[1,2,3,4,5].map(n=>setParticipation(p,n)||""),String(Math.round(equivalentSetsForPlayer(p)*100)/100).replace(".",",")];
+     pre.forEach((v,i)=>{
+       rect(xx,y,widths[wi],rowH,"1 1 1");
+       if(i===1) txt(xx+3,y+13,String(v),6.3,true,C.black);
+       else centered(xx,y+13,widths[wi],String(v),5.7,false,C.black);
+       xx+=widths[wi++];
+     });
+     for(const [a,name,vals] of defs){
+       for(const v of vals){
+         rect(xx,y,widths[wi],rowH,valColor(a,v));
+         let value=percent?pct(p,a,v):count(p,a,v);
+         centered(xx,y+13,widths[wi],String(value),5.8,true,C.black);
+         xx+=widths[wi++];
+       }
+     }
      y+=rowH;
    }
+
    if(percent){
-     y+=10; rect(x,y,758,24,"0.86 0.93 0.83");
-     txt(x+5,y+15,"TOTAL EQUIP",6.2,true);
-     let summary=defs.flatMap(d=>d[2].map(v=>teamPct(d[0],v))).join("   ");
-     txt(x+95,y+15,`Sets: ${scores.length}     ${summary}`,5.3);
-     y+=34; rect(x,y,758,48,"0.91 0.95 0.97");
-     txt(x+5,y+13,"LECTURA DEL FULL",7,true);
-     txt(x+5,y+28,"Els percentatges mostren el pes de cada valor sobre el total d'accions de cada fonament.",6);
-     txt(x+5,y+40,"Sets* és el nombre real de sets disputats al partit.",6);
+     y+=10;
+     rect(x,y,758,25,C.team);
+     txt(x+5,y+16,"TOTAL EQUIP",6.3,true,C.black);
+     let sx=x+104, idx=3;
+     centered(x+102,y+16,34,String(scores.length),6,true,C.black);
+     for(const [a,name,vals] of defs){
+       for(const v of vals){
+         let w=widths[idx++];
+         rect(sx,y,w,25,valColor(a,v));
+         centered(sx,y+16,w,teamPct(a,v),5.5,true,C.black);
+         sx+=w;
+       }
+     }
+     y+=35; rect(x,y,758,49,C.note);
+     txt(x+5,y+14,"LECTURA DEL FULL",7,true,C.blue);
+     txt(x+5,y+29,"Els percentatges mostren quin pes té cada valor sobre el total d'accions de cada fonament.",6,false,C.black);
+     txt(x+5,y+41,"Sets* és el nombre real de sets disputats al partit.",6,false,C.black);
    }else{
-     y+=10; rect(x,y,758,48,"0.91 0.95 0.97");
-     txt(x+5,y+13,"COM ANOTAR LES ACCIONS",7,true);
-     txt(x+5,y+28,"Participació per set: 100% = set complet; percentatge inferior = participació parcial;",6);
-     txt(x+5,y+40,"cel·la buida = no ha jugat el set.",6);
+     y+=10; rect(x,y,758,49,C.note);
+     txt(x+5,y+14,"COM ANOTAR LES ACCIONS",7,true,C.blue);
+     txt(x+5,y+29,"Participació per set: 100% = set complet; percentatge inferior = participació parcial;",6,false,C.black);
+     txt(x+5,y+41,"cel·la buida = no ha jugat el set.",6,false,C.black);
    }
    return c.join("\n");
  }
- const streams=[page("FULL D'ESTADÍSTIQUES DE PARTIT",false),page("PERCENTATGES PER JUGADORA",true)];
+
+ const streams=[makePage("FULL D'ESTADÍSTIQUES DE PARTIT",false),makePage("PERCENTATGES PER JUGADORA",true)];
  const pageIds=[];
  for(const stream of streams){
    const sid=add(`<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`);
@@ -924,7 +983,6 @@ function buildDirectPDF(){
  const pagesId=add(`<< /Type /Pages /Kids [${pageIds.map(i=>i+" 0 R").join(" ")}] /Count ${pageIds.length} >>`);
  pageIds.forEach(i=>objs[i]=objs[i].replace("PARENT",String(pagesId)));
  const catalog=add(`<< /Type /Catalog /Pages ${pagesId} 0 R >>`);
-
  let out="%PDF-1.4\n%\xE2\xE3\xCF\xD3\n",offs=[0];
  for(let i=1;i<objs.length;i++){offs[i]=out.length;out+=`${i} 0 obj\n${objs[i]}\nendobj\n`}
  const xref=out.length; out+=`xref\n0 ${objs.length}\n0000000000 65535 f \n`;
