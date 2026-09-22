@@ -2,7 +2,7 @@
 <html lang="ca">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#132641"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Stats Castellar"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>Stats Castellar · v1.0.1</title>
+<meta name="theme-color" content="#132641"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Stats Castellar"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>Stats Castellar · v1.0.2</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#eef3f8;color:#132641}
 header{background:#132641;color:#fff;padding:11px 12px;position:sticky;top:0;z-index:10}.head{max-width:900px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:8px}.brand{font-weight:900;font-size:20px}.nav{display:flex;gap:6px}.btn{border:0;border-radius:11px;padding:12px 14px;font-weight:800;cursor:pointer}.light{background:#e8eef5;color:#132641}.primary{background:#0965c2;color:#fff}.green{background:#249b53;color:#fff}.red{background:#e95752;color:#fff}.wide{width:100%}
@@ -255,7 +255,7 @@ body:has(#home:not(.hidden)) main{margin:0!important;padding:0!important;max-wid
 
 
 <style id="home-center-fix-v164">
-/* Únic canvi v1.0.1: centrar verticalment la portada sense tocar-ne el disseny. */
+/* Únic canvi v1.0.2: centrar verticalment la portada sense tocar-ne el disseny. */
 #home:not(.hidden){
   min-height:100svh!important;
   display:flex!important;
@@ -283,7 +283,7 @@ body:has(#home:not(.hidden)) main{margin:0!important;padding:0!important;max-wid
 
 
 <style id="home-fullscreen-orange-v165">
-/* v1.0.1 — només adaptació de la portada a la pantalla */
+/* v1.0.2 — només adaptació de la portada a la pantalla */
 html:has(#home:not(.hidden)),
 body:has(#home:not(.hidden)){
   margin:0!important;
@@ -453,9 +453,23 @@ body:has(#home:not(.hidden)) main{position:fixed!important;inset:0!important;wid
 #teams .teamAddPlus{font-size:25px;line-height:1}
 </style>
 
+
+<style id="settings-v102">
+#settings .settingsV102{max-width:620px;margin:16px auto;padding:0 14px 34px}
+#settings .settingsBlock{background:#fff;border:1px solid #e6e8ec;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 3px 10px rgba(0,0,0,.06)}
+#settings .settingsBlock h3{margin:0 0 8px;color:#173f5f}
+#settings .settingsBlock p{margin:0 0 16px;color:#667085;line-height:1.45;font-size:14px}
+#settings .settingsBtn{width:100%;margin-top:9px;padding:13px 14px;border-radius:12px;border:1px solid #d0d5dd;background:#fff;color:#344054;font-weight:800;font-size:15px}
+#settings .settingsPrimary{background:#173f5f;color:#fff;border-color:#173f5f}
+#settings .settingsInfoRow{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid #eee;font-size:14px}
+#settings .settingsInfoRow:last-child{border-bottom:0}
+#settings .settingsInfoRow span{color:#667085}
+#settings .settingsInfoRow strong{text-align:right;color:#101828}
+</style>
+
 </head>
 <body>
-<header><div class="head"><div class="brand">🏐 Stats Castellar <span style="font-size:12px;opacity:.72;font-weight:700;white-space:nowrap">v1.0.1</span></div><div class="nav"><button class="btn light" onclick="show('home')">Inici</button><button class="btn light" onclick="show('roster')">Plantilla</button></div></div></header>
+<header><div class="head"><div class="brand">🏐 Stats Castellar <span style="font-size:12px;opacity:.72;font-weight:700;white-space:nowrap">v1.0.2</span></div><div class="nav"><button class="btn light" onclick="show('home')">Inici</button><button class="btn light" onclick="show('roster')">Plantilla</button></div></div></header>
 <main>
 <section id="home">
   <div class="homeExactMockup">
@@ -466,11 +480,33 @@ body:has(#home:not(.hidden)) main{position:fixed!important;inset:0!important;wid
     <span class="teamHomeMask" aria-hidden="true"></span>
     <span class="teamHomeLabel" aria-hidden="true">EQUIP</span>
     <button class="mockHotspot hsRoster" onclick="show('teams')" aria-label="Equip"></button>
-    <button class="mockHotspot hsSettings" onclick="showSettings()" aria-label="Configuració"></button>
+    <button class="mockHotspot hsSettings" onclick="show('settings')" aria-label="Configuració"></button>
   </div>
 </section>
 <section id="recover" class="hidden"><div class="card"><div class="sectionTop"><button class="btn light" onclick="show('home')">← Enrere</button><h2>Recuperar partit</h2><button class="btn light" onclick="show('home')">⌂ Inici</button></div><div id="recoverContent"></div></div></section>
 <section id="history" class="hidden"><div class="card"><div class="sectionTop"><button class="btn light" onclick="show('home')">← Enrere</button><h2>Historial de partits</h2><button class="btn light" onclick="show('home')">⌂ Inici</button></div><div id="historyList" class="muted"></div></div></section>
+
+<section id="settings" class="hidden">
+  <h2>Configuració</h2>
+  <div class="settingsV102">
+    <div class="settingsBlock">
+      <h3>Dades de l'app</h3>
+      <p>Desa una còpia de les dades de Stats Castellar per poder recuperar-les si canvies de dispositiu o es perden les dades locals.</p>
+      <button type="button" class="settingsBtn settingsPrimary" onclick="backupStatsCastellar()">↓ Fer còpia de seguretat</button>
+      <button type="button" class="settingsBtn" onclick="document.getElementById('restoreStatsFile').click()">↑ Restaurar còpia</button>
+      <input id="restoreStatsFile" type="file" accept="application/json,.json" hidden onchange="restoreStatsCastellar(this)">
+    </div>
+
+    <div class="settingsBlock">
+      <h3>Informació</h3>
+      <div class="settingsInfoRow"><span>Aplicació</span><strong>Stats Castellar</strong></div>
+      <div class="settingsInfoRow"><span>Versió</span><strong>1.0.2</strong></div>
+      <div class="settingsInfoRow"><span>Club</span><strong>F.S. Castellar Volei</strong></div>
+      <div class="settingsInfoRow"><span>Creat per</span><strong>Curu</strong></div>
+    </div>
+  </div>
+</section>
+
 <section id="teams" class="hidden">
   <h2>Equip</h2>
   <div class="teamPicker">
@@ -1389,6 +1425,41 @@ show("home");
     window.show=function(id){const r=oldShow.apply(this,arguments);if(id==='teams')setTimeout(renderExtraTeams,0);return r}
   }
 })();
+</script>
+
+
+<script id="backup-settings-v102">
+function backupStatsCastellar(){
+  try{
+    const data={format:"stats-castellar-backup",version:"1.0.2",created:new Date().toISOString(),localStorage:{}};
+    for(let i=0;i<localStorage.length;i++){
+      const k=localStorage.key(i);
+      data.localStorage[k]=localStorage.getItem(k);
+    }
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download="stats-castellar-copia-"+new Date().toISOString().slice(0,10)+".json";
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  }catch(e){alert("No s'ha pogut crear la còpia de seguretat.");console.error(e)}
+}
+function restoreStatsCastellar(input){
+  const f=input.files&&input.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=function(){
+    try{
+      const data=JSON.parse(r.result);
+      if(!data||data.format!=="stats-castellar-backup"||!data.localStorage)throw new Error("Format no vàlid");
+      if(!confirm("Restaurar aquesta còpia substituirà les dades actuals de Stats Castellar. Vols continuar?")){input.value="";return}
+      localStorage.clear();
+      Object.entries(data.localStorage).forEach(([k,v])=>localStorage.setItem(k,v));
+      alert("Còpia restaurada correctament. L'app es tornarà a carregar.");
+      location.reload();
+    }catch(e){alert("Aquest fitxer no és una còpia de seguretat vàlida de Stats Castellar.");input.value="";console.error(e)}
+  };
+  r.readAsText(f);
+}
 </script>
 
 </body></html>
