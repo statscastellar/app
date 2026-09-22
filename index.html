@@ -2,7 +2,7 @@
 <html lang="ca">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#132641"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Stats Castellar"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>Stats Castellar · v1.5.12</title>
+<meta name="theme-color" content="#132641"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Stats Castellar"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>Stats Castellar · v1.5.13</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#eef3f8;color:#132641}
 header{background:#132641;color:#fff;padding:11px 12px;position:sticky;top:0;z-index:10}.head{max-width:900px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:8px}.brand{font-weight:900;font-size:20px}.nav{display:flex;gap:6px}.btn{border:0;border-radius:11px;padding:12px 14px;font-weight:800;cursor:pointer}.light{background:#e8eef5;color:#132641}.primary{background:#0965c2;color:#fff}.green{background:#249b53;color:#fff}.red{background:#e95752;color:#fff}.wide{width:100%}
@@ -172,7 +172,7 @@ body.home-mode footer{background:#eef3f8}
 
 </head>
 <body>
-<header><div class="head"><div class="brand">🏐 Stats Castellar <span style="font-size:12px;opacity:.72;font-weight:700;white-space:nowrap">v1.5.12</span></div><div class="nav"><button class="btn light" onclick="show('home')">Inici</button><button class="btn light" onclick="show('roster')">Plantilla</button></div></div></header>
+<header><div class="head"><div class="brand">🏐 Stats Castellar <span style="font-size:12px;opacity:.72;font-weight:700;white-space:nowrap">v1.5.13</span></div><div class="nav"><button class="btn light" onclick="show('home')">Inici</button><button class="btn light" onclick="show('roster')">Plantilla</button></div></div></header>
 <main>
 <section id="home">
  <div class="homeHero">
@@ -185,7 +185,7 @@ body.home-mode footer{background:#eef3f8}
    <button class="btn wide" onclick="showSettings()" style="background:transparent!important;background-color:transparent!important;color:#132a46!important;border:1px solid rgba(19,42,70,.22)!important;box-shadow:none!important">⚙️ Configuració</button>
   </div>
   <div class="homeStatus" id="homeStatus"></div>
-  <div class="muted" style="margin-top:18px">v1.5.12</div>
+  <div class="muted" style="margin-top:18px">v1.5.13</div>
  </div>
 </section>
 <section id="recover" class="hidden"><div class="card"><div class="sectionTop"><button class="btn light" onclick="show('home')">← Enrere</button><h2>Recuperar partit</h2><button class="btn light" onclick="show('home')">⌂ Inici</button></div><div id="recoverContent"></div></div></section>
@@ -247,7 +247,7 @@ body.home-mode footer{background:#eef3f8}
  <p class="muted">El PDF reprodueix «Full de partit» i «Percentatges». ODS i Excel conserven també les dues fulles.</p></div>
 </section>
 <section id="pdfPreview" class="hidden">
- <div class="card pdfnav"><div class="row"><button class="btn light" onclick="show('finished')">← Enrere</button><button class="btn light" onclick="show('home')">⌂ Inici</button><button class="btn green" style="margin-left:auto" onclick="printPDFPreview()">📄 Compartir / Desar PDF</button></div></div>
+ <div class="card pdfnav"><div class="row"><button class="btn light" onclick="show('finished')">← Enrere</button><button class="btn light" onclick="show('home')">⌂ Inici</button><button class="btn green" style="margin-left:auto" onclick="printPDFPreview()">📄 Desar PDF</button></div></div>
  <div id="pdfContent"></div>
 </section>
 </main>
@@ -733,41 +733,79 @@ function downloadBlob(blob,name){let a=document.createElement("a");a.href=URL.cr
 function fileDateDMY(s){if(!s)return "";let p=String(s).split("-");return p.length===3?`${p[2]}-${p[1]}-${p[0]}`:s}
 function exportBaseName(){return `Stats_Castellar_${match.rival.replace(/[^a-z0-9à-ÿ]+/gi,"_")}_${fileDateDMY(match.date)}`}
 function downloadODS(){try{downloadBlob(buildODSBlob(),exportBaseName()+".ods")}catch(err){alert("No s'ha pogut crear l'ODS: "+err.message)}}
+
 function xlsxCol(n){let s="";while(n){n--;s=String.fromCharCode(65+n%26)+s;n=Math.floor(n/26)}return s}
-function xlsxSet(doc,row,col,val){
- const ns="http://schemas.openxmlformats.org/spreadsheetml/2006/main",ref=xlsxCol(col)+row;
- let sd=doc.getElementsByTagNameNS(ns,"sheetData")[0],r=[...sd.getElementsByTagNameNS(ns,"row")].find(x=>Number(x.getAttribute("r"))===row);
- if(!r){r=doc.createElementNS(ns,"row");r.setAttribute("r",row);sd.appendChild(r)}
- let c=[...r.getElementsByTagNameNS(ns,"c")].find(x=>x.getAttribute("r")===ref);
- if(!c){c=doc.createElementNS(ns,"c");c.setAttribute("r",ref);r.appendChild(c)}
- while(c.firstChild)c.removeChild(c.firstChild);c.removeAttribute("t");
- if(typeof val==="number"){
-   let v=doc.createElementNS(ns,"v");v.textContent=String(val);c.appendChild(v);
+function xmlEsc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&apos;"}[c]))}
+function patchXlsxCell(xml,row,col,val){
+ const ref=xlsxCol(col)+row;
+ const re=new RegExp(`<c\\b([^>]*\\br="${ref}"[^>]*)>[\\s\\S]*?<\\/c>`);
+ const attrs=m=>{
+   let a=m||"";
+   a=a.replace(/\s+t="[^"]*"/g,"");
+   return a;
+ };
+ let old=xml.match(re);
+ let baseAttrs=old?attrs(old[1]):` r="${ref}"`;
+ let cell;
+ if(typeof val==="number" && Number.isFinite(val)){
+   cell=`<c${baseAttrs}><v>${val}</v></c>`;
  }else{
-   c.setAttribute("t","inlineStr");let is=doc.createElementNS(ns,"is"),t=doc.createElementNS(ns,"t");t.textContent=String(val??"");is.appendChild(t);c.appendChild(is);
+   cell=`<c${baseAttrs} t="inlineStr"><is><t xml:space="preserve">${xmlEsc(val)}</t></is></c>`;
  }
+ if(old)return xml.replace(re,cell);
+
+ // Si la cel·la no existeix, l'afegim dins la fila.
+ const rr=new RegExp(`(<row\\b[^>]*\\br="${row}"[^>]*>)([\\s\\S]*?)(<\\/row>)`);
+ if(rr.test(xml))return xml.replace(rr,(m,a,b,c)=>a+b+cell+c);
+ return xml;
 }
 function buildXLSXBlob(){
- const dec=new TextDecoder(),enc=new TextEncoder(),files={};for(const [n,b] of Object.entries(XLSX_MASTER_TEMPLATE))files[n]=b64bytes(b);
- const parse=n=>new DOMParser().parseFromString(dec.decode(files[n]),"application/xml");
- let s1=parse("xl/worksheets/sheet1.xml"),s2=parse("xl/worksheets/sheet2.xml");
- // La plantilla original tenia validacions a les cel·les de participació.
- // No les volem a l'Excel exportat: només percentatges plans.
- for(const dv of [...s1.getElementsByTagNameNS("http://schemas.openxmlformats.org/spreadsheetml/2006/main","dataValidations")])dv.remove();
- xlsxSet(s1,5,3,"F.S. Castellar Volei");xlsxSet(s1,5,10,match.rival);xlsxSet(s1,5,17,formatDateDMY(match.date));xlsxSet(s1,5,21,match.venue==="away"?"Camp rival":"Casa");
- let scores=[...(match.setScores||[]),{set:match.set,home:match.home,away:match.away}],hw=scores.filter(x=>x.home>x.away).length,aw=scores.filter(x=>x.away>x.home).length;
- xlsxSet(s1,6,3,match.venue==="away"?`${aw}-${hw}`:`${hw}-${aw}`);
- let all=[...match.court,...match.bench],seen=new Set();all=all.filter(p=>!seen.has(p.id)&&seen.add(p.id)).sort((a,b)=>(Number(a.num)||999)-(Number(b.num)||999)||String(a.n).localeCompare(String(b.n),"ca"));
- const stats=match.events.filter(e=>e.type==="stat"),maps={S:{0:10,1:11,2:12},R:{0:13,1:14,2:15,3:16},C:{0:17,1:18,2:19,3:20},A:{0:21,1:22,2:23,3:24},B:{1:25,2:26,3:27}};
- for(let r=10;r<=23;r++){for(let c=2;c<=9;c++)xlsxSet(s1,r,c,"");for(let c=10;c<=27;c++)xlsxSet(s1,r,c,0)}
- for(let r=7;r<=20;r++){xlsxSet(s2,r,2,"");xlsxSet(s2,r,3,"");xlsxSet(s2,r,4,0)}
- all.slice(0,14).forEach((p,i)=>{let r=10+i,pr=7+i,eq=Math.round(equivalentSetsForPlayer(p)*100)/100;xlsxSet(s1,r,2,Number(p.num)||p.num);xlsxSet(s1,r,3,p.n);for(let set=1;set<=5;set++){
- let part=setParticipation(p,set)||"";
- xlsxSet(s1,r,3+set,part)
-}xlsxSet(s1,r,9,eq);for(const [a,vals] of Object.entries(maps))for(const [v,c] of Object.entries(vals))xlsxSet(s1,r,c,stats.filter(x=>x.player===p.n&&String(x.num)===String(p.num)&&x.action===a&&String(x.value)===String(v)).length);xlsxSet(s2,pr,2,Number(p.num)||p.num);xlsxSet(s2,pr,3,p.n);xlsxSet(s2,pr,4,eq)});
- xlsxSet(s2,24,4,scores.length);
- files["xl/worksheets/sheet1.xml"]=enc.encode(new XMLSerializer().serializeToString(s1));files["xl/worksheets/sheet2.xml"]=enc.encode(new XMLSerializer().serializeToString(s2));
- return new Blob([zipStore(files)],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+ const dec=new TextDecoder(),enc=new TextEncoder(),files={};
+ for(const [n,b] of Object.entries(XLSX_MASTER_TEMPLATE))files[n]=b64bytes(b);
+
+ let s1=dec.decode(files["xl/worksheets/sheet1.xml"]);
+ let s2=dec.decode(files["xl/worksheets/sheet2.xml"]);
+
+ // Eliminem únicament els desplegables; la resta de la plantilla queda byte-a-byte intacta.
+ s1=s1.replace(/<dataValidations\b[\s\S]*?<\/dataValidations>/g,"");
+
+ const set1=(r,c,v)=>{s1=patchXlsxCell(s1,r,c,v)};
+ const set2=(r,c,v)=>{s2=patchXlsxCell(s2,r,c,v)};
+
+ set1(5,3,"F.S. Castellar Volei"); set1(5,10,match.rival);
+ set1(5,17,formatDateDMY(match.date)); set1(5,21,match.venue==="away"?"Camp rival":"Casa");
+
+ let scores=[...(match.setScores||[]),{set:match.set,home:match.home,away:match.away}],
+     hw=scores.filter(x=>x.home>x.away).length, aw=scores.filter(x=>x.away>x.home).length;
+ set1(6,3,match.venue==="away"?`${aw}-${hw}`:`${hw}-${aw}`);
+
+ let all=[...match.court,...match.bench],seen=new Set();
+ all=all.filter(p=>!seen.has(p.id)&&seen.add(p.id))
+        .sort((a,b)=>(Number(a.num)||999)-(Number(b.num)||999)||String(a.n).localeCompare(String(b.n),"ca"));
+ const stats=match.events.filter(e=>e.type==="stat"),
+ maps={S:{0:10,1:11,2:12},R:{0:13,1:14,2:15,3:16},C:{0:17,1:18,2:19,3:20},A:{0:21,1:22,2:23,3:24},B:{1:25,2:26,3:27}};
+
+ for(let r=10;r<=23;r++){for(let c=2;c<=9;c++)set1(r,c,"");for(let c=10;c<=27;c++)set1(r,c,0)}
+ for(let r=7;r<=20;r++){set2(r,2,"");set2(r,3,"");set2(r,4,0)}
+
+ all.slice(0,14).forEach((p,i)=>{
+   let r=10+i,pr=7+i,eq=Math.round(equivalentSetsForPlayer(p)*100)/100;
+   set1(r,2,Number(p.num)||p.num); set1(r,3,p.n);
+   for(let set=1;set<=5;set++) set1(r,3+set,setParticipation(p,set)||"");
+   set1(r,9,eq);
+   for(const [a,vals] of Object.entries(maps))
+     for(const [v,c] of Object.entries(vals))
+       set1(r,c,stats.filter(x=>x.player===p.n&&String(x.num)===String(p.num)&&x.action===a&&String(x.value)===String(v)).length);
+   set2(pr,2,Number(p.num)||p.num); set2(pr,3,p.n); set2(pr,4,eq);
+ });
+ set2(24,4,scores.length);
+
+ files["xl/worksheets/sheet1.xml"]=enc.encode(s1);
+ files["xl/worksheets/sheet2.xml"]=enc.encode(s2);
+
+ // zipStore ja retorna el paquet ZIP complet. No l'emboliquem dins d'un altre Blob.
+ const pkg=zipStore(files);
+ return pkg.slice(0,pkg.size,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 }
 function downloadXLSX(){try{downloadBlob(buildXLSXBlob(),exportBaseName()+".xlsx")}catch(err){alert("No s'ha pogut crear l'Excel: "+err.message);console.error(err)}}
 function reportRows(){
@@ -806,8 +844,98 @@ function sharePDF(){
   show("pdfPreview");
  }catch(err){alert("No s'ha pogut preparar el PDF: "+err.message);console.error(err)}
 }
+
+function pdfWin(s){
+ const map={"À":"\\300","Á":"\\301","È":"\\310","É":"\\311","Í":"\\315","Ò":"\\322","Ó":"\\323","Ú":"\\332",
+ "à":"\\340","á":"\\341","è":"\\350","é":"\\351","í":"\\355","ò":"\\362","ó":"\\363","ú":"\\372",
+ "Ç":"\\307","ç":"\\347","ï":"\\357","ü":"\\374","·":"\\267","’":"'","“":'"',"”":'"',"–":"-","—":"-"};
+ return String(s??"").replace(/[\\()]/g,m=>"\\"+m).replace(/[^\x20-\x7E]/g,ch=>map[ch]||"?");
+}
+function buildDirectPDF(){
+ const W=842,H=595, objs=[null], pages=[];
+ const add=o=>(objs.push(o),objs.length-1);
+ const font=add("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>");
+ const bold=add("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>");
+
+ const players=[...match.court,...match.bench].filter((p,i,a)=>a.findIndex(q=>q.id===p.id)===i)
+   .sort((a,b)=>(Number(a.num)||999)-(Number(b.num)||999));
+ const stats=match.events.filter(e=>e.type==="stat");
+ const scores=[...(match.setScores||[]),{set:match.set,home:match.home,away:match.away}],
+ hw=scores.filter(x=>x.home>x.away).length,aw=scores.filter(x=>x.away>x.home).length,
+ result=match.venue==="away"?`${aw}-${hw}`:`${hw}-${aw}`;
+ const defs=[["S","SERVEI",[0,1,2]],["R","RECEPCIÓ",[0,1,2,3]],["C","COL·LOCACIÓ",[0,1,2,3]],["A","ATAC",[0,1,2,3]],["B","BLOQUEIG",[1,2,3]]];
+ const count=(p,a,v)=>stats.filter(x=>x.player===p.n&&String(x.num)===String(p.num)&&x.action===a&&Number(x.value)===Number(v)).length;
+ const pct=(p,a,v)=>{let d=defs.find(x=>x[0]===a),t=d[2].reduce((n,z)=>n+count(p,a,z),0);return t?Math.round(count(p,a,v)*100/t)+"%":""};
+ const teamPct=(a,v)=>{let d=defs.find(x=>x[0]===a),t=players.reduce((n,p)=>n+d[2].reduce((q,z)=>q+count(p,a,z),0),0),n=players.reduce((q,p)=>q+count(p,a,v),0);return t?Math.round(n*100/t)+"%":""};
+
+ function page(title,percent){
+   let c=[];
+   const txt=(x,y,s,size=7,b=false)=>c.push(`BT /F${b?2:1} ${size} Tf ${x} ${H-y} Td (${pdfWin(s)}) Tj ET`);
+   const rect=(x,y,w,h,fill=null,stroke="0.55 0.62 0.68")=>{
+     if(fill)c.push(`${fill} rg ${x} ${H-y-h} ${w} ${h} re f`);
+     c.push(`${stroke} RG ${x} ${H-y-h} ${w} ${h} re S`);
+   };
+   txt(42,38,title,15,true); c.push(`0.14 0.34 0.51 RG 42 ${H-45} 410 3 re f`);
+   rect(42,53,758,28,"1 0.95 0.78","1 0.95 0.78");
+   txt(48,65,`Equip: F.S. Castellar Volei    Rival: ${match.rival}    Resultat: ${result}`,7,true);
+   txt(48,77,`Data: ${formatDateDMY(match.date)}    Lloc: ${match.venue==="away"?"Camp rival":"Casa"}`,7);
+
+   let x=42,y=92,rowH=20;
+   let widths=percent?[30,70,34,...Array(18).fill(34.65)]:[30,70,...Array(5).fill(27),38,...Array(18).fill(26.9)];
+   let headers=percent?["DORSAL","NOM","SETS",...defs.flatMap(d=>d[2].map(v=>String(v)))]
+                      :["DORSAL","NOM","S1","S2","S3","S4","S5","TOTAL",...defs.flatMap(d=>d[2].map(v=>String(v)))];
+   let xx=x;
+   headers.forEach((h,i)=>{rect(xx,y,widths[i],rowH,"0.84 0.91 0.95");txt(xx+2,y+13,h,5.2,true);xx+=widths[i]});
+   y+=rowH;
+
+   for(const p of players){
+     xx=x;
+     let vals=percent?[p.num,p.n,String(Math.round(equivalentSetsForPlayer(p)*100)/100).replace(".",","),
+       ...defs.flatMap(d=>d[2].map(v=>pct(p,d[0],v)))]
+       :[p.num,p.n,...[1,2,3,4,5].map(n=>setParticipation(p,n)||""),
+       String(Math.round(equivalentSetsForPlayer(p)*100)/100).replace(".",","),
+       ...defs.flatMap(d=>d[2].map(v=>count(p,d[0],v)))];
+     vals.forEach((v,i)=>{rect(xx,y,widths[i],rowH,null);txt(xx+2,y+13,String(v),i===1?6.2:5.6,i===1);xx+=widths[i]});
+     y+=rowH;
+   }
+   if(percent){
+     y+=10; rect(x,y,758,24,"0.86 0.93 0.83");
+     txt(x+5,y+15,"TOTAL EQUIP",6.2,true);
+     let summary=defs.flatMap(d=>d[2].map(v=>teamPct(d[0],v))).join("   ");
+     txt(x+95,y+15,`Sets: ${scores.length}     ${summary}`,5.3);
+     y+=34; rect(x,y,758,48,"0.91 0.95 0.97");
+     txt(x+5,y+13,"LECTURA DEL FULL",7,true);
+     txt(x+5,y+28,"Els percentatges mostren el pes de cada valor sobre el total d'accions de cada fonament.",6);
+     txt(x+5,y+40,"Sets* és el nombre real de sets disputats al partit.",6);
+   }else{
+     y+=10; rect(x,y,758,48,"0.91 0.95 0.97");
+     txt(x+5,y+13,"COM ANOTAR LES ACCIONS",7,true);
+     txt(x+5,y+28,"Participació per set: 100% = set complet; percentatge inferior = participació parcial;",6);
+     txt(x+5,y+40,"cel·la buida = no ha jugat el set.",6);
+   }
+   return c.join("\n");
+ }
+ const streams=[page("FULL D'ESTADÍSTIQUES DE PARTIT",false),page("PERCENTATGES PER JUGADORA",true)];
+ const pageIds=[];
+ for(const stream of streams){
+   const sid=add(`<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`);
+   pageIds.push(add(`<< /Type /Page /Parent PARENT 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /Font << /F1 ${font} 0 R /F2 ${bold} 0 R >> >> /Contents ${sid} 0 R >>`));
+ }
+ const pagesId=add(`<< /Type /Pages /Kids [${pageIds.map(i=>i+" 0 R").join(" ")}] /Count ${pageIds.length} >>`);
+ pageIds.forEach(i=>objs[i]=objs[i].replace("PARENT",String(pagesId)));
+ const catalog=add(`<< /Type /Catalog /Pages ${pagesId} 0 R >>`);
+
+ let out="%PDF-1.4\n%\xE2\xE3\xCF\xD3\n",offs=[0];
+ for(let i=1;i<objs.length;i++){offs[i]=out.length;out+=`${i} 0 obj\n${objs[i]}\nendobj\n`}
+ const xref=out.length; out+=`xref\n0 ${objs.length}\n0000000000 65535 f \n`;
+ for(let i=1;i<objs.length;i++)out+=String(offs[i]).padStart(10,"0")+" 00000 n \n";
+ out+=`trailer\n<< /Size ${objs.length} /Root ${catalog} 0 R >>\nstartxref\n${xref}\n%%EOF`;
+ const bytes=new Uint8Array(out.length);for(let i=0;i<out.length;i++)bytes[i]=out.charCodeAt(i)&255;
+ return new Blob([bytes],{type:"application/pdf"});
+}
 function printPDFPreview(){
- window.print();
+ try{downloadBlob(buildDirectPDF(),exportBaseName()+".pdf")}
+ catch(err){alert("No s'ha pogut crear el PDF: "+err.message);console.error(err)}
 }
 function csvCell(v){return '"'+String(v??"").replaceAll('"','""')+'"'}
 function downloadCSV(){let rows=[["Data","Rival","Set","Dorsal","Jugadora","Tipus","Equip origen","Acció","Valor"]];for(let e of match.events.filter(x=>x.type==="stat"))rows.push([e.date,e.rival,e.set,e.num,e.player,e.guest?"Puntual":"Habitual",e.team,e.actionName,e.value]);let csv="\uFEFF"+rows.map(r=>r.map(csvCell).join(";")).join("\n");let blob=new Blob([csv],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=exportBaseName()+".csv";a.click();URL.revokeObjectURL(a.href)}
