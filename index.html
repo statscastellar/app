@@ -2,7 +2,7 @@
 <html lang="ca">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#132641"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Stats Castellar"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><title>Stats Castellar · v1.4.8</title>
+<meta name="theme-color" content="#132641"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Stats Castellar"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>Stats Castellar · v1.4.11</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#eef3f8;color:#132641}
 header{background:#132641;color:#fff;padding:11px 12px;position:sticky;top:0;z-index:10}.head{max-width:900px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:8px}.brand{font-weight:900;font-size:20px}.nav{display:flex;gap:6px}.btn{border:0;border-radius:11px;padding:12px 14px;font-weight:800;cursor:pointer}.light{background:#e8eef5;color:#132641}.primary{background:#0965c2;color:#fff}.green{background:#249b53;color:#fff}.red{background:#e95752;color:#fff}.wide{width:100%}
@@ -22,7 +22,7 @@ main{max-width:900px;margin:auto;padding:12px}.card{background:#fff;border-radiu
 @media(max-width:450px){.brand{font-size:17px}.nav .btn{padding:8px 9px}.tools{grid-template-columns:1fr 1fr}}
 </style></head>
 <body>
-<header><div class="head"><div class="brand">🏐 Stats Castellar</div><div class="nav"><button class="btn light" onclick="show('home')">Inici</button><button class="btn light" onclick="show('roster')">Plantilla</button></div></div></header>
+<header><div class="head"><div class="brand">🏐 Stats Castellar <span style="font-size:12px;opacity:.72;font-weight:700;white-space:nowrap">v1.4.11</span></div><div class="nav"><button class="btn light" onclick="show('home')">Inici</button><button class="btn light" onclick="show('roster')">Plantilla</button></div></div></header>
 <main>
 <section id="home">
  <div class="card"><h2>Partits</h2><p>Registra el partit ràpidament i conserva totes les accions.</p><div id="resumeBox"></div><button class="btn primary wide" onclick="startSetup()">＋ Nou partit</button></div>
@@ -120,6 +120,7 @@ function historySort(a,b){
 function historyId(m){return [m.date||"",String(m.rival||"").toLowerCase(),m.venue||""].join("|")}
 function getDeletedHistory(){try{return JSON.parse(localStorage.getItem("sc_deleted_preloaded_history_v1")||"[]")}catch(e){return []}}
 function seedPreloadedHistory(){
+ if(localStorage.getItem("sc_seed_build")!=="1.4.11"){try{localStorage.removeItem("sc_deleted_preloaded_history_v1");localStorage.setItem("sc_seed_build","1.4.11")}catch(e){}}
  let h=[];try{h=JSON.parse(localStorage.getItem("sc_match_history_v1")||"[]")}catch(e){}
  const deleted=getDeletedHistory();
  for(const m of PRELOADED_HISTORY){
