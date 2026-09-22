@@ -2,7 +2,7 @@
 <html lang="ca">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#132641"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Stats Castellar"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>Stats Castellar · v1.5.11</title>
+<meta name="theme-color" content="#132641"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Stats Castellar"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>Stats Castellar · v1.5.12</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#eef3f8;color:#132641}
 header{background:#132641;color:#fff;padding:11px 12px;position:sticky;top:0;z-index:10}.head{max-width:900px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:8px}.brand{font-weight:900;font-size:20px}.nav{display:flex;gap:6px}.btn{border:0;border-radius:11px;padding:12px 14px;font-weight:800;cursor:pointer}.light{background:#e8eef5;color:#132641}.primary{background:#0965c2;color:#fff}.green{background:#249b53;color:#fff}.red{background:#e95752;color:#fff}.wide{width:100%}
@@ -149,9 +149,30 @@ body.home-mode footer{background:#eef3f8}
 }
 </style>
 
+
+<style id="pdf-two-pages-v1512">
+@media print{
+  @page{size:landscape;margin:0!important}
+  html,body{margin:0!important;padding:0!important;background:#fff!important}
+  body.printingPdf #pdfContent{margin:0!important;padding:0!important}
+  body.printingPdf #pdfContent .pdfsheet{
+    box-sizing:border-box!important;
+    width:100vw!important;
+    min-height:100vh!important;
+    margin:0!important;
+    padding:8mm!important;
+    page-break-inside:avoid!important;
+  }
+  body.printingPdf #pdfContent .pdfpage{
+    break-after:page!important;
+    page-break-after:always!important;
+  }
+}
+</style>
+
 </head>
 <body>
-<header><div class="head"><div class="brand">🏐 Stats Castellar <span style="font-size:12px;opacity:.72;font-weight:700;white-space:nowrap">v1.5.11</span></div><div class="nav"><button class="btn light" onclick="show('home')">Inici</button><button class="btn light" onclick="show('roster')">Plantilla</button></div></div></header>
+<header><div class="head"><div class="brand">🏐 Stats Castellar <span style="font-size:12px;opacity:.72;font-weight:700;white-space:nowrap">v1.5.12</span></div><div class="nav"><button class="btn light" onclick="show('home')">Inici</button><button class="btn light" onclick="show('roster')">Plantilla</button></div></div></header>
 <main>
 <section id="home">
  <div class="homeHero">
@@ -164,7 +185,7 @@ body.home-mode footer{background:#eef3f8}
    <button class="btn wide" onclick="showSettings()" style="background:transparent!important;background-color:transparent!important;color:#132a46!important;border:1px solid rgba(19,42,70,.22)!important;box-shadow:none!important">⚙️ Configuració</button>
   </div>
   <div class="homeStatus" id="homeStatus"></div>
-  <div class="muted" style="margin-top:18px">v1.5.11</div>
+  <div class="muted" style="margin-top:18px">v1.5.12</div>
  </div>
 </section>
 <section id="recover" class="hidden"><div class="card"><div class="sectionTop"><button class="btn light" onclick="show('home')">← Enrere</button><h2>Recuperar partit</h2><button class="btn light" onclick="show('home')">⌂ Inici</button></div><div id="recoverContent"></div></div></section>
@@ -223,7 +244,7 @@ body.home-mode footer{background:#eef3f8}
  <div class="card"><h3>Compartir i exportar</h3>
  <button class="btn green wide" onclick="sharePDF()">📄 Compartir / desar PDF</button>
  <div class="row"><button class="btn primary" style="flex:1" onclick="downloadODS()">ODS</button><button class="btn primary" style="flex:1" onclick="downloadXLSX()">Excel (.xlsx)</button></div>
- <p class="muted">El PDF reprodueix el «Full de partit». ODS i Excel conserven les dues fulles.</p></div>
+ <p class="muted">El PDF reprodueix «Full de partit» i «Percentatges». ODS i Excel conserven també les dues fulles.</p></div>
 </section>
 <section id="pdfPreview" class="hidden">
  <div class="card pdfnav"><div class="row"><button class="btn light" onclick="show('finished')">← Enrere</button><button class="btn light" onclick="show('home')">⌂ Inici</button><button class="btn green" style="margin-left:auto" onclick="printPDFPreview()">📄 Compartir / Desar PDF</button></div></div>
@@ -742,8 +763,7 @@ function buildXLSXBlob(){
  for(let r=7;r<=20;r++){xlsxSet(s2,r,2,"");xlsxSet(s2,r,3,"");xlsxSet(s2,r,4,0)}
  all.slice(0,14).forEach((p,i)=>{let r=10+i,pr=7+i,eq=Math.round(equivalentSetsForPlayer(p)*100)/100;xlsxSet(s1,r,2,Number(p.num)||p.num);xlsxSet(s1,r,3,p.n);for(let set=1;set<=5;set++){
  let part=setParticipation(p,set)||"";
- let pv=part?Number(String(part).replace("%",""))/100:"";
- xlsxSet(s1,r,3+set,pv)
+ xlsxSet(s1,r,3+set,part)
 }xlsxSet(s1,r,9,eq);for(const [a,vals] of Object.entries(maps))for(const [v,c] of Object.entries(vals))xlsxSet(s1,r,c,stats.filter(x=>x.player===p.n&&String(x.num)===String(p.num)&&x.action===a&&String(x.value)===String(v)).length);xlsxSet(s2,pr,2,Number(p.num)||p.num);xlsxSet(s2,pr,3,p.n);xlsxSet(s2,pr,4,eq)});
  xlsxSet(s2,24,4,scores.length);
  files["xl/worksheets/sheet1.xml"]=enc.encode(new XMLSerializer().serializeToString(s1));files["xl/worksheets/sheet2.xml"]=enc.encode(new XMLSerializer().serializeToString(s2));
@@ -782,7 +802,7 @@ function sharePDF(){
   const page2=`<h1>PERCENTATGES PER JUGADORA</h1>${meta}<table class="stats pct"><thead><tr><th rowspan="2">DORSAL</th><th rowspan="2">NOM</th><th rowspan="2">SETS</th>${groupHeads}</tr><tr>${valueHeads}</tr></thead><tbody>${rows2}</tbody></table><table class="team"><tr><th>EQUIP</th><th>TOTAL</th><th>SETS*</th>${groupHeads}</tr><tr><td></td><td><b>TOTAL EQUIP</b></td><td>${scores.length}</td>${totals}</tr></table><div class="legend"><b>LECTURA DEL FULL</b><p>Els percentatges mostren quin pes té cada valor sobre el total d’accions de cada fonament. La mitjana va de 0 a 2 en servei, d’1 a 3 en bloqueig i de 0 a 3 en recepció, col·locació i atac. “Sets*” és el nombre real de sets disputats al partit.</p></div>`;
   pdfContent.innerHTML=`<style>
   #pdfContent{background:#eef3f7;padding:8px}.pdfsheet{background:#fff;width:1120px;max-width:100%;margin:12px auto;padding:14px;box-shadow:0 2px 12px #0002}.pdfpage{page-break-after:always}.pdfpage:last-child{page-break-after:auto}#pdfContent h1{font-size:18px;color:#245781;border-bottom:4px solid #245781;padding-bottom:7px;margin:0 0 8px}#pdfContent .meta{font-size:9px;background:#fff2c9;padding:5px;margin-bottom:8px}#pdfContent table{border-collapse:collapse;width:100%;table-layout:fixed}#pdfContent .stats{font-size:6.8px}#pdfContent .stats th,#pdfContent .stats td{border:1px solid #9aaaba;padding:2.6px 1px;text-align:center;height:19px}#pdfContent .stats th{background:#d7e7f3}#pdfContent .stats .name{text-align:left;font-weight:700;font-size:7.5px}#pdfContent .red{background:#ff6666!important}#pdfContent .yellow{background:#ffd86b!important}#pdfContent .blue{background:#69a5d8!important}#pdfContent .green{background:#70b44b!important}#pdfContent .data{font-weight:600;color:#17243b}#pdfContent .legend{margin-top:10px;background:#e8f0f6;font-size:8px;min-height:55px}#pdfContent .legend>b{display:block;background:#245781;color:#fff;padding:3px 6px}#pdfContent .legend p{padding:6px;margin:0;font-style:italic}#pdfContent .team{font-size:7px;margin-top:10px;width:100%}#pdfContent .team th,#pdfContent .team td{border:1px solid #fff;padding:3px;text-align:center}#pdfContent .team th{background:#245781;color:#fff}#pdfContent .team td{background:#dcebd6}#pdfContent .pct td{font-size:7px}
-  </style><section class="pdfsheet">${page1}</section>`;
+  </style><section class="pdfsheet pdfpage">${page1}</section><section class="pdfsheet">${page2}</section>`;
   show("pdfPreview");
  }catch(err){alert("No s'ha pogut preparar el PDF: "+err.message);console.error(err)}
 }
