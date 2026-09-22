@@ -2,7 +2,7 @@
 <html lang="ca">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#132641"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Stats Castellar"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>Stats Castellar · v1.5.9</title>
+<meta name="theme-color" content="#132641"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Stats Castellar"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>Stats Castellar · v1.5.10</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#eef3f8;color:#132641}
 header{background:#132641;color:#fff;padding:11px 12px;position:sticky;top:0;z-index:10}.head{max-width:900px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:8px}.brand{font-weight:900;font-size:20px}.nav{display:flex;gap:6px}.btn{border:0;border-radius:11px;padding:12px 14px;font-weight:800;cursor:pointer}.light{background:#e8eef5;color:#132641}.primary{background:#0965c2;color:#fff}.green{background:#249b53;color:#fff}.red{background:#e95752;color:#fff}.wide{width:100%}
@@ -117,9 +117,41 @@ body.home-mode footer{background:#eef3f8}
 }
 </style>
 
-<style id="home-header-final-fix">body.home-mode > header{display:none!important}body.home-mode main{padding-top:0!important}</style></head>
+<style id="home-header-final-fix">body.home-mode > header{display:none!important}body.home-mode main{padding-top:0!important}</style>
+<style id="pdf-print-fix-v1510">
+@media print{
+  body.printingPdf header,
+  body.printingPdf footer,
+  body.printingPdf #pdfPreview > .pdfnav,
+  body.printingPdf main > section:not(#pdfPreview){
+    display:none !important;
+  }
+  body.printingPdf main,
+  body.printingPdf #pdfPreview,
+  body.printingPdf #pdfContent,
+  body.printingPdf #pdfContent .pdfsheet{
+    display:block !important;
+    visibility:visible !important;
+  }
+  body.printingPdf #pdfPreview{
+    position:static !important;
+    margin:0 !important;
+    padding:0 !important;
+  }
+  body.printingPdf #pdfContent .pdfsheet{
+    width:100% !important;
+    max-width:none !important;
+    margin:0 !important;
+    padding:0 !important;
+    box-shadow:none !important;
+  }
+  @page{size:landscape;margin:8mm}
+}
+</style>
+
+</head>
 <body>
-<header><div class="head"><div class="brand">🏐 Stats Castellar <span style="font-size:12px;opacity:.72;font-weight:700;white-space:nowrap">v1.5.9</span></div><div class="nav"><button class="btn light" onclick="show('home')">Inici</button><button class="btn light" onclick="show('roster')">Plantilla</button></div></div></header>
+<header><div class="head"><div class="brand">🏐 Stats Castellar <span style="font-size:12px;opacity:.72;font-weight:700;white-space:nowrap">v1.5.10</span></div><div class="nav"><button class="btn light" onclick="show('home')">Inici</button><button class="btn light" onclick="show('roster')">Plantilla</button></div></div></header>
 <main>
 <section id="home">
  <div class="homeHero">
@@ -132,7 +164,7 @@ body.home-mode footer{background:#eef3f8}
    <button class="btn wide" onclick="showSettings()" style="background:transparent!important;background-color:transparent!important;color:#132a46!important;border:1px solid rgba(19,42,70,.22)!important;box-shadow:none!important">⚙️ Configuració</button>
   </div>
   <div class="homeStatus" id="homeStatus"></div>
-  <div class="muted" style="margin-top:18px">v1.5.9</div>
+  <div class="muted" style="margin-top:18px">v1.5.10</div>
  </div>
 </section>
 <section id="recover" class="hidden"><div class="card"><div class="sectionTop"><button class="btn light" onclick="show('home')">← Enrere</button><h2>Recuperar partit</h2><button class="btn light" onclick="show('home')">⌂ Inici</button></div><div id="recoverContent"></div></div></section>
@@ -689,6 +721,9 @@ function buildXLSXBlob(){
  const dec=new TextDecoder(),enc=new TextEncoder(),files={};for(const [n,b] of Object.entries(XLSX_MASTER_TEMPLATE))files[n]=b64bytes(b);
  const parse=n=>new DOMParser().parseFromString(dec.decode(files[n]),"application/xml");
  let s1=parse("xl/worksheets/sheet1.xml"),s2=parse("xl/worksheets/sheet2.xml");
+ // La plantilla original tenia validacions a les cel·les de participació.
+ // No les volem a l'Excel exportat: només percentatges plans.
+ for(const dv of [...s1.getElementsByTagNameNS("http://schemas.openxmlformats.org/spreadsheetml/2006/main","dataValidations")])dv.remove();
  xlsxSet(s1,5,3,"F.S. Castellar Volei");xlsxSet(s1,5,10,match.rival);xlsxSet(s1,5,17,formatDateDMY(match.date));xlsxSet(s1,5,21,match.venue==="away"?"Camp rival":"Casa");
  let scores=[...(match.setScores||[]),{set:match.set,home:match.home,away:match.away}],hw=scores.filter(x=>x.home>x.away).length,aw=scores.filter(x=>x.away>x.home).length;
  xlsxSet(s1,6,3,match.venue==="away"?`${aw}-${hw}`:`${hw}-${aw}`);
@@ -696,7 +731,11 @@ function buildXLSXBlob(){
  const stats=match.events.filter(e=>e.type==="stat"),maps={S:{0:10,1:11,2:12},R:{0:13,1:14,2:15,3:16},C:{0:17,1:18,2:19,3:20},A:{0:21,1:22,2:23,3:24},B:{1:25,2:26,3:27}};
  for(let r=10;r<=23;r++){for(let c=2;c<=9;c++)xlsxSet(s1,r,c,"");for(let c=10;c<=27;c++)xlsxSet(s1,r,c,0)}
  for(let r=7;r<=20;r++){xlsxSet(s2,r,2,"");xlsxSet(s2,r,3,"");xlsxSet(s2,r,4,0)}
- all.slice(0,14).forEach((p,i)=>{let r=10+i,pr=7+i,eq=Math.round(equivalentSetsForPlayer(p)*100)/100;xlsxSet(s1,r,2,Number(p.num)||p.num);xlsxSet(s1,r,3,p.n);for(let set=1;set<=5;set++){xlsxSet(s1,r,3+set,setParticipation(p,set)||"")}xlsxSet(s1,r,9,eq);for(const [a,vals] of Object.entries(maps))for(const [v,c] of Object.entries(vals))xlsxSet(s1,r,c,stats.filter(x=>x.player===p.n&&String(x.num)===String(p.num)&&x.action===a&&String(x.value)===String(v)).length);xlsxSet(s2,pr,2,Number(p.num)||p.num);xlsxSet(s2,pr,3,p.n);xlsxSet(s2,pr,4,eq)});
+ all.slice(0,14).forEach((p,i)=>{let r=10+i,pr=7+i,eq=Math.round(equivalentSetsForPlayer(p)*100)/100;xlsxSet(s1,r,2,Number(p.num)||p.num);xlsxSet(s1,r,3,p.n);for(let set=1;set<=5;set++){
+ let part=setParticipation(p,set)||"";
+ let pv=part?Number(String(part).replace("%",""))/100:"";
+ xlsxSet(s1,r,3+set,pv)
+}xlsxSet(s1,r,9,eq);for(const [a,vals] of Object.entries(maps))for(const [v,c] of Object.entries(vals))xlsxSet(s1,r,c,stats.filter(x=>x.player===p.n&&String(x.num)===String(p.num)&&x.action===a&&String(x.value)===String(v)).length);xlsxSet(s2,pr,2,Number(p.num)||p.num);xlsxSet(s2,pr,3,p.n);xlsxSet(s2,pr,4,eq)});
  xlsxSet(s2,24,4,scores.length);
  files["xl/worksheets/sheet1.xml"]=enc.encode(new XMLSerializer().serializeToString(s1));files["xl/worksheets/sheet2.xml"]=enc.encode(new XMLSerializer().serializeToString(s2));
  return new Blob([zipStore(files)],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
@@ -738,7 +777,12 @@ function sharePDF(){
   show("pdfPreview");
  }catch(err){alert("No s'ha pogut preparar el PDF: "+err.message);console.error(err)}
 }
-function printPDFPreview(){document.body.classList.add("printingPdf");window.print();setTimeout(()=>document.body.classList.remove("printingPdf"),800)}
+function printPDFPreview(){
+ document.body.classList.add("printingPdf");
+ const cleanup=()=>{document.body.classList.remove("printingPdf");window.removeEventListener("afterprint",cleanup)};
+ window.addEventListener("afterprint",cleanup);
+ requestAnimationFrame(()=>requestAnimationFrame(()=>window.print()));
+}
 function csvCell(v){return '"'+String(v??"").replaceAll('"','""')+'"'}
 function downloadCSV(){let rows=[["Data","Rival","Set","Dorsal","Jugadora","Tipus","Equip origen","Acció","Valor"]];for(let e of match.events.filter(x=>x.type==="stat"))rows.push([e.date,e.rival,e.set,e.num,e.player,e.guest?"Puntual":"Habitual",e.team,e.actionName,e.value]);let csv="\uFEFF"+rows.map(r=>r.map(csvCell).join(";")).join("\n");let blob=new Blob([csv],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=exportBaseName()+".csv";a.click();URL.revokeObjectURL(a.href)}
 seedPreloadedHistory();
