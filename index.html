@@ -2,7 +2,7 @@
 <html lang="ca">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#132641"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Stats Castellar"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>Stats Castellar · v1.5.16</title>
+<meta name="theme-color" content="#132641"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Stats Castellar"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>Stats Castellar · v1.6.0</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#eef3f8;color:#132641}
 header{background:#132641;color:#fff;padding:11px 12px;position:sticky;top:0;z-index:10}.head{max-width:900px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:8px}.brand{font-weight:900;font-size:20px}.nav{display:flex;gap:6px}.btn{border:0;border-radius:11px;padding:12px 14px;font-weight:800;cursor:pointer}.light{background:#e8eef5;color:#132641}.primary{background:#0965c2;color:#fff}.green{background:#249b53;color:#fff}.red{background:#e95752;color:#fff}.wide{width:100%}
@@ -170,9 +170,41 @@ body.home-mode footer{background:#eef3f8}
 }
 </style>
 
+
+<style id="v160-final-polish">
+/* Full d'estadístiques: dorsal i nom sempre visibles mentre es desplaça horitzontalment */
+.stats-sticky-table-wrap{overflow-x:auto!important;-webkit-overflow-scrolling:touch;position:relative}
+.stats-sticky-table th:nth-child(1),.stats-sticky-table td:nth-child(1){
+  position:sticky;left:0;z-index:4;background:#fff;
+}
+.stats-sticky-table th:nth-child(2),.stats-sticky-table td:nth-child(2){
+  position:sticky;left:44px;z-index:4;background:#fff;
+  box-shadow:2px 0 3px rgba(0,0,0,.12);
+}
+.stats-sticky-table thead th:nth-child(1),.stats-sticky-table thead th:nth-child(2){
+  z-index:6;background:#dbe8ef;
+}
+.stats-sticky-table th:nth-child(1),.stats-sticky-table td:nth-child(1){min-width:44px;width:44px}
+.stats-sticky-table th:nth-child(2),.stats-sticky-table td:nth-child(2){min-width:92px;width:92px}
+
+/* Portada: mateix disseny, només més aire i millor repartiment vertical */
+#home:not(.hidden){
+  min-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  box-sizing:border-box;
+  padding-top:max(22px,env(safe-area-inset-top))!important;
+  padding-bottom:max(24px,env(safe-area-inset-bottom))!important;
+}
+#home .card,#home .home-card,#home>div{
+  box-sizing:border-box;
+}
+#home h1{margin-bottom:8px!important}
+#home h2,#home .subtitle{margin-top:0!important;margin-bottom:18px!important}
+#home button{margin-top:7px;margin-bottom:7px}
+</style>
+
 </head>
 <body>
-<header><div class="head"><div class="brand">🏐 Stats Castellar <span style="font-size:12px;opacity:.72;font-weight:700;white-space:nowrap">v1.5.16</span></div><div class="nav"><button class="btn light" onclick="show('home')">Inici</button><button class="btn light" onclick="show('roster')">Plantilla</button></div></div></header>
+<header><div class="head"><div class="brand">🏐 Stats Castellar <span style="font-size:12px;opacity:.72;font-weight:700;white-space:nowrap">v1.6.0</span></div><div class="nav"><button class="btn light" onclick="show('home')">Inici</button><button class="btn light" onclick="show('roster')">Plantilla</button></div></div></header>
 <main>
 <section id="home">
  <div class="homeHero">
@@ -185,7 +217,7 @@ body.home-mode footer{background:#eef3f8}
    <button class="btn wide" onclick="showSettings()" style="background:transparent!important;background-color:transparent!important;color:#132a46!important;border:1px solid rgba(19,42,70,.22)!important;box-shadow:none!important">⚙️ Configuració</button>
   </div>
   <div class="homeStatus" id="homeStatus"></div>
-  <div class="muted" style="margin-top:18px">v1.5.16</div>
+  <div class="muted" style="margin-top:18px">v1.6.0</div>
  </div>
 </section>
 <section id="recover" class="hidden"><div class="card"><div class="sectionTop"><button class="btn light" onclick="show('home')">← Enrere</button><h2>Recuperar partit</h2><button class="btn light" onclick="show('home')">⌂ Inici</button></div><div id="recoverContent"></div></div></section>
@@ -238,7 +270,7 @@ body.home-mode footer{background:#eef3f8}
 <section id="finished" class="hidden">
  <div class="card"><div class="row" style="margin-bottom:10px"><button class="btn light" onclick="show('home')">← Enrere</button><button class="btn light" onclick="show('home')">⌂ Inici</button></div><h2>Partit finalitzat</h2><div id="finishInfo"></div></div>
  <div class="card"><h3>Full d’estadístiques de partit</h3><div class="summary" id="summary"></div></div>
- <div class="card"><h3>Informe individual · prova</h3><div id="rating"></div></div>
+ <div class="card"><h3>Informe individual</h3><div id="rating"></div></div>
  <div class="card"><h3>Com es calcula?</h3><div id="methodology"></div></div>
  <div class="card" style="display:none"><h3>Informe per jugadora</h3><div id="playerReports"></div></div>
  <div class="card"><h3>Compartir i exportar</h3>
@@ -1027,6 +1059,34 @@ show("home");
   const start=(d.getMonth()>=6)?y:y-1; // juliol = mes 6
   const el=document.getElementById("homeSeason");
   if(el) el.textContent=start+"-"+String(start+1).slice(-2);
+})();
+</script>
+
+
+<script id="v160-final-polish-js">
+(function(){
+  function polish(){
+    document.querySelectorAll("table").forEach(function(t){
+      var heads=[].slice.call(t.querySelectorAll("th")).map(function(x){return (x.textContent||"").trim().toUpperCase()});
+      if(heads.length>=2 && heads[0].indexOf("DORSAL")>=0 && heads[1]==="NOM"){
+        var txt=(t.closest("section")||t.parentElement||t).textContent||"";
+        if(/Full d.estad.stiques de partit/i.test(txt)){
+          t.classList.add("stats-sticky-table");
+          if(t.parentElement)t.parentElement.classList.add("stats-sticky-table-wrap");
+        }
+      }
+    });
+    var home=document.getElementById("home");
+    if(home){
+      home.querySelectorAll('button,[role="button"],a').forEach(function(el){
+        var tx=(el.textContent||"").trim(), ar=(el.getAttribute("aria-label")||"").toLowerCase(),
+            ti=(el.getAttribute("title")||"").toLowerCase();
+        if(!tx && /bookmark|marcador|favorite|favorit/.test(ar+" "+ti)) el.style.display="none";
+      });
+    }
+  }
+  new MutationObserver(polish).observe(document.documentElement,{subtree:true,childList:true});
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",polish);else polish();
 })();
 </script>
 
