@@ -2,7 +2,7 @@
 <html lang="ca">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#132641"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Stats Castellar"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><title>Stats Castellar</title>
+<meta name="theme-color" content="#132641"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Stats Castellar"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><title>Stats Castellar · v1.4.8</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#eef3f8;color:#132641}
 header{background:#132641;color:#fff;padding:11px 12px;position:sticky;top:0;z-index:10}.head{max-width:900px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:8px}.brand{font-weight:900;font-size:20px}.nav{display:flex;gap:6px}.btn{border:0;border-radius:11px;padding:12px 14px;font-weight:800;cursor:pointer}.light{background:#e8eef5;color:#132641}.primary{background:#0965c2;color:#fff}.green{background:#249b53;color:#fff}.red{background:#e95752;color:#fff}.wide{width:100%}
@@ -16,7 +16,7 @@ main{max-width:900px;margin:auto;padding:12px}.card{background:#fff;border-radiu
 .summary{overflow:auto}.summary table{border-collapse:collapse;width:100%;font-size:13px}.summary th,.summary td{padding:7px;border-bottom:1px solid #e4e9ef;text-align:center}.summary th{background:#132641;color:#fff;position:sticky;top:0}
 .ratingbox{background:#f7f9fc;border:1px solid #dfe7f0;border-radius:13px;padding:12px;margin-top:10px}
 .ratingtable{overflow:auto}.ratingtable table{border-collapse:collapse;width:100%;font-size:12px;white-space:nowrap}.ratingtable th,.ratingtable td{padding:7px;border-bottom:1px solid #e4e9ef;text-align:center}.ratingtable th{background:#132641;color:#fff}.ratingtable td:nth-child(2){text-align:left;font-weight:800}
-.playerreport{border-left:4px solid #132641;background:#f7f9fc;border-radius:10px;padding:10px 12px;margin:9px 0}.playerreport h4{margin-bottom:5px}.formula{font-weight:900;font-size:16px}.tiny{font-size:12px;color:#64748b}
+.playerreport{border-left:4px solid #132641;background:#f7f9fc;border-radius:10px;padding:10px 12px;margin:9px 0}.playerreport h4{margin-bottom:5px}.formula{font-weight:900;font-size:16px}.tiny{font-size:12px;color:#64748b}.historyitem{border:1px solid #e1e8f0;border-radius:12px;padding:10px;margin:8px 0}.historyactions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.warning{background:#fff7d6;border:1px solid #efd77b;border-radius:10px;padding:9px;margin:8px 0}
 
 @media(min-width:700px){.court{grid-template-columns:repeat(3,1fr)}.selection{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:450px){.brand{font-size:17px}.nav .btn{padding:8px 9px}.tools{grid-template-columns:1fr 1fr}}
@@ -25,7 +25,8 @@ main{max-width:900px;margin:auto;padding:12px}.card{background:#fff;border-radiu
 <header><div class="head"><div class="brand">🏐 Stats Castellar</div><div class="nav"><button class="btn light" onclick="show('home')">Inici</button><button class="btn light" onclick="show('roster')">Plantilla</button></div></div></header>
 <main>
 <section id="home">
- <div class="card"><h2>Partits</h2><p>Registra el partit ràpidament i conserva totes les accions.</p><button class="btn primary wide" onclick="startSetup()">＋ Nou partit</button></div>
+ <div class="card"><h2>Partits</h2><p>Registra el partit ràpidament i conserva totes les accions.</p><div id="resumeBox"></div><button class="btn primary wide" onclick="startSetup()">＋ Nou partit</button></div>
+ <div class="card"><h3>Historial de partits</h3><div id="historyList" class="muted">Encara no hi ha partits guardats.</div></div>
  <div class="card"><h3>Plantilla habitual</h3><div id="homeRoster"></div></div>
 </section>
 
@@ -80,8 +81,10 @@ main{max-width:900px;margin:auto;padding:12px}.card{background:#fff;border-radiu
  <div class="card"><h3>🏆 Valoració del partit</h3><div id="rating"></div></div>
  <div class="card"><h3>Com es calcula?</h3><div id="methodology"></div></div>
  <div class="card"><h3>Informe per jugadora</h3><div id="playerReports"></div></div>
- <div class="card"><button class="btn primary wide" onclick="downloadODS()">⬇️ Exportar estadístiques (.ods)</button>
- <p class="muted">Aquest registre conserva cada acció. El següent pas serà generar directament l'Excel final amb el mateix disseny del full de l'entrenadora.</p></div>
+ <div class="card"><h3>Compartir i exportar</h3>
+ <button class="btn green wide" onclick="sharePDF()">📄 Compartir / desar PDF</button>
+ <div class="row"><button class="btn primary" style="flex:1" onclick="downloadODS()">ODS</button><button class="btn primary" style="flex:1" onclick="downloadXLSX()">Excel (.xlsx)</button></div>
+ <p class="muted">El PDF és per compartir. ODS i Excel conserven les dues fulles: «Full de partit» i «Percentatges».</p></div>
 </section>
 </main>
 
@@ -106,13 +109,25 @@ let call=[],starters=[],guestId=0,match=null,pending=null,out=null,inn=null;
 function saveRoster(){localStorage.setItem("sc_roster_v3",JSON.stringify(roster))}
 function saveMatch(){if(match)localStorage.setItem("sc_current_match",JSON.stringify(match))}
 function show(id){document.querySelectorAll("main section").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");if(id=="home")renderHome();if(id=="roster")renderRoster()}
-function renderHome(){homeRoster.innerHTML=roster.map(p=>`<div class="playerline"><div class="badge">${p.num}</div><b>${p.n}</b><span></span></div>`).join("")}
+function getHistory(){try{return JSON.parse(localStorage.getItem("sc_match_history_v1")||"[]")}catch(e){return []}}
+function matchKey(m){return [m.date||"",m.rival||"",m.venue||"",(m.events||[]).length].join("|")}
+function archiveMatch(m){let h=getHistory(),copy=JSON.parse(JSON.stringify(m));copy.finished=true;copy.savedAt=new Date().toISOString();let k=matchKey(copy),i=h.findIndex(x=>matchKey(x)===k);if(i>=0)h[i]=copy;else h.unshift(copy);localStorage.setItem("sc_match_history_v1",JSON.stringify(h.slice(0,100)))}
+function resumeCurrent(){try{match=JSON.parse(localStorage.getItem("sc_current_match")||"null")}catch(e){match=null}if(!match)return alert("No hi ha cap partit en curs guardat.");show("match");renderMatch()}
+function openHistory(i){let h=getHistory();if(!h[i])return;match=JSON.parse(JSON.stringify(h[i]));show("finished");renderFinished()}
+function continueHistory(i){let h=getHistory();if(!h[i])return;match=JSON.parse(JSON.stringify(h[i]));match.finished=false;saveMatch();show("match");renderMatch()}
+function deleteHistory(i){if(!confirm("Eliminar aquest partit de l'historial? Aquesta acció no es pot desfer."))return;let h=getHistory();h.splice(i,1);localStorage.setItem("sc_match_history_v1",JSON.stringify(h));renderHome()}
+function renderHome(){
+ homeRoster.innerHTML=roster.map(p=>`<div class="playerline"><div class="badge">${p.num}</div><b>${p.n}</b><span></span></div>`).join("");
+ let cur=null;try{cur=JSON.parse(localStorage.getItem("sc_current_match")||"null")}catch(e){}
+ resumeBox.innerHTML=cur&&!cur.finished?`<div class="warning"><b>Partit en curs guardat</b><br>${cur.rival||"Rival"} · ${formatDateDMY(cur.date||"")} · SET ${cur.set||1}<br><button class="btn green" style="margin-top:8px" onclick="resumeCurrent()">↩ Recuperar partit en curs</button></div>`:"";
+ let h=getHistory();historyList.innerHTML=h.length?h.map((m,i)=>{let scores=[...(m.setScores||[]),{set:m.set,home:m.home,away:m.away}],hw=scores.filter(x=>x.home>x.away).length,aw=scores.filter(x=>x.away>x.home).length,res=m.venue==="away"?`${aw}-${hw}`:`${hw}-${aw}`;return `<div class="historyitem"><b>${formatDateDMY(m.date)} · Castellar – ${m.rival}</b><br><span class="muted">${m.venue==="away"?"Camp rival":"Casa"} · ${res}</span><div class="historyactions"><button class="btn light" onclick="openHistory(${i})">Veure</button><button class="btn light" onclick="continueHistory(${i})">Continuar/Edita</button><button class="btn red" onclick="deleteHistory(${i})">Eliminar</button></div></div>`}).join(""):"Encara no hi ha partits guardats.";
+}
 function renderRoster(){rosterList.innerHTML=roster.map((p,i)=>`<div class="playerline"><div class="badge">${p.num}</div><b>${p.n}</b><button class="btn red" onclick="removeRoster(${i})">×</button></div>`).join("")}
 function addRoster(){let n=newName.value.trim(),num=newNum.value.trim();if(!n||!num)return;roster.push({n,num:Number(num)});saveRoster();newName.value="";newNum.value="";renderRoster()}
 function removeRoster(i){if(confirm("Eliminar aquesta jugadora de la plantilla habitual?")){roster.splice(i,1);saveRoster();renderRoster()}}
 let venueChoice="home";
 function setVenue(v){venueChoice=v;venueHomeBtn.className="btn "+(v==="home"?"green":"light");venueAwayBtn.className="btn "+(v==="away"?"green":"light")}
-function startSetup(){call=roster.map((p,i)=>({...p,id:"r"+i,selected:false,guest:false}));rival.value="";matchDate.value=new Date().toISOString().slice(0,10);setVenue("home");renderCall();show("setup")}
+function startSetup(){let cur=null;try{cur=JSON.parse(localStorage.getItem("sc_current_match")||"null")}catch(e){}if(cur&&!cur.finished&&!confirm("Hi ha un partit en curs guardat. Si comences un partit nou, el partit en curs deixarà de ser la còpia activa (les dades guardades fins ara no s’esborraran fins que comencis el nou partit). Vols continuar?"))return;call=roster.map((p,i)=>({...p,id:"r"+i,selected:false,guest:false}));rival.value="";matchDate.value=new Date().toISOString().slice(0,10);setVenue("home");renderCall();show("setup")}
 function renderCall(){callup.innerHTML=call.map((p,i)=>`<button class="pick ${p.selected?"on":""}" onclick="toggleCall(${i})"><b>${p.num} · ${p.n}</b>${p.guest?`<small>Puntual${p.team?" · "+p.team:""}</small>`:""}</button>`).join("")}
 function toggleCall(i){call[i].selected=!call[i].selected;renderCall()}
 function addGuest(){let n=guestName.value.trim(),num=guestNum.value.trim(),team=guestTeam.value.trim();if(!n||!num)return;call.push({n,num:Number(num),team,id:"g"+(++guestId),selected:true,guest:true});guestName.value="";guestNum.value="";guestTeam.value="";renderCall()}
@@ -265,7 +280,7 @@ function doChange(){let oc=match.court.map(x=>({...x})),ob=match.bench.map(x=>({
 function closeM(id){document.getElementById(id).style.display="none"}
 function finishMatch(){
  if(!confirm("Finalitzar el partit? Podràs revisar i exportar totes les accions."))return;
- localStorage.setItem("sc_last_match",JSON.stringify(match));
+ match.finished=true; archiveMatch(match); localStorage.setItem("sc_last_match",JSON.stringify(match)); localStorage.removeItem("sc_current_match");
  show("finished");
  try{renderFinished()}
  catch(err){
@@ -448,7 +463,7 @@ function setParticipation(p,set){
  if(f<=0)return "";
  return Math.round(f*100)+"%";
 }
-function downloadODS(){
+function buildODSBlob(){
  try{
   const dec=new TextDecoder(),enc=new TextEncoder(),files={};for(const [n,b] of Object.entries(ODS_TEMPLATE))files[n]=b64bytes(b);
   let xml=dec.decode(files["content.xml"]),doc=new DOMParser().parseFromString(xml,"application/xml");if(doc.querySelector("parsererror"))throw new Error("No s'ha pogut preparar la plantilla ODS");
@@ -473,9 +488,39 @@ function downloadODS(){
   odsSet(doc,"Full de partit",26,2,"Participació per set: el percentatge indica quants dels punts disputats en aquell set la jugadora ha estat a pista. 100% = set complet; un percentatge inferior indica que ha entrat o sortit per un canvi; cel·la buida = no ha jugat el set. Es calcula automàticament a partir de l'alineació inicial, els canvis i el marcador.");
   // TOTAL EQUIP / SETS = nombre real de sets disputats, no la suma dels sets de les jugadores.
   odsSet(doc,"Percentatges",24,4,scores.length);
-  files["content.xml"]=enc.encode(new XMLSerializer().serializeToString(doc));let blob=zipStore(files),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`Stats_Castellar_${match.rival.replace(/[^a-z0-9à-ÿ]+/gi,"_")}_${match.date}.ods`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
- }catch(err){alert("No s'ha pogut crear l'ODS: "+err.message);console.error(err)}
+  files["content.xml"]=enc.encode(new XMLSerializer().serializeToString(doc));return zipStore(files);
+ }catch(err){console.error(err);throw err}
 }
+function downloadBlob(blob,name){let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
+function exportBaseName(){return `Stats_Castellar_${match.rival.replace(/[^a-z0-9à-ÿ]+/gi,"_")}_${match.date}`}
+function downloadODS(){try{downloadBlob(buildODSBlob(),exportBaseName()+".ods")}catch(err){alert("No s'ha pogut crear l'ODS: "+err.message)}}
+async function ensureXLSX(){
+ if(window.XLSX)return true;
+ return await new Promise(resolve=>{let sc=document.createElement("script");sc.src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js";sc.onload=()=>resolve(true);sc.onerror=()=>resolve(false);document.head.appendChild(sc)})
+}
+async function downloadXLSX(){
+ try{
+  if(!await ensureXLSX())throw new Error("No s'ha pogut carregar el convertidor d'Excel. Comprova la connexió a Internet.");
+  let ods=buildODSBlob(),ab=await ods.arrayBuffer();let wb=XLSX.read(ab,{type:"array",cellStyles:true});
+  if(!wb.SheetNames.includes("Full de partit")||!wb.SheetNames.includes("Percentatges"))throw new Error("No s'han trobat les dues fulles de l'informe.");
+  XLSX.writeFile(wb,exportBaseName()+".xlsx",{bookType:"xlsx",cellStyles:true});
+ }catch(err){alert("No s'ha pogut crear l'Excel: "+err.message);console.error(err)}
+}
+function reportRows(){
+ let all=[...match.court,...match.bench],seen=new Set();all=all.filter(p=>!seen.has(p.id)&&seen.add(p.id)).sort((a,b)=>(Number(a.num)||999)-(Number(b.num)||999));
+ const stats=match.events.filter(e=>e.type==="stat"), acts=["S","R","C","A","B"];
+ return all.map(p=>({p,sets:[1,2,3,4,5].map(n=>setParticipation(p,n)||""),eq:Math.round(equivalentSetsForPlayer(p)*100)/100,vals:acts.map(a=>{let v=stats.filter(x=>x.player===p.n&&String(x.num)===String(p.num)&&x.action===a).map(x=>Number(x.value));return v.length?(v.reduce((q,w)=>q+w,0)/v.length).toFixed(2):"-"})}))
+}
+function sharePDF(){
+ try{
+  let rows=reportRows(),scores=[...(match.setScores||[]),{set:match.set,home:match.home,away:match.away}],hw=scores.filter(x=>x.home>x.away).length,aw=scores.filter(x=>x.away>x.home).length,result=match.venue==="away"?`${aw}-${hw}`:`${hw}-${aw}`;
+  let esc=x=>String(x??"").replace(/[&<>\"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  let page1=`<h1>F.S. Castellar Volei</h1><div class="meta"><b>Rival:</b> ${esc(match.rival)} &nbsp; <b>Data:</b> ${esc(formatDateDMY(match.date))} &nbsp; <b>${match.venue==="away"?"Camp rival":"Casa"}</b> &nbsp; <b>Resultat:</b> ${result}</div><h2>Full de partit</h2><table><tr><th>Dorsal</th><th>Jugadora</th><th>Set 1</th><th>Set 2</th><th>Set 3</th><th>Set 4</th><th>Set 5</th><th>Sets eq.</th><th>S</th><th>R</th><th>C</th><th>A</th><th>B</th></tr>${rows.map(r=>`<tr><td>${r.p.num}</td><td>${esc(r.p.n)}</td>${r.sets.map(x=>`<td>${esc(x)}</td>`).join("")}<td>${r.eq}</td>${r.vals.map(x=>`<td>${x}</td>`).join("")}</tr>`).join("")}</table><p class="note">Participació per set: 100% = set complet; un percentatge inferior indica participació parcial; cel·la buida = no ha jugat el set.</p>`;
+  let page2=`<h1>F.S. Castellar Volei</h1><div class="meta"><b>Rival:</b> ${esc(match.rival)} &nbsp; <b>Data:</b> ${esc(formatDateDMY(match.date))} &nbsp; <b>Resultat:</b> ${result}</div><h2>Percentatges</h2><table><tr><th>Dorsal</th><th>Jugadora</th><th>Sets eq.</th><th>Servei</th><th>Recepció</th><th>Col·locació</th><th>Atac</th><th>Bloqueig</th></tr>${rows.map(r=>`<tr><td>${r.p.num}</td><td>${esc(r.p.n)}</td><td>${r.eq}</td>${r.vals.map(x=>`<td>${x}</td>`).join("")}</tr>`).join("")}</table><p class="note">Sets totals del partit: ${scores.length}</p>`;
+  let w=window.open("","_blank");if(!w)throw new Error("El navegador ha bloquejat la finestra del PDF.");w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${esc(exportBaseName())}</title><style>@page{size:A4 landscape;margin:10mm}body{font-family:Arial,sans-serif;color:#17243b;margin:0}h1{font-size:20px;margin:0 0 6px}h2{font-size:16px;background:#17243b;color:white;padding:7px;margin:12px 0 5px}.meta{font-size:11px;margin-bottom:8px}table{border-collapse:collapse;width:100%;font-size:9px}th{background:#d9eaf7}th,td{border:1px solid #aeb9c5;padding:4px;text-align:center}td:nth-child(2){text-align:left}.note{font-size:9px}.page{page-break-after:always}.page:last-child{page-break-after:auto}@media print{.noprint{display:none}}</style></head><body><div class="noprint" style="padding:8px;background:#fff7d6"><b>PDF de dues pàgines:</b> al diàleg d'impressió tria «Desar com a PDF» o «Compartir». <button onclick="print()">Crear PDF</button></div><section class="page">${page1}</section><section class="page">${page2}</section><script>setTimeout(()=>print(),350)<\/script></body></html>`);w.document.close();
+ }catch(err){alert("No s'ha pogut preparar el PDF: "+err.message);console.error(err)}
+}
+
 function csvCell(v){return '"'+String(v??"").replaceAll('"','""')+'"'}
 function downloadCSV(){let rows=[["Data","Rival","Set","Dorsal","Jugadora","Tipus","Equip origen","Acció","Valor"]];for(let e of match.events.filter(x=>x.type==="stat"))rows.push([e.date,e.rival,e.set,e.num,e.player,e.guest?"Puntual":"Habitual",e.team,e.actionName,e.value]);let csv="\uFEFF"+rows.map(r=>r.map(csvCell).join(";")).join("\n");let blob=new Blob([csv],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`Stats_Castellar_${match.rival.replace(/[^a-z0-9à-ÿ]+/gi,"_")}_${match.date}.csv`;a.click();URL.revokeObjectURL(a.href)}
 renderHome();
