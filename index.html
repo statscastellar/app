@@ -503,26 +503,34 @@ body:not(:has(#home:not(.hidden))) header::after{
 
 
 
-<style id="final-home-v1612">
-#home:not(.hidden) .homeExactMockup{
+
+<style id="final-home-safe-v1614">
+#home .homeExactMockup{
   position:relative!important;
 }
-#home:not(.hidden) .homeExactMockup>img{
-  width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;
-}
-#home:not(.hidden) .finalHotspot{
-  position:absolute!important;z-index:50!important;
+#home .finalHotspot{
+  position:absolute!important;
+  z-index:50!important;
   left:5.5100%!important;
   width:86.5182%!important;
-  border:0!important;background:transparent!important;opacity:0!important;
-  padding:0!important;margin:0!important;
+  border:0!important;
+  background:transparent!important;
+  opacity:0!important;
+  padding:0!important;
+  margin:0!important;
 }
-.hsNew{top:47.6681%!important;height:6.0738%!important;}
-.hsHistory{top:54.6095%!important;height:5.9111%!important;}
-.hsRecover{top:61.3883%!important;height:5.9111%!important;}
-.hsRoster{top:68.1670%!important;height:5.9653%!important;}
-.hsSettings{top:74.9458%!important;height:5.9653%!important;}
+#home .hsNew{top:47.6681%!important;height:6.0738%!important}
+#home .hsHistory{top:54.6095%!important;height:5.9111%!important}
+#home .hsRecover{top:61.3883%!important;height:5.9111%!important}
+#home .hsRoster{top:68.1670%!important;height:5.9653%!important}
+#home .hsSettings{top:74.9458%!important;height:5.9653%!important}
+
+/* Només centrat vertical de la portada, sense afectar cap pantalla interior. */
+#home:not(.hidden){
+  min-height:100dvh!important;
+}
 </style>
+
 </head>
 <body>
 <header><div class="head"><div class="brand">🏐 Stats Castellar <span style="font-size:12px;opacity:.72;font-weight:700;white-space:nowrap">v1.6.12</span></div><div class="nav"><button class="btn light" onclick="show('home')">Inici</button><button class="btn light" onclick="show('roster')">Plantilla</button></div></div></header>
@@ -558,7 +566,7 @@ body:not(:has(#home:not(.hidden))) header::after{
     <div class="settingsBlock">
       <h3>Informació</h3>
       <div class="settingsInfoRow"><span>Aplicació</span><strong>Stats Castellar</strong></div>
-      <div class="settingsInfoRow"><span>Versió</span><strong>1.6.12</strong></div>
+      <div class="settingsInfoRow"><span>Versió</span><strong>1.6.14</strong></div>
       <div class="settingsInfoRow"><span>Club</span><strong>F.S. Castellar Volei</strong></div>
       <div class="settingsInfoRow"><span>Creat per</span><strong>Curu</strong></div>
     </div>
@@ -1520,7 +1528,7 @@ show("home");
 <script id="backup-settings-v102">
 function backupStatsCastellar(){
   try{
-    const data={format:"stats-castellar-backup",version:"1.6.12",created:new Date().toISOString(),localStorage:{}};
+    const data={format:"stats-castellar-backup",version:"1.6.14",created:new Date().toISOString(),localStorage:{}};
     for(let i=0;i<localStorage.length;i++){
       const k=localStorage.key(i);
       data.localStorage[k]=localStorage.getItem(k);
