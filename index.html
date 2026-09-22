@@ -112,29 +112,42 @@ function saveMatch(){if(match)localStorage.setItem("sc_current_match",JSON.strin
 function show(id){document.querySelectorAll("main section").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");if(id=="home")renderHome();if(id=="roster")renderRoster()}
 function historySort(a,b){
  const d=String(b.date||"").localeCompare(String(a.date||""));if(d)return d;
+ const ta=String(a.savedAt||""),tb=String(b.savedAt||"");if(ta!==tb)return tb.localeCompare(ta);
  const priority=x=>/sant cugat/i.test(x.rival||"")?0:/gadex/i.test(x.rival||"")?1:2;
  const p=priority(a)-priority(b);if(p)return p;
  return String(a.rival||"").localeCompare(String(b.rival||""),"ca");
 }
+function historyId(m){return [m.date||"",String(m.rival||"").toLowerCase(),m.venue||""].join("|")}
+function getDeletedHistory(){try{return JSON.parse(localStorage.getItem("sc_deleted_preloaded_history_v1")||"[]")}catch(e){return []}}
 function seedPreloadedHistory(){
  let h=[];try{h=JSON.parse(localStorage.getItem("sc_match_history_v1")||"[]")}catch(e){}
+ const deleted=getDeletedHistory();
  for(const m of PRELOADED_HISTORY){
-   const exists=h.some(x=>String(x.date)===String(m.date)&&String(x.rival).toLowerCase()===String(m.rival).toLowerCase());
+   if(deleted.includes(historyId(m)))continue;
+   const exists=h.some(x=>historyId(x)===historyId(m));
    if(!exists)h.push(JSON.parse(JSON.stringify(m)));
  }
- h.sort(historySort);localStorage.setItem("sc_match_history_v1",JSON.stringify(h.slice(0,100)));
+ h.sort(historySort);
+ try{localStorage.setItem("sc_match_history_v1",JSON.stringify(h.slice(0,100)))}catch(e){}
+ return h.slice(0,100);
 }
-function getHistory(){try{return JSON.parse(localStorage.getItem("sc_match_history_v1")||"[]").sort(historySort)}catch(e){return []}}
+function getHistory(){
+ let h=[];try{h=JSON.parse(localStorage.getItem("sc_match_history_v1")||"[]")}catch(e){}
+ const deleted=getDeletedHistory();
+ for(const m of PRELOADED_HISTORY){if(!deleted.includes(historyId(m))&&!h.some(x=>historyId(x)===historyId(m)))h.push(JSON.parse(JSON.stringify(m)))}
+ return h.sort(historySort);
+}
 function matchKey(m){return [m.date||"",m.rival||"",m.venue||"",(m.events||[]).length].join("|")}
 function archiveMatch(m){let h=getHistory(),copy=JSON.parse(JSON.stringify(m));copy.finished=true;copy.savedAt=new Date().toISOString();let k=matchKey(copy),i=h.findIndex(x=>matchKey(x)===k);if(i>=0)h[i]=copy;else h.unshift(copy);localStorage.setItem("sc_match_history_v1",JSON.stringify(h.slice(0,100)))}
 function resumeCurrent(){try{match=JSON.parse(localStorage.getItem("sc_current_match")||"null")}catch(e){match=null}if(!match)return alert("No hi ha cap partit en curs guardat.");show("match");renderMatch()}
 function openHistory(i){let h=getHistory();if(!h[i])return;match=JSON.parse(JSON.stringify(h[i]));show("finished");renderFinished()}
 function continueHistory(i){let h=getHistory();if(!h[i])return;match=JSON.parse(JSON.stringify(h[i]));match.finished=false;saveMatch();show("match");renderMatch()}
-function deleteHistory(i){if(!confirm("Eliminar aquest partit de l'historial? Aquesta acció no es pot desfer."))return;let h=getHistory();h.splice(i,1);localStorage.setItem("sc_match_history_v1",JSON.stringify(h));renderHome()}
+function deleteHistory(i){if(!confirm("Eliminar aquest partit de l'historial? Aquesta acció no es pot desfer."))return;let h=getHistory();let target=h[i];if(!target)return;let deleted=getDeletedHistory();if(PRELOADED_HISTORY.some(x=>historyId(x)===historyId(target))&&!deleted.includes(historyId(target))){deleted.push(historyId(target));try{localStorage.setItem("sc_deleted_preloaded_history_v1",JSON.stringify(deleted))}catch(e){}}h=h.filter((x,j)=>j!==i);try{localStorage.setItem("sc_match_history_v1",JSON.stringify(h))}catch(e){}renderHome()}
+function discardCurrent(){if(!confirm("Eliminar definitivament el partit en curs? Es perdran totes les dades d'aquest partit que no siguin a l'historial. Aquesta acció no es pot desfer."))return;localStorage.removeItem("sc_current_match");match=null;renderHome()}
 function renderHome(){
  homeRoster.innerHTML=roster.map(p=>`<div class="playerline"><div class="badge">${p.num}</div><b>${p.n}</b><span></span></div>`).join("");
  let cur=null;try{cur=JSON.parse(localStorage.getItem("sc_current_match")||"null")}catch(e){}
- resumeBox.innerHTML=cur&&!cur.finished?`<div class="warning"><b>Partit en curs guardat</b><br>${cur.rival||"Rival"} · ${formatDateDMY(cur.date||"")} · SET ${cur.set||1}<br><button class="btn green" style="margin-top:8px" onclick="resumeCurrent()">↩ Recuperar partit en curs</button></div>`:"";
+ resumeBox.innerHTML=cur&&!cur.finished?`<div class="warning"><b>Partit en curs guardat</b><br>${cur.rival||"Rival"} · ${formatDateDMY(cur.date||"")} · SET ${cur.set||1}<br><div class="historyactions"><button class="btn green" onclick="resumeCurrent()">↩ Recuperar partit en curs</button><button class="btn red" onclick="discardCurrent()">🗑 Eliminar definitivament</button></div></div>`:"";
  let h=getHistory();historyList.innerHTML=h.length?h.map((m,i)=>{let scores=[...(m.setScores||[]),{set:m.set,home:m.home,away:m.away}],hw=scores.filter(x=>x.home>x.away).length,aw=scores.filter(x=>x.away>x.home).length,res=m.venue==="away"?`${aw}-${hw}`:`${hw}-${aw}`;return `<div class="historyitem"><b>${formatDateDMY(m.date)} · ${m.venue==="away"?m.rival+" – Castellar":"Castellar – "+m.rival}</b><br><span class="muted">${m.venue==="away"?"Camp rival":"Casa"} · ${res}</span><div class="historyactions"><button class="btn light" onclick="openHistory(${i})">Veure</button><button class="btn light" onclick="continueHistory(${i})">Continuar/Edita</button><button class="btn red" onclick="deleteHistory(${i})">Eliminar</button></div></div>`}).join(""):"Encara no hi ha partits guardats.";
 }
 function renderRoster(){rosterList.innerHTML=roster.map((p,i)=>`<div class="playerline"><div class="badge">${p.num}</div><b>${p.n}</b><button class="btn red" onclick="removeRoster(${i})">×</button></div>`).join("")}
