@@ -2,7 +2,7 @@
 <html lang="ca">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#132641"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Stats Castellar"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>Stats Castellar · v1.0.2</title>
+<meta name="theme-color" content="#132641"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Stats Castellar"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>Stats Castellar · v1.6.11</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#eef3f8;color:#132641}
 header{background:#132641;color:#fff;padding:11px 12px;position:sticky;top:0;z-index:10}.head{max-width:900px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:8px}.brand{font-weight:900;font-size:20px}.nav{display:flex;gap:6px}.btn{border:0;border-radius:11px;padding:12px 14px;font-weight:800;cursor:pointer}.light{background:#e8eef5;color:#132641}.primary{background:#0965c2;color:#fff}.green{background:#249b53;color:#fff}.red{background:#e95752;color:#fff}.wide{width:100%}
@@ -255,7 +255,7 @@ body:has(#home:not(.hidden)) main{margin:0!important;padding:0!important;max-wid
 
 
 <style id="home-center-fix-v164">
-/* Únic canvi v1.0.2: centrar verticalment la portada sense tocar-ne el disseny. */
+/* Únic canvi v1.6.11: centrar verticalment la portada sense tocar-ne el disseny. */
 #home:not(.hidden){
   min-height:100svh!important;
   display:flex!important;
@@ -283,7 +283,7 @@ body:has(#home:not(.hidden)) main{margin:0!important;padding:0!important;max-wid
 
 
 <style id="home-fullscreen-orange-v165">
-/* v1.0.2 — només adaptació de la portada a la pantalla */
+/* v1.6.11 — només adaptació de la portada a la pantalla */
 html:has(#home:not(.hidden)),
 body:has(#home:not(.hidden)){
   margin:0!important;
@@ -467,9 +467,138 @@ body:has(#home:not(.hidden)) main{position:fixed!important;inset:0!important;wid
 #settings .settingsInfoRow strong{text-align:right;color:#101828}
 </style>
 
+
+<style id="home-clean-v1610">
+/* Elimina definitivament el pedaç antic */
+.teamHomeMask,.teamHomeLabel{display:none!important}
+
+/* Quart botó complet, no una etiqueta superposada */
+#home:not(.hidden) .homeTeamButton{
+  position:absolute!important;
+  z-index:35!important;
+  left:5.51%!important;
+  top:70.88%!important;
+  width:88.51%!important;
+  height:6.13%!important;
+  margin:0!important;
+  padding:0 4.8%!important;
+  border:0!important;
+  border-radius:18px!important;
+  background:linear-gradient(90deg,#d91d22 0%,#e32227 52%,#dc2024 100%)!important;
+  box-shadow:0 5px 11px rgba(105,21,15,.22)!important;
+  display:grid!important;
+  grid-template-columns:13% 1fr 9%!important;
+  align-items:center!important;
+  color:#fff!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  cursor:pointer!important;
+}
+#home:not(.hidden) .homeTeamIcon{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+}
+#home:not(.hidden) .homeTeamIcon svg{
+  width:54px!important;max-width:100%!important;height:auto!important;fill:#fff!important;
+}
+#home:not(.hidden) .homeTeamText{
+  text-align:left!important;
+  font-size:clamp(20px,4.4vw,34px)!important;
+  font-weight:700!important;
+  letter-spacing:.01em!important;
+  line-height:1!important;
+}
+#home:not(.hidden) .homeTeamChevron{
+  text-align:right!important;
+  font-size:clamp(38px,7vw,58px)!important;
+  font-weight:300!important;
+  line-height:.8!important;
+}
+
+/* Peu real HTML: tapa només el peu antic de la imatge */
+#home:not(.hidden) .homeVersionFooter{
+  position:absolute!important;
+  z-index:36!important;
+  left:5.5%!important;
+  top:89.05%!important;
+  width:89%!important;
+  height:5.2%!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  background:#f56a00!important;
+  color:#111!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  pointer-events:none!important;
+}
+#home:not(.hidden) .homeVersionRow{
+  width:100%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:18px!important;
+  font-size:clamp(12px,2.5vw,18px)!important;
+  font-weight:800!important;
+  letter-spacing:.24em!important;
+}
+#home:not(.hidden) .homeVersionRow:before,
+#home:not(.hidden) .homeVersionRow:after{
+  content:""!important;display:block!important;height:1px!important;
+  background:#222!important;flex:1!important;max-width:180px!important;
+}
+#home:not(.hidden) .homeCredit{
+  margin-top:8px!important;
+  font-size:clamp(11px,2.2vw,16px)!important;
+  letter-spacing:.22em!important;
+}
+</style>
+
+
+<style id="mobile-header-team-v1611">
+/* Barra superior interior: prou baixa per no quedar sota l'hora/notch d'iOS */
+body:not(:has(#home:not(.hidden))) header{
+  position:sticky!important;
+  top:0!important;
+  z-index:1000!important;
+  box-sizing:border-box!important;
+  min-height:calc(54px + env(safe-area-inset-top))!important;
+  padding-top:max(12px,env(safe-area-inset-top))!important;
+  padding-left:max(14px,env(safe-area-inset-left))!important;
+  padding-right:max(14px,env(safe-area-inset-right))!important;
+  padding-bottom:10px!important;
+}
+
+/* Fora de la portada, deixem només una navegació clara d'Enrere */
+body:not(:has(#home:not(.hidden))) header .brand,
+body:not(:has(#home:not(.hidden))) header a,
+body:not(:has(#home:not(.hidden))) header button{
+  display:none!important;
+}
+body:not(:has(#home:not(.hidden))) header::after{
+  content:"‹  Enrere";
+  display:inline-flex;
+  align-items:center;
+  min-height:38px;
+  padding:0 14px 0 8px;
+  border-radius:10px;
+  color:#fff;
+  font:800 17px/1 Arial,Helvetica,sans-serif;
+  cursor:pointer;
+}
+
+/* Equip > Infantil A */
+#teams .teamCard{
+  background:#000!important;
+  color:#58a9ff!important;
+  border:1px solid #111!important;
+}
+#teams .teamCard .teamArrow{
+  color:#58a9ff!important;
+}
+</style>
+
 </head>
 <body>
-<header><div class="head"><div class="brand">🏐 Stats Castellar <span style="font-size:12px;opacity:.72;font-weight:700;white-space:nowrap">v1.0.2</span></div><div class="nav"><button class="btn light" onclick="show('home')">Inici</button><button class="btn light" onclick="show('roster')">Plantilla</button></div></div></header>
+<header><div class="head"><div class="brand">🏐 Stats Castellar <span style="font-size:12px;opacity:.72;font-weight:700;white-space:nowrap">v1.6.11</span></div><div class="nav"><button class="btn light" onclick="show('home')">Inici</button><button class="btn light" onclick="show('roster')">Plantilla</button></div></div></header>
 <main>
 <section id="home">
   <div class="homeExactMockup">
@@ -477,11 +606,26 @@ body:has(#home:not(.hidden)) main{position:fixed!important;inset:0!important;wid
     <button class="mockHotspot hsNew" onclick="startSetup()" aria-label="Nou partit"></button>
     <button class="mockHotspot hsHistory" onclick="show('history')" aria-label="Historial de partits"></button>
     <button class="mockHotspot hsRecover" onclick="show('recover')" aria-label="Recuperar partit"></button>
-    <span class="teamHomeMask" aria-hidden="true"></span>
-    <span class="teamHomeLabel" aria-hidden="true">EQUIP</span>
-    <button class="mockHotspot hsRoster" onclick="show('teams')" aria-label="Equip"></button>
+    <button class="homeTeamButton" type="button" onclick="show('teams')" aria-label="Equip">
+      <span class="homeTeamIcon" aria-hidden="true">
+        <svg viewBox="0 0 64 52" role="img">
+          <circle cx="32" cy="13" r="10"></circle>
+          <circle cx="13" cy="18" r="8"></circle>
+          <circle cx="51" cy="18" r="8"></circle>
+          <path d="M17 48v-9c0-10 6-16 15-16s15 6 15 16v9z"></path>
+          <path d="M2 46v-7c0-8 4-13 11-13 4 0 7 2 9 5-3 4-4 9-4 15z"></path>
+          <path d="M62 46v-7c0-8-4-13-11-13-4 0-7 2-9 5 3 4 4 9 4 15z"></path>
+        </svg>
+      </span>
+      <span class="homeTeamText">EQUIP</span>
+      <span class="homeTeamChevron">›</span>
+    </button>
     <button class="mockHotspot hsSettings" onclick="show('settings')" aria-label="Configuració"></button>
-  </div>
+    <div class="homeVersionFooter" aria-hidden="true">
+      <div class="homeVersionRow">VERSIÓ 1.6.11</div>
+      <div class="homeCredit">Creat per Curu</div>
+    </div>
+</div>
 </section>
 <section id="recover" class="hidden"><div class="card"><div class="sectionTop"><button class="btn light" onclick="show('home')">← Enrere</button><h2>Recuperar partit</h2><button class="btn light" onclick="show('home')">⌂ Inici</button></div><div id="recoverContent"></div></div></section>
 <section id="history" class="hidden"><div class="card"><div class="sectionTop"><button class="btn light" onclick="show('home')">← Enrere</button><h2>Historial de partits</h2><button class="btn light" onclick="show('home')">⌂ Inici</button></div><div id="historyList" class="muted"></div></div></section>
@@ -500,7 +644,7 @@ body:has(#home:not(.hidden)) main{position:fixed!important;inset:0!important;wid
     <div class="settingsBlock">
       <h3>Informació</h3>
       <div class="settingsInfoRow"><span>Aplicació</span><strong>Stats Castellar</strong></div>
-      <div class="settingsInfoRow"><span>Versió</span><strong>1.0.2</strong></div>
+      <div class="settingsInfoRow"><span>Versió</span><strong>1.6.11</strong></div>
       <div class="settingsInfoRow"><span>Club</span><strong>F.S. Castellar Volei</strong></div>
       <div class="settingsInfoRow"><span>Creat per</span><strong>Curu</strong></div>
     </div>
@@ -1431,7 +1575,7 @@ show("home");
 <script id="backup-settings-v102">
 function backupStatsCastellar(){
   try{
-    const data={format:"stats-castellar-backup",version:"1.0.2",created:new Date().toISOString(),localStorage:{}};
+    const data={format:"stats-castellar-backup",version:"1.6.11",created:new Date().toISOString(),localStorage:{}};
     for(let i=0;i<localStorage.length;i++){
       const k=localStorage.key(i);
       data.localStorage[k]=localStorage.getItem(k);
@@ -1460,6 +1604,32 @@ function restoreStatsCastellar(input){
   };
   r.readAsText(f);
 }
+</script>
+
+
+<script id="mobile-back-v1611">
+(function(){
+  function visibleSection(){
+    return Array.from(document.querySelectorAll('main > section')).find(s=>!s.classList.contains('hidden'));
+  }
+  function goBackStats(){
+    const s=visibleSection();
+    if(!s){ show('home'); return; }
+    if(s.id==='roster'){ show('teams'); return; }
+    if(s.id==='teams' || s.id==='settings' || s.id==='history' || s.id==='recover'){ show('home'); return; }
+    if(history.length>1){ history.back(); return; }
+    show('home');
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    const h=document.querySelector('header');
+    if(h){
+      h.addEventListener('click',function(e){
+        const s=visibleSection();
+        if(s && s.id!=='home') goBackStats();
+      });
+    }
+  });
+})();
 </script>
 
 </body></html>
