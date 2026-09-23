@@ -929,7 +929,21 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 .eval-positive{border-left:4px solid #8fbf9f}.eval-work{border-left:4px solid #d9a0a0}
 .eval-summary{font-size:11px;line-height:1.45;margin-top:8px;color:#344054}
 .eval-priority{font-size:11px;line-height:1.45;margin-top:7px;padding:8px 10px;background:#eef3f7;border-radius:8px;color:#17283f}
-</style></head>
+</style>
+<style id="direct-edit-v22">
+.direct-edit-card{padding:13px 14px!important}
+.direct-edit-card>button{width:100%;min-height:44px;border:0;border-radius:10px;background:#17283f;color:#fff;font-weight:950}
+.direct-edit-note{font-size:11px;line-height:1.4;color:#667085;margin:10px 0}
+.direct-edit-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.direct-edit-buttons button{min-height:42px;border:0;border-radius:9px;font-weight:900}
+#cancelDirectEdit{background:#eef1f4;color:#344054}
+#saveDirectEdit{background:#17283f;color:#fff}
+.edit-stat{display:grid;grid-template-columns:22px minmax(22px,1fr) 22px;align-items:center;gap:2px;min-width:70px}
+.edit-stat button{width:22px;height:27px;border:0;border-radius:6px;background:#fff9;font-size:16px;font-weight:950;color:#17283f;padding:0}
+.edit-stat span{text-align:center;font-weight:950}
+.report-table td.editing-cell{padding:3px!important}
+</style>
+</head>
 <body>
 
 <script id="mandatory-default-team-v131">
@@ -1241,17 +1255,17 @@ https://github.com/nodeca/pako/blob/main/LICENSE
       <small>Lectura orientativa basada en les accions registrades i el volum de dades de cada jugadora.</small>
       <div id="playerEvaluations"></div>
     </div>
-    <div id="historyCorrectionCard" class="card history-correction" hidden>
-      <button id="toggleCorrectionBtn" type="button">🔒 Corregir estadístiques</button>
-      <div id="correctionPanel" hidden>
-        <div class="correction-warning"><b>Mode correcció.</b> Cada canvi queda registrat.</div>
-        <div class="correction-grid">
-          <select id="corrPlayer"></select><select id="corrAction"></select><select id="corrValue"></select>
-          <button id="corrMinus" type="button">− Treure una</button><button id="corrPlus" type="button">＋ Afegir una</button>
+    <div id="directEditCard" class="card direct-edit-card" hidden>
+      <button id="directEditBtn" type="button">✏️ Editar estadístiques</button>
+      <div id="directEditActions" hidden>
+        <div class="direct-edit-note">Toca − o + directament a les caselles. En partits nous, selecciona primer el set que vols corregir. El Total partit es recalcula automàticament.</div>
+        <div class="direct-edit-buttons">
+          <button id="cancelDirectEdit" type="button">Cancel·lar</button>
+          <button id="saveDirectEdit" type="button">Desar canvis</button>
         </div>
-        <div id="correctionLogView" class="correction-log"></div>
       </div>
     </div>
+    
   </div>
 </section>
 <section id="history" class="screen">
@@ -2301,6 +2315,74 @@ document.addEventListener('DOMContentLoaded', () => {
    if(value===2)return 'rating-blue';
    return 'rating-green';
  }
+
+ let directEditMode=false;
+ let directEditDraft=null;
+
+ function currentEditMatch(){ return directEditMode && directEditDraft ? directEditDraft : match; }
+
+ function editableActionsContainer(m,setFilter){
+   if(m.legacy) return m.completedSets && m.completedSets[0];
+   const n=Number(setFilter);
+   return (m.completedSets||[]).find(s=>Number(s.set)===n);
+ }
+
+ function adjustDirectStat(playerId,action,value,delta){
+   const f=$('reportSetFilter');
+   const filter=f?f.value:'all';
+   const m=directEditDraft;
+   if(!m)return;
+   const setObj=editableActionsContainer(m,filter);
+   if(!setObj)return;
+   setObj.actions=setObj.actions||[];
+   if(delta>0){
+     setObj.actions.push({playerId,action,value:Number(value),set:Number(setObj.set)||1,time:Date.now(),corrected:true});
+   }else{
+     for(let i=setObj.actions.length-1;i>=0;i--){
+       const a=setObj.actions[i];
+       if(a.playerId===playerId && a.action===action && Number(a.value)===Number(value)){
+         setObj.actions.splice(i,1);break;
+       }
+     }
+   }
+   renderReportTable(m,filter);
+   renderPlayerEvaluations(m);
+ }
+
+ function setupDirectEdit(m){
+   const card=$('directEditCard'),btn=$('directEditBtn'),actions=$('directEditActions');
+   if(!card)return;
+   card.hidden=!viewingHistory;
+   if(!viewingHistory)return;
+
+   btn.onclick=()=>{
+     const f=$('reportSetFilter');
+     if(!m.legacy && (!f || f.value==='all')){
+       alert('Per editar un partit nou, selecciona primer el Set 1, Set 2, etc. El Total partit es calcula automàticament a partir dels sets.');
+       return;
+     }
+     directEditMode=true;
+     directEditDraft=JSON.parse(JSON.stringify(m));
+     btn.hidden=true; actions.hidden=false;
+     renderReportTable(directEditDraft,f.value);
+   };
+
+   $('cancelDirectEdit').onclick=()=>{
+     directEditMode=false;directEditDraft=null;btn.hidden=false;actions.hidden=true;
+     renderReportTable(m,$('reportSetFilter').value);renderPlayerEvaluations(m);
+   };
+
+   $('saveDirectEdit').onclick=()=>{
+     if(!directEditDraft)return;
+     const list=loadHistory(),i=list.findIndex(x=>x.id===directEditDraft.id);
+     if(i>=0)list[i]=JSON.parse(JSON.stringify(directEditDraft));
+     saveHistory(list);
+     match=JSON.parse(JSON.stringify(directEditDraft));
+     m=match;
+     directEditMode=false;directEditDraft=null;btn.hidden=false;actions.hidden=true;
+     renderFinalReport(match);
+   };
+ }
  function renderReportTable(m,f='all'){
    const table=$('reportTable'),acts=reportActionsFor(m,f),allMode=f==='all';
    let top='<tr><th rowspan="2" class="sticky-number">Dorsal</th><th rowspan="2" class="sticky-name">Jugadora</th>';
@@ -2332,7 +2414,18 @@ document.addEventListener('DOMContentLoaded', () => {
        const vals=(m.legacy && !allMode)
          ? Array(action==='Bloqueig'?3:4).fill('')
          : actionCounts(acts,pl.id,action);
-       vals.forEach((n,v)=>add(n,ratingClass(action,v)));
+       vals.forEach((n,v)=>{
+         if(directEditMode && m===directEditDraft && (m.legacy || !allMode)){
+           const td=document.createElement('td');td.className=ratingClass(action,v)+' editing-cell';
+           const wrap=document.createElement('div');wrap.className='edit-stat';
+           const minus=document.createElement('button');minus.type='button';minus.textContent='−';minus.disabled=Number(n)<=0;
+           const span=document.createElement('span');span.textContent=n;
+           const plus=document.createElement('button');plus.type='button';plus.textContent='+';
+           minus.onclick=()=>adjustDirectStat(pl.id,action,v,-1);
+           plus.onclick=()=>adjustDirectStat(pl.id,action,v,1);
+           wrap.append(minus,span,plus);td.appendChild(wrap);tr.appendChild(td);
+         }else add(n,ratingClass(action,v));
+       });
      });
      body.appendChild(tr);
    });
@@ -2478,10 +2571,14 @@ document.addEventListener('DOMContentLoaded', () => {
      f.disabled=false;
      $('reportSetsLine').textContent='Partit importat de l’ODS original · per set es conserva la participació; les accions de l’ODS són totals del partit';
    }else f.disabled=false;
-   f.onchange=()=>renderReportTable(m,f.value);renderReportTable(m,'all');renderPlayerEvaluations(m);setupCorrection(m);
+   f.onchange=()=>{
+     if(directEditMode){directEditMode=false;directEditDraft=null;const a=$('directEditActions'),b=$('directEditBtn');if(a)a.hidden=true;if(b)b.hidden=false;}
+     renderReportTable(m,f.value);
+   };
+   renderReportTable(m,'all');renderPlayerEvaluations(m);setupDirectEdit(m);
  }
  const reportBack=$('reportBackBtn');
- if(reportBack)reportBack.onclick=()=>{const dest=viewingHistory?'history':'home';viewingHistory=false;const b=document.createElement('button');b.type='button';b.dataset.go=dest;b.style.display='none';document.body.appendChild(b);b.click();b.remove();if(dest==='history')setTimeout(renderHistory,0)};
+ if(reportBack)reportBack.onclick=()=>{directEditMode=false;directEditDraft=null;const dest=viewingHistory?'history':'home';viewingHistory=false;const b=document.createElement('button');b.type='button';b.dataset.go=dest;b.style.display='none';document.body.appendChild(b);b.click();b.remove();if(dest==='history')setTimeout(renderHistory,0)};
 
 
  const EXPORT_COLORS={
