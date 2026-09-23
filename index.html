@@ -1056,7 +1056,15 @@ https://github.com/nodeca/pako/blob/main/LICENSE
   display:block;
 }
 #discardRecoverMatch[hidden]{display:none!important}
-</style></head>
+</style>
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#e86516">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Stats Castellar">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+</head>
 <body>
 
 <script id="mandatory-default-team-v131">
@@ -1131,8 +1139,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         <div class="home-since">DES DE 2013</div>
       </div>
       <nav class="home-menu" aria-label="Menú principal">
-        <button id="loadTestMatchBtn" class="home-btn" style="background:linear-gradient(90deg,#555,#777)" type="button"><span class="ico">🧪</span><span>PARTIT DE PROVA</span><span class="chev">›</span></button>
-        <button class="home-btn new" type="button" data-go="new-match"><span class="ico">▣</span><span>NOU PARTIT</span><span class="chev">›</span></button>
+<button class="home-btn new" type="button" data-go="new-match"><span class="ico">▣</span><span>NOU PARTIT</span><span class="chev">›</span></button>
         <button class="home-btn recover" type="button" data-go="recover"><span class="ico">↻</span><span>RECUPERAR PARTIT</span><span class="chev">›</span></button>
         <button class="home-btn history" type="button" data-go="history"><span class="ico">▥</span><span>HISTORIAL DE PARTITS</span><span class="chev">›</span></button>
         <button class="home-btn teams" type="button" data-go="teams"><span class="ico">♟</span><span>EQUIPS</span><span class="chev">›</span></button>
@@ -1438,12 +1445,6 @@ https://github.com/nodeca/pako/blob/main/LICENSE
     <div id="backupStatus" class="settings-status"></div>
   </div>
 
-  <div class="card settings-card">
-    <div class="settings-row">
-      <div><h2>Mode de prova</h2><p class="settings-help">Mostra o amaga les eines de prova de l’app.</p></div>
-      <label class="switch"><input id="testModeToggle" type="checkbox"><span class="slider"></span></label>
-    </div>
-  </div>
 
   <div class="card settings-card about-card">
     <div class="about-name">STATS CASTELLAR</div>
@@ -3234,7 +3235,6 @@ document.addEventListener('DOMContentLoaded', () => {
      alert('No s’ha pogut crear el partit de prova: '+(e&&e.message?e.message:String(e)));
    }
  }
- const testBtn=$('loadTestMatchBtn');if(testBtn)testBtn.onclick=loadTestMatch;
 
  const HISTORY_KEY='statsCastellarHistoryV2'; // clau antiga: només per migració
  const HISTORY_DB='StatsCastellarDB';
@@ -3490,11 +3490,6 @@ document.addEventListener('DOMContentLoaded', () => {
  const SETTINGS_KEY='statsCastellarSettingsV1';
  function getSettings(){try{return JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}')}catch(_){return {}}}
  function saveSettingsObj(s){localStorage.setItem(SETTINGS_KEY,JSON.stringify(s))}
- function applyTestMode(){
-   const on=!!getSettings().testMode;
-   document.querySelectorAll('[data-test-mode],#testMatchBtn,.test-match-btn').forEach(el=>el.style.display=on?'':'none');
-   const t=document.getElementById('testModeToggle');if(t)t.checked=on;
- }
  async function exportStatsBackup(){
    const data={format:'Stats Castellar Backup',version:'1.0',createdAt:new Date().toISOString(),localStorage:{}};
    for(let i=0;i<localStorage.length;i++){
@@ -3528,13 +3523,18 @@ document.addEventListener('DOMContentLoaded', () => {
    backupImportBtn.onclick=()=>backupImportFile.click();
    backupImportFile.onchange=async()=>{try{if(backupImportFile.files[0])await importStatsBackup(backupImportFile.files[0])}catch(e){alert(e.message||'No s’ha pogut restaurar la còpia.')}finally{backupImportFile.value=''}};
  }
- const testModeToggle=document.getElementById('testModeToggle');
- if(testModeToggle)testModeToggle.onchange=()=>{const s=getSettings();s.testMode=testModeToggle.checked;saveSettingsObj(s);applyTestMode()};
- applyTestMode();
 })();
 </script>
 
 
 <!-- Stats Castellar Base 1.8.1: exportacions segons model ODS -->
+
+<script id="pwa-v1">
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js').catch(err => console.warn('Service Worker:', err));
+  });
+}
+</script>
 </body>
 </html>
