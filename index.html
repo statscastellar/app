@@ -996,6 +996,24 @@ https://github.com/nodeca/pako/blob/main/LICENSE
   box-sizing: border-box;
 }
 </style>
+
+<style id="modal-overlay-clean-v242">
+.modal-overlay,
+.confirm-overlay,
+.dialog-overlay,
+.live-exit-overlay,
+[id$="Modal"]:not([hidden]) {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  outline: 0 !important;
+}
+/* Només l'overlay queda net. La caixa blanca interior conserva el seu estil. */
+</style>
 </head>
 <body>
 
