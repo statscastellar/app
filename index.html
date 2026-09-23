@@ -856,7 +856,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   
 
 <section id="scoring" class="screen">
-  <div class="topbar"><button class="back" data-back>←</button><h1>Partit en directe</h1><span></span></div>
+  <div class="topbar"><button id="liveBackBtn" class="back" type="button">←</button><h1>Partit en directe</h1><span></span></div>
   <div class="live-wrap">
     <div class="live-score card">
       <div class="set-badge" id="liveSet">SET 1</div>
@@ -899,6 +899,20 @@ document.addEventListener('DOMContentLoaded',()=>{
     </div>
 
     <button id="finishSetBtn" class="finish-set-btn" type="button">FINALITZAR SET 1</button>
+  </div>
+
+
+  <div id="leaveMatchModal" class="app-modal" hidden>
+    <div class="app-modal-backdrop"></div>
+    <div class="app-modal-card" role="dialog" aria-modal="true" aria-labelledby="leaveMatchTitle">
+      <div class="app-modal-kicker">PARTIT EN CURS</div>
+      <h2 id="leaveMatchTitle">Vols sortir del partit?</h2>
+      <p>El partit quedarà guardat i el podràs continuar des de «Recuperar partit».</p>
+      <div class="app-modal-actions">
+        <button id="stayInMatch" type="button" class="modal-confirm">Continuar el partit</button>
+        <button id="leaveMatch" type="button" class="modal-cancel">Sortir</button>
+      </div>
+    </div>
   </div>
 
   <div id="finishSetModal" class="app-modal" hidden>
@@ -1516,7 +1530,12 @@ document.addEventListener('DOMContentLoaded', () => {
  const actions=['Servei','Recepció','Col·locació','Atac','Bloqueig'];
  const p=id=>match&&match.players.find(x=>x.id===id);
  const snap=()=>JSON.parse(JSON.stringify({scores:match.scores,serving:match.serving,positions:match.positions,actions:match.actions,pinned:match.pinned}));
- function save(){if(match)localStorage.setItem('statsCastellarCurrentMatchV1',JSON.stringify(match))}
+ function save(){
+   if(!match)return;
+   match.undoHistory=history.slice(-30);
+   match.savedAt=Date.now();
+   localStorage.setItem('statsCastellarCurrentMatchV1',JSON.stringify(match));
+ }
  function rotate(){
    const cycle=['1','6','5','4','3','2'];
    const old={...match.positions};
@@ -1687,6 +1706,88 @@ document.addEventListener('DOMContentLoaded', () => {
    const s=history.pop();match.scores=s.scores;match.serving=s.serving;match.positions=s.positions;match.actions=s.actions;match.pinned=s.pinned||[];
    swapSource=null;save();renderAll();
  };
+
+ function hasRecoverableMatch(){
+   try{
+     const saved=JSON.parse(localStorage.getItem('statsCastellarCurrentMatchV1')||'null');
+     return !!(saved && saved.players && saved.positions && saved.scores && !saved.finished);
+   }catch(_){return false}
+ }
+
+ function restoreSavedMatch(){
+   let saved=null;
+   try{saved=JSON.parse(localStorage.getItem('statsCastellarCurrentMatchV1')||'null')}catch(_){}
+   if(!saved || !saved.players || !saved.positions || !saved.scores)return false;
+
+   match=saved;
+   match.actions=Array.isArray(match.actions)?match.actions:[];
+   match.pinned=Array.isArray(match.pinned)?match.pinned:[];
+   match.completedSets=Array.isArray(match.completedSets)?match.completedSets:[];
+   match.set=Number(match.set)||1;
+   match.serving=match.serving||'castellar';
+
+   history.length=0;
+   if(Array.isArray(match.undoHistory)){
+     match.undoHistory.slice(-30).forEach(x=>history.push(x));
+   }
+   swapSource=null;
+   renderAll();
+   return true;
+ }
+
+ function openLiveScreen(){
+   const bridge=document.createElement('button');
+   bridge.type='button';bridge.dataset.go='scoring';bridge.style.display='none';
+   document.body.appendChild(bridge);bridge.click();bridge.remove();
+ }
+
+ const liveBack=$('liveBackBtn');
+ if(liveBack)liveBack.onclick=e=>{
+   e.preventDefault();e.stopPropagation();
+   if(match){
+     save();
+     $('leaveMatchModal').hidden=false;
+   }else{
+     history.back();
+   }
+ };
+ $('stayInMatch').onclick=()=>{$('leaveMatchModal').hidden=true};
+ $('leaveMatchModal').querySelector('.app-modal-backdrop').onclick=()=>{$('leaveMatchModal').hidden=true};
+ $('leaveMatch').onclick=()=>{
+   if(match)save();
+   match=null;history.length=0;swapSource=null;
+   $('leaveMatchModal').hidden=true;
+   const bridge=document.createElement('button');
+   bridge.type='button';bridge.dataset.go='home';bridge.style.display='none';
+   document.body.appendChild(bridge);bridge.click();bridge.remove();
+ };
+
+ /* Botó de portada Recuperar partit:
+    interceptem el clic abans de la navegació provisional antiga. */
+ const recoverBtn=document.querySelector('[data-go="recover"]');
+ if(recoverBtn){
+   recoverBtn.addEventListener('click',e=>{
+     e.preventDefault();e.stopImmediatePropagation();
+     if(!hasRecoverableMatch()){
+       alert('No hi ha cap partit pendent de recuperar.');
+       return;
+     }
+     if(restoreSavedMatch())openLiveScreen();
+   },true);
+ }
+
+ /* Guardat extra quan l'app queda en segon pla o es tanca/recarrega. */
+ document.addEventListener('visibilitychange',()=>{if(document.hidden&&match)save()});
+ window.addEventListener('pagehide',()=>{if(match)save()});
+
+ /* Si el navegador intenta sortir/recarregar durant un partit,
+    demanem confirmació nativa com a segona xarxa de seguretat. */
+ window.addEventListener('beforeunload',e=>{
+   if(!match)return;
+   save();
+   e.preventDefault();
+   e.returnValue='';
+ });
 
 })();
 </script>
