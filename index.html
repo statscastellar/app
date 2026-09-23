@@ -832,6 +832,27 @@ document.addEventListener('DOMContentLoaded',()=>{
 }
 </style>
 
+
+<style id="final-report-v17">
+.report-wrap{width:min(100%,1100px);margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.report-summary{text-align:center;padding:16px!important}.report-kicker{font-size:10px;font-weight:950;letter-spacing:.16em;color:#e45e00}
+.report-summary h2{margin:5px 0 4px;color:#17283f}.report-final-result{font-size:34px;font-weight:950;color:#17283f}
+.report-sets-line{font-size:12px;font-weight:850;color:#667085;margin-top:5px}
+.report-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px!important}
+.report-toolbar strong,.report-toolbar small{display:block}.report-toolbar small{color:#667085;margin-top:2px}
+.report-toolbar label{font-size:11px;font-weight:900}.report-toolbar select{display:block;margin-top:4px;min-height:38px;border:1px solid #d0d5dd;border-radius:9px;background:#fff;padding:5px 9px;font-weight:850}
+.report-table-card{padding:0!important;overflow:hidden}.report-scroll{width:100%;overflow:auto;-webkit-overflow-scrolling:touch}
+.report-table{border-collapse:separate;border-spacing:0;min-width:1060px;width:max-content;background:#fff;font-size:11px}
+.report-table th,.report-table td{height:42px;padding:6px 8px;border-right:1px solid #e4e7ec;border-bottom:1px solid #e4e7ec;text-align:center;white-space:nowrap;background:#fff}
+.report-table thead th{position:sticky;top:0;z-index:5;background:#17283f;color:#fff;font-weight:950}
+.report-table .sticky-number{position:sticky;left:0;z-index:3;width:54px;min-width:54px;max-width:54px;font-weight:950}
+.report-table .sticky-name{position:sticky;left:54px;z-index:3;width:108px;min-width:108px;max-width:108px;text-align:left;font-weight:950;box-shadow:5px 0 8px rgba(16,24,40,.08)}
+.report-table thead .sticky-number,.report-table thead .sticky-name{z-index:8;background:#17283f;color:#fff}
+.report-table tbody tr:nth-child(even) td,.report-table tbody tr:nth-child(even) .sticky-number,.report-table tbody tr:nth-child(even) .sticky-name{background:#f8fafc}
+.report-table .action-head{min-width:135px}.report-table .participation-head{min-width:90px}.stat-values{font-weight:800}.participation-cell{font-weight:950}
+.report-legend{padding:12px 14px!important;font-size:11px;line-height:1.55;color:#475467}
+@media(max-width:620px){.report-table{font-size:10px}.report-table .sticky-number{width:48px;min-width:48px;max-width:48px}.report-table .sticky-name{left:48px;width:92px;min-width:92px;max-width:92px}}
+</style>
 </head>
 <body>
 
@@ -1102,6 +1123,31 @@ document.addEventListener('DOMContentLoaded',()=>{
         <button id="returnToSetBtn" type="button" class="return-set-secondary">Tornar al set</button>
         <button id="finishMatchBtn" type="button" class="finish-match-secondary">Finalitzar partit</button>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="final-report" class="screen">
+  <div class="topbar"><button id="reportBackBtn" class="back" type="button">←</button><h1>Informe final</h1><span></span></div>
+  <div class="report-wrap">
+    <div class="report-summary card">
+      <div class="report-kicker">PARTIT FINALITZAT</div>
+      <h2 id="reportMatchTitle">Castellar – Rival</h2>
+      <div id="reportFinalResult" class="report-final-result">0 – 0</div>
+      <div id="reportSetsLine" class="report-sets-line"></div>
+    </div>
+    <div class="report-toolbar card">
+      <div><strong>Estadístiques de jugadores</strong><small>Desplaça la taula lateralment. Dorsal i nom queden fixos.</small></div>
+      <label>Veure<select id="reportSetFilter"><option value="all">Total partit</option></select></label>
+    </div>
+    <div class="report-table-card card"><div class="report-scroll">
+      <table id="reportTable" class="report-table"><thead></thead><tbody></tbody></table>
+    </div></div>
+    <div class="report-legend card">
+      <strong>Llegenda</strong>
+      <div><b>S</b> Servei · <b>R</b> Recepció · <b>C</b> Col·locació · <b>A</b> Atac · <b>B</b> Bloqueig</div>
+      <div>Les cel·les mostren les valoracions registrades: <b>0 / 1 / 2 / 3</b>. En bloqueig: <b>0 / 1 / 2</b>.</div>
+      <div><b>Participació</b>: percentatge de temps jugat.</div>
     </div>
   </div>
 </section>
@@ -2111,11 +2157,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
  $('finishMatchBtn').onclick=()=>{
    if(!match)return;
-   match.finished=true;
-   match.finishedAt=Date.now();
-   save();
-   $('finishSetModal').hidden=true;
-   alert('Partit finalitzat i guardat. El següent bloc serà l’informe final i les exportacions.');
+   match.finished=true;match.finishedAt=Date.now();save();$('finishSetModal').hidden=true;
+   renderFinalReport(match);
+   const bridge=document.createElement('button');bridge.type='button';bridge.dataset.go='final-report';bridge.style.display='none';
+   document.body.appendChild(bridge);bridge.click();bridge.remove();
  };
 
  $('cancelSubstitution').onclick=()=>{$('substitutionModal').hidden=true};
@@ -2128,6 +2173,37 @@ document.addEventListener('DOMContentLoaded', () => {
    swapSource=null;save();renderAll();
  };
 
+
+ function allReportSets(m){return (Array.isArray(m.completedSets)?m.completedSets.slice():[]).sort((a,b)=>Number(a.set)-Number(b.set))}
+ function reportActionsFor(m,f){const ss=allReportSets(m);if(f==='all')return ss.flatMap(s=>Array.isArray(s.actions)?s.actions:[]);const s=ss.find(x=>String(x.set)===String(f));return s&&Array.isArray(s.actions)?s.actions:[]}
+ function actionCounts(actions,id,action){const out=action==='Bloqueig'?[0,0,0]:[0,0,0,0];actions.forEach(a=>{if(a.playerId===id&&a.action===action){const v=Number(a.value);if(v>=0&&v<out.length)out[v]++}});return out}
+ function reportParticipation(m,id,f){
+   const ss=allReportSets(m);
+   if(f!=='all'){const s=ss.find(x=>String(x.set)===String(f)),r=s&&s.participation&&s.participation[id];return r?Number(r.percentage||0):0}
+   let played=0,total=0;
+   ss.forEach(s=>{const r=s.participation&&s.participation[id];if(r)played+=Number(r.playedMs)||0;const vals=Object.values(s.participation||{}).map(x=>Number(x.playedMs)||0);total+=vals.length?Math.max(...vals):0});
+   return total?Math.round(played/total*1000)/10:0;
+ }
+ function renderReportTable(m,f='all'){
+   const table=$('reportTable'),acts=reportActionsFor(m,f);
+   const hs=[['Dorsal','sticky-number'],['Jugadora','sticky-name'],['Servei 0/1/2/3','action-head'],['Recepció 0/1/2/3','action-head'],['Col·locació 0/1/2/3','action-head'],['Atac 0/1/2/3','action-head'],['Bloqueig 0/1/2','action-head'],['Participació','participation-head']];
+   table.tHead.innerHTML='<tr>'+hs.map(x=>'<th class="'+x[1]+'">'+x[0]+'</th>').join('')+'</tr>';
+   const body=table.tBodies[0];body.innerHTML='';
+   (m.players||[]).slice().sort((a,b)=>Number(a.number)-Number(b.number)).forEach(pl=>{
+     const tr=document.createElement('tr');
+     const vals=[[pl.number,'sticky-number'],[pl.name,'sticky-name'],[actionCounts(acts,pl.id,'Servei').join(' / '),'stat-values'],[actionCounts(acts,pl.id,'Recepció').join(' / '),'stat-values'],[actionCounts(acts,pl.id,'Col·locació').join(' / '),'stat-values'],[actionCounts(acts,pl.id,'Atac').join(' / '),'stat-values'],[actionCounts(acts,pl.id,'Bloqueig').join(' / '),'stat-values'],[reportParticipation(m,pl.id,f).toFixed(1)+'%','participation-cell']];
+     vals.forEach(v=>{const td=document.createElement('td');td.className=v[1];td.textContent=v[0];tr.appendChild(td)});body.appendChild(tr);
+   });
+ }
+ function renderFinalReport(m){
+   const ss=allReportSets(m),won=ss.reduce((a,s)=>{if(+s.scores.castellar>+s.scores.rival)a.c++;else if(+s.scores.rival>+s.scores.castellar)a.r++;return a},{c:0,r:0});
+   $('reportMatchTitle').textContent='Castellar – '+(m.opponent||'Rival');$('reportFinalResult').textContent=won.c+' – '+won.r;
+   $('reportSetsLine').textContent=ss.map(s=>'Set '+s.set+': '+s.scores.castellar+'–'+s.scores.rival).join(' · ');
+   const f=$('reportSetFilter');f.innerHTML='<option value="all">Total partit</option>';ss.forEach(s=>{const o=document.createElement('option');o.value=s.set;o.textContent='Set '+s.set;f.appendChild(o)});
+   f.onchange=()=>renderReportTable(m,f.value);renderReportTable(m,'all');
+ }
+ const reportBack=$('reportBackBtn');
+ if(reportBack)reportBack.onclick=()=>{const b=document.createElement('button');b.type='button';b.dataset.go='home';b.style.display='none';document.body.appendChild(b);b.click();b.remove()};
  function hasRecoverableMatch(){
    try{
      const saved=JSON.parse(localStorage.getItem('statsCastellarCurrentMatchV1')||'null');
