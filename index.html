@@ -617,6 +617,38 @@ document.addEventListener('DOMContentLoaded',()=>{
 }
 </style>
 
+
+<style id="player-controls-v12">
+.team-score-controls{display:flex;justify-content:center;gap:8px;margin-top:7px}
+.team-score-controls button{
+ width:44px;height:34px;border:0;border-radius:9px;background:#e8edf3;color:#17283f;
+ font-size:22px;line-height:1;font-weight:950;cursor:pointer
+}
+.team-score-controls button:active{transform:scale(.96)}
+.serve-status{margin-top:10px!important}
+.player-tools{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:6px}
+.player-tools button{
+ min-height:30px;border:1px solid rgba(23,40,63,.16);border-radius:8px;
+ background:#f2f4f7;color:#344054;font-size:9px;font-weight:900;padding:3px 2px
+}
+.player-tools .pin-btn.pinned{background:#17283f;color:#fff;border-color:#17283f}
+.player-tools .swap-btn.swap-source{
+ background:#fff3cd;color:#7a5100;border:2px solid #e5a900
+}
+.live-player-cell.swap-target{
+ box-shadow:inset 0 0 0 4px #e5a900;background:rgba(255,221,87,.22)
+}
+.swap-help{
+ grid-column:1/-1;text-align:center;font-size:8px;font-weight:850;color:#7a5100;
+ padding:2px 0 0
+}
+@media(max-width:620px){
+ .player-tools{gap:3px;margin-top:4px}
+ .player-tools button{font-size:7px;min-height:27px}
+ .team-score-controls button{width:40px;height:32px}
+}
+</style>
+
 </head>
 <body>
 <div id="app">
@@ -744,17 +776,23 @@ document.addEventListener('DOMContentLoaded',()=>{
     <div class="live-score card">
       <div class="set-badge" id="liveSet">SET 1</div>
       <div class="scoreboard">
-        <div class="score-team"><div id="leftTeamName">Castellar</div><strong id="leftScore">0</strong></div>
+        <div class="score-team">
+          <div id="leftTeamName">Castellar</div><strong id="leftScore">0</strong>
+          <div class="team-score-controls">
+            <button id="leftMinus" type="button" aria-label="Restar punt">−</button>
+            <button id="leftPlus" type="button" aria-label="Sumar punt">+</button>
+          </div>
+        </div>
         <div class="score-sep">–</div>
-        <div class="score-team"><div id="rightTeamName">Rival</div><strong id="rightScore">0</strong></div>
+        <div class="score-team">
+          <div id="rightTeamName">Rival</div><strong id="rightScore">0</strong>
+          <div class="team-score-controls">
+            <button id="rightMinus" type="button" aria-label="Restar punt">−</button>
+            <button id="rightPlus" type="button" aria-label="Sumar punt">+</button>
+          </div>
+        </div>
       </div>
-      <div class="serve-status" id="serveStatus">Servei: —</div>
-      <div class="manual-score">
-        <button type="button" data-manual="castellar,-1">− Castellar</button>
-        <button type="button" data-manual="castellar,1">+ Castellar</button>
-        <button type="button" data-manual="rival,-1">− Rival</button>
-        <button type="button" data-manual="rival,1">+ Rival</button>
-      </div>
+      <div class="serve-status" id="serveStatus">🏐 Servei: —</div>
     </div>
 
     <div class="live-court-card card">
@@ -767,7 +805,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         <div class="live-player-cell" data-pos="6"></div>
         <div class="live-player-cell" data-pos="1"></div>
       </div>
-      <button id="changePositionsBtn" class="secondary-action live-position-btn" type="button">↔ Canviar posicions</button>
+
     </div>
 
     <div class="last-action card">
@@ -1359,7 +1397,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <script id="live-scoring-logic-v11">
 (() => {
- let match=null;
+ let match=null, swapSource=null;
  const history=[];
  const $=id=>document.getElementById(id);
  const ratings={
@@ -1371,11 +1409,23 @@ document.addEventListener('DOMContentLoaded', () => {
  };
  const actions=['Servei','Recepció','Col·locació','Atac','Bloqueig'];
  const p=id=>match&&match.players.find(x=>x.id===id);
- const snap=()=>JSON.parse(JSON.stringify({scores:match.scores,serving:match.serving,positions:match.positions,actions:match.actions}));
+ const snap=()=>JSON.parse(JSON.stringify({scores:match.scores,serving:match.serving,positions:match.positions,actions:match.actions,pinned:match.pinned}));
  function save(){if(match)localStorage.setItem('statsCastellarCurrentMatchV1',JSON.stringify(match))}
  function rotate(){
-   const o={...match.positions};
-   match.positions={'1':o['2'],'6':o['1'],'5':o['6'],'4':o['5'],'3':o['4'],'2':o['3']};
+   const cycle=['1','6','5','4','3','2'];
+   const old={...match.positions};
+   const fixedPositions=cycle.filter(pos=>match.pinned.includes(old[pos]));
+   const movablePositions=cycle.filter(pos=>!fixedPositions.includes(pos));
+   if(movablePositions.length<2)return;
+
+   const next={...old};
+   /* Les jugadores fixades no es mouen. Les altres avancen a la següent
+      posició disponible seguint l'ordre normal de rotació. */
+   movablePositions.forEach((pos,i)=>{
+     const nextPos=movablePositions[(i+1)%movablePositions.length];
+     next[nextPos]=old[pos];
+   });
+   match.positions=next;
  }
  function award(side){
    if(!side)return;
@@ -1392,12 +1442,12 @@ document.addEventListener('DOMContentLoaded', () => {
    const n=names();
    $('leftTeamName').textContent=n.l;$('rightTeamName').textContent=n.r;
    $('leftScore').textContent=match.scores[n.lk];$('rightScore').textContent=match.scores[n.rk];
-   $('serveStatus').textContent='Servei: '+(match.serving==='castellar'?'Castellar':match.opponent);
+   $('serveStatus').textContent='🏐 Servei: '+(match.serving==='castellar'?'Castellar':match.opponent);
  }
  function renderCourt(){
    document.querySelectorAll('#liveCourt .live-player-cell').forEach(cell=>{
      const pos=cell.dataset.pos,id=match.positions[pos],pl=p(id);
-     cell.innerHTML='';
+     cell.classList.remove('swap-target');cell.innerHTML='';
      if(!pl)return;
      const head=document.createElement('div');head.className='live-player-head';
      head.innerHTML='<span class="live-pos">'+pos+'</span>'+pl.number+' · '+pl.name;
@@ -1406,8 +1456,49 @@ document.addEventListener('DOMContentLoaded', () => {
        const b=document.createElement('button');b.type='button';b.textContent=a;
        b.onclick=()=>showRatings(cell,pl,a);box.appendChild(b);
      });
-     cell.append(head,box);
+
+     const tools=document.createElement('div');tools.className='player-tools';
+     const pin=document.createElement('button');pin.type='button';pin.className='pin-btn';
+     const isPinned=match.pinned.includes(pl.id);
+     pin.classList.toggle('pinned',isPinned);
+     pin.textContent=isPinned?'🔒 Fixada':'🔓 Fixar';
+     pin.onclick=()=>{
+       const i=match.pinned.indexOf(pl.id);
+       if(i>=0)match.pinned.splice(i,1);else match.pinned.push(pl.id);
+       save();renderCourt();
+     };
+
+     const swap=document.createElement('button');swap.type='button';swap.className='swap-btn';
+     swap.textContent='⇄ Canviar';
+     if(swapSource===pl.id)swap.classList.add('swap-source');
+     swap.onclick=()=>beginOrCompleteSwap(pl.id);
+
+     tools.append(pin,swap);
+     if(swapSource){
+       const help=document.createElement('div');help.className='swap-help';
+       help.textContent=swapSource===pl.id?'Tria una altra jugadora':'Toca “Canviar” per intercanviar';
+       tools.appendChild(help);
+       if(swapSource!==pl.id)cell.classList.add('swap-target');
+     }
+     cell.append(head,box,tools);
    });
+ }
+ function beginOrCompleteSwap(playerId){
+   if(!swapSource){
+     swapSource=playerId;renderCourt();return;
+   }
+   if(swapSource===playerId){
+     swapSource=null;renderCourt();return;
+   }
+   const posA=Object.keys(match.positions).find(k=>match.positions[k]===swapSource);
+   const posB=Object.keys(match.positions).find(k=>match.positions[k]===playerId);
+   if(posA&&posB){
+     const tmp=match.positions[posA];
+     match.positions[posA]=match.positions[posB];
+     match.positions[posB]=tmp;
+     save();
+   }
+   swapSource=null;renderCourt();
  }
  function showRatings(cell,pl,action){
    const box=cell.querySelector('.live-actions');box.innerHTML='';
@@ -1436,30 +1527,27 @@ document.addEventListener('DOMContentLoaded', () => {
    const d=e.detail;
    match={teamId:d.teamId,opponent:d.opponent,date:d.date,venue:d.venue,set:1,players:d.players,
           positions:{...d.positions},starting:[...d.starting],serving:d.serving,
-          scores:{castellar:0,rival:0},actions:[]};
+          scores:{castellar:0,rival:0},actions:[],pinned:[]};
    history.length=0;save();renderAll();
  });
- document.querySelectorAll('[data-manual]').forEach(b=>b.onclick=()=>{
-   if(!match)return;const [side,dr]=b.dataset.manual.split(',');
-   history.push(snap());match.scores[side]=Math.max(0,match.scores[side]+Number(dr));save();renderAll();
- });
+ function manualPoint(visualSide,delta){
+   if(!match)return;
+   const n=names();
+   const side=visualSide==='left'?n.lk:n.rk;
+   history.push(snap());
+   match.scores[side]=Math.max(0,match.scores[side]+delta);
+   save();renderAll();
+ }
+ $('leftMinus').onclick=()=>manualPoint('left',-1);
+ $('leftPlus').onclick=()=>manualPoint('left',1);
+ $('rightMinus').onclick=()=>manualPoint('right',-1);
+ $('rightPlus').onclick=()=>manualPoint('right',1);
  $('undoAction').onclick=()=>{
    if(!history.length||!match)return;
-   const s=history.pop();match.scores=s.scores;match.serving=s.serving;match.positions=s.positions;match.actions=s.actions;
-   save();renderAll();
+   const s=history.pop();match.scores=s.scores;match.serving=s.serving;match.positions=s.positions;match.actions=s.actions;match.pinned=s.pinned||[];
+   swapSource=null;save();renderAll();
  };
- $('changePositionsBtn').onclick=()=>{
-   if(!match)return;
-   const pos=prompt('Quina posició vols modificar? (1–6)');
-   if(!['1','2','3','4','5','6'].includes(pos))return;
-   const list=Object.values(match.positions).map(p).filter(Boolean);
-   const dorsal=prompt('Escriu el dorsal de la jugadora:\\n\\n'+list.map(x=>x.number+' · '+x.name).join('\\n'));
-   if(dorsal===null)return;
-   const pl=list.find(x=>String(x.number)===dorsal.trim());if(!pl)return alert('Dorsal no trobat.');
-   const old=Object.keys(match.positions).find(k=>match.positions[k]===pl.id), displaced=match.positions[pos];
-   match.positions[pos]=pl.id;if(old&&old!==pos)match.positions[old]=displaced;
-   save();renderCourt();
- };
+
 })();
 </script>
 
