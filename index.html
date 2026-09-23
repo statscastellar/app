@@ -674,6 +674,14 @@ document.addEventListener('DOMContentLoaded',()=>{
 .modal-confirm{background:#17283f;color:#fff}
 </style>
 
+
+<style id="sets-flow-v15">
+.sets-score{font-size:11px;font-weight:900;color:#667085;margin:-2px 0 7px}
+.after-set-actions{display:grid;grid-template-columns:1fr;gap:9px;margin-top:4px}
+.after-set-actions[hidden]{display:none!important}
+.finish-match-secondary{min-height:46px;border:1px solid #17283f;border-radius:11px;background:#fff;color:#17283f;font-weight:950}
+</style>
+
 </head>
 <body>
 
@@ -808,7 +816,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   <!-- PAS 3 -->
   <div id="matchStep3" class="match-step card" hidden>
     <div class="step-kicker">PAS 3 DE 4</div>
-    <h2>Sis inicial</h2>
+    <h2 id="startingSixTitle">Sis inicial</h2>
     <p class="step-help">Selecciona exactament 6 jugadores per començar el set.</p>
     <div id="startingSixList" class="available-list"></div>
     <div id="sixCounter" class="selection-counter">0 / 6 seleccionades</div>
@@ -821,7 +829,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   <!-- PAS 4 -->
   <div id="matchStep4" class="match-step card" hidden>
     <div class="step-kicker">PAS 4 DE 4</div>
-    <h2>Posicions a pista</h2>
+    <h2 id="positionsTitle">Posicions a pista</h2>
     <p class="step-help">Assigna les sis jugadores a les posicions 1–6. Pots corregir qualsevol posició abans de començar.</p>
 
     <div class="court-wrap">
@@ -860,6 +868,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   <div class="live-wrap">
     <div class="live-score card">
       <div class="set-badge" id="liveSet">SET 1</div>
+      <div id="setsScore" class="sets-score">Sets: Castellar 0 – 0 Rival</div>
       <div class="scoreboard">
         <div class="score-team">
           <div id="leftTeamName">Castellar</div><strong id="leftScore">0</strong>
@@ -922,9 +931,13 @@ document.addEventListener('DOMContentLoaded',()=>{
       <h2 id="finishSetTitle">Finalitzar el Set 1?</h2>
       <div id="finishSetScore" class="finish-set-score"></div>
       <p>Es guardaran el resultat i totes les estadístiques d'aquest set.</p>
-      <div class="app-modal-actions">
+      <div id="finishSetConfirmActions" class="app-modal-actions">
         <button id="cancelFinishSet" type="button" class="modal-cancel">Cancel·lar</button>
         <button id="confirmFinishSet" type="button" class="modal-confirm">Finalitzar set</button>
+      </div>
+      <div id="afterSetActions" class="after-set-actions" hidden>
+        <button id="nextSetBtn" type="button" class="modal-confirm">Preparar següent set</button>
+        <button id="finishMatchBtn" type="button" class="finish-match-secondary">Finalitzar partit</button>
       </div>
     </div>
   </div>
@@ -1161,7 +1174,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 <script id="new-match-flow-v08">
 (() => {
   const TEAM_KEY='statsCastellarTeamsV1';
-  const state={step:1,teamId:'infantil-a',opponent:'',date:'',venue:'home',available:[],guests:[],starting:[],positions:{},firstServe:null};
+  const state={step:1,teamId:'infantil-a',opponent:'',date:'',venue:'home',available:[],guests:[],starting:[],positions:{},firstServe:null,nextSetMode:false,currentSet:1};
 
   const $=id=>document.getElementById(id);
   const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1180,8 +1193,15 @@ document.addEventListener('DOMContentLoaded',()=>{
     state.step=n;
     [1,2,3,4].forEach(i=>{const el=$('matchStep'+i);if(el)el.hidden=i!==n});
     if(n===2)renderAvailable();
-    if(n===3)renderStarting();
-    if(n===4){renderCourt();updateFirstServeButtons();}
+    if(n===3){
+      if($('startingSixTitle'))$('startingSixTitle').textContent='Sis inicial · Set '+state.currentSet;
+      renderStarting();
+    }
+    if(n===4){
+      if($('positionsTitle'))$('positionsTitle').textContent='Posicions a pista · Set '+state.currentSet;
+      renderCourt();updateFirstServeButtons();
+      if($('readyForSet'))$('readyForSet').textContent='Preparat per començar el Set '+state.currentSet;
+    }
     window.scrollTo(0,0);
   }
   function prepare(){
@@ -1343,13 +1363,33 @@ $('readyForSet').onclick=()=>{
       starting:[...state.starting],
       positions:{...state.positions},
       players:allPlayers().map(p=>({...p})),
-      serving:state.firstServe
+      serving:state.firstServe,
+      set:state.currentSet
     };
     document.dispatchEvent(new CustomEvent('stats-start-scoring',{detail}));
     const bridge=document.createElement('button');
     bridge.type='button';bridge.dataset.go='scoring';bridge.style.display='none';
     document.body.appendChild(bridge);bridge.click();bridge.remove();
   };
+  window.statsPrepareNextSet=function(detail){
+    state.nextSetMode=true;
+    state.currentSet=Number(detail.set)||2;
+    state.teamId=detail.teamId;
+    state.opponent=detail.opponent;
+    state.date=detail.date;
+    state.venue=detail.venue;
+    state.guests=(detail.players||[]).filter(p=>p.guest);
+    state.available=(detail.available||detail.players||[]).map(p=>typeof p==='string'?p:p.id);
+    state.starting=[];
+    state.positions={};
+    state.firstServe=null;
+
+    const bridge=document.createElement('button');
+    bridge.type='button';bridge.dataset.go='new-match';bridge.style.display='none';
+    document.body.appendChild(bridge);bridge.click();bridge.remove();
+    showStep(3);
+  };
+
 })();
 </script>
 
@@ -1651,13 +1691,25 @@ document.addEventListener('DOMContentLoaded', () => {
    renderScore();renderCourt();renderLast();
    if($('liveSet'))$('liveSet').textContent='SET '+match.set;
    if($('finishSetBtn'))$('finishSetBtn').textContent='FINALITZAR SET '+match.set;
+   const won=(match.completedSets||[]).reduce((a,s)=>{
+     if((s.scores.castellar||0)>(s.scores.rival||0))a.castellar++;
+     else if((s.scores.rival||0)>(s.scores.castellar||0))a.rival++;
+     return a;
+   },{castellar:0,rival:0});
+   if($('setsScore'))$('setsScore').textContent='Sets: Castellar '+won.castellar+' – '+won.rival+' '+(match.opponent||'Rival');
  }
  document.addEventListener('stats-start-scoring',e=>{
    const d=e.detail;
-   match={teamId:d.teamId,opponent:d.opponent,date:d.date,venue:d.venue,set:1,players:d.players,
-          positions:{...d.positions},starting:[...d.starting],serving:d.serving,
-          scores:{castellar:0,rival:0},actions:[],pinned:[],completedSets:[]};
-   history.length=0;save();renderAll();
+   let saved=null;
+   try{saved=JSON.parse(localStorage.getItem('statsCastellarCurrentMatchV1')||'null')}catch(_){}
+   const continuing=Number(d.set)>1 && saved && !saved.finished;
+   match={
+     teamId:d.teamId,opponent:d.opponent,date:d.date,venue:d.venue,set:Number(d.set)||1,players:d.players,
+     positions:{...d.positions},starting:[...d.starting],serving:d.serving,
+     scores:{castellar:0,rival:0},actions:[],pinned:[],
+     completedSets:continuing&&Array.isArray(saved.completedSets)?saved.completedSets:[]
+   };
+   history.length=0;swapSource=null;save();renderAll();
  });
  function manualPoint(visualSide,delta){
    if(!match)return;
@@ -1677,6 +1729,8 @@ document.addEventListener('DOMContentLoaded', () => {
    const n=names();
    $('finishSetTitle').textContent='Finalitzar el Set '+match.set+'?';
    $('finishSetScore').textContent=n.l+' '+match.scores[n.lk]+' – '+match.scores[n.rk]+' '+n.r;
+   $('finishSetConfirmActions').hidden=false;
+   $('afterSetActions').hidden=true;
    $('finishSetModal').hidden=false;
  };
  $('cancelFinishSet').onclick=()=>{$('finishSetModal').hidden=true};
@@ -1685,22 +1739,46 @@ document.addEventListener('DOMContentLoaded', () => {
  $('confirmFinishSet').onclick=()=>{
    if(!match)return;
    match.completedSets=match.completedSets||[];
-   match.completedSets.push({
-     set:match.set,
-     scores:{...match.scores},
-     actions:JSON.parse(JSON.stringify(match.actions)),
-     finalPositions:{...match.positions},
-     pinned:[...match.pinned],
-     starting:[...match.starting]
-   });
-   save();
-   $('finishSetModal').hidden=true;
-
-   /* De moment tanquem i preservem el set. El següent bloc serà la
-      configuració del Set 2 (sis inicial, posicions i primer servei). */
-   alert('Set '+match.set+' guardat correctament.');
+   const already=match.completedSets.some(s=>Number(s.set)===Number(match.set));
+   if(!already){
+     match.completedSets.push({
+       set:match.set,
+       scores:{...match.scores},
+       actions:JSON.parse(JSON.stringify(match.actions)),
+       finalPositions:{...match.positions},
+       pinned:[...match.pinned],
+       starting:[...match.starting]
+     });
+   }
+   save();renderAll();
+   $('finishSetTitle').textContent='Set '+match.set+' guardat';
+   const n=names();
+   $('finishSetScore').textContent=n.l+' '+match.scores[n.lk]+' – '+match.scores[n.rk]+' '+n.r;
+   $('finishSetConfirmActions').hidden=true;
+   $('afterSetActions').hidden=false;
  };
 
+
+ $('nextSetBtn').onclick=()=>{
+   if(!match)return;
+   const next=Number(match.set)+1;
+   const detail={
+     set:next,teamId:match.teamId,opponent:match.opponent,date:match.date,venue:match.venue,
+     players:match.players,available:match.players
+   };
+   save();
+   $('finishSetModal').hidden=true;
+   if(window.statsPrepareNextSet)window.statsPrepareNextSet(detail);
+ };
+
+ $('finishMatchBtn').onclick=()=>{
+   if(!match)return;
+   match.finished=true;
+   match.finishedAt=Date.now();
+   save();
+   $('finishSetModal').hidden=true;
+   alert('Partit finalitzat i guardat. El següent bloc serà l’informe final i les exportacions.');
+ };
  $('undoAction').onclick=()=>{
    if(!history.length||!match)return;
    const s=history.pop();match.scores=s.scores;match.serving=s.serving;match.positions=s.positions;match.actions=s.actions;match.pinned=s.pinned||[];
