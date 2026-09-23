@@ -395,6 +395,64 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 </script>
 
+
+<style id="new-match-steps-v08">
+.match-step{width:min(100%,760px);margin:0 auto}
+.match-step h2{margin:3px 0 15px;font-size:25px}
+.step-kicker{font-size:10px;font-weight:950;letter-spacing:.18em;color:#e45e00}
+.step-help{margin:-6px 0 16px;color:#667085;line-height:1.45}
+.match-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field select,.field input{
+ width:100%;min-height:49px;border:1px solid #cfd6df;border-radius:12px;
+ padding:10px 12px;background:#fff;font-size:16px;color:#182230
+}
+.segmented{display:grid;grid-template-columns:1fr 1fr;border:1px solid #cfd6df;border-radius:12px;overflow:hidden}
+.segmented button{min-height:49px;border:0;background:#fff;font-weight:850;color:#475467;cursor:pointer}
+.segmented button.active{background:#17283f;color:#fff}
+.primary-action,.secondary-action{
+ min-height:50px;border:0;border-radius:13px;padding:10px 16px;font-weight:900;cursor:pointer
+}
+.primary-action{background:#17283f;color:#fff}
+.secondary-action{background:#eef2f6;color:#344054}
+.match-step>.primary-action{width:100%;margin-top:16px}
+.available-list{display:flex;flex-direction:column;gap:8px}
+.available-player{
+ min-height:56px;border:1px solid #d8dee7;border-radius:13px;background:#fff;
+ display:grid;grid-template-columns:52px 1fr auto;align-items:center;padding:0 12px 0 0;cursor:pointer
+}
+.available-player .num{height:100%;display:flex;align-items:center;justify-content:center;background:#17283f;color:#fff;font-weight:900;border-radius:12px 0 0 12px}
+.available-player .name{padding:10px 13px;font-weight:850}
+.available-player .check{width:28px;height:28px;border:2px solid #c6ccd5;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:950}
+.available-player.selected{border-color:#168a43;background:#f2fff7}
+.available-player.selected .check{background:#168a43;border-color:#168a43;color:#fff}
+#guestPlayerBtn{width:100%;margin-top:12px;border:2px dashed #f36b00;background:#fff7ed;color:#c65300}
+.step-actions{display:flex;gap:10px;margin-top:17px}
+.step-actions>*{flex:1}
+.selection-counter{text-align:center;margin-top:12px;font-weight:900;color:#475467}
+.court-wrap{width:min(100%,620px);margin:0 auto}
+.court-label{text-align:center;font-size:11px;font-weight:950;letter-spacing:.2em;color:#fff;background:#17283f;padding:7px;border-radius:10px 10px 0 0}
+.volley-court{
+ display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,minmax(110px,1fr));
+ border:3px solid #fff;background:rgba(243,107,0,.82);box-shadow:0 8px 20px rgba(0,0,0,.22)
+}
+.court-slot{
+ position:relative;border:1px solid rgba(255,255,255,.75);background:rgba(255,255,255,.10);
+ color:#fff;padding:12px 7px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px
+}
+.court-slot .pos{position:absolute;top:6px;left:8px;font-size:11px;font-weight:950;opacity:.85}
+.court-player{font-weight:950;text-align:center;text-shadow:0 1px 3px rgba(0,0,0,.55)}
+.court-slot.filled{background:rgba(23,40,63,.83)}
+.court-note{text-align:center;color:#667085;font-size:12px;margin:8px 0 14px}
+.position-pool{display:flex;flex-wrap:wrap;gap:7px;justify-content:center}
+.position-chip{border:0;border-radius:999px;background:#fff;color:#17283f;padding:8px 12px;font-weight:850;box-shadow:0 2px 7px rgba(0,0,0,.12)}
+.position-chip.assigned{opacity:.38}
+@media(max-width:620px){
+ .match-form-grid{grid-template-columns:1fr}
+ .volley-court{grid-template-rows:repeat(2,minmax(90px,1fr))}
+ .court-player{font-size:13px}
+}
+</style>
+
 </head>
 <body>
 <div id="app">
@@ -420,10 +478,92 @@ document.addEventListener('DOMContentLoaded',()=>{
     </div>
   </section>
 
-  <section id="new-match" class="screen">
-    <div class="topbar"><button class="back" data-back>←</button><h1>Nou partit</h1><span></span></div>
-    <div class="card placeholder">Pantalla reservada per al procés de Nou partit.</div>
-  </section>
+  
+<section id="new-match" class="screen">
+  <div class="topbar"><button class="back" data-back>←</button><h1>Nou partit</h1><span></span></div>
+
+  <!-- PAS 1 -->
+  <div id="matchStep1" class="match-step card">
+    <div class="step-kicker">PAS 1 DE 4</div>
+    <h2>Dades del partit</h2>
+
+    <div class="match-form-grid">
+      <div class="field">
+        <label for="matchTeam">Equip</label>
+        <select id="matchTeam"></select>
+      </div>
+      <div class="field">
+        <label for="matchOpponent">Rival</label>
+        <input id="matchOpponent" maxlength="60" autocomplete="off" placeholder="Nom de l'equip rival">
+      </div>
+      <div class="field">
+        <label for="matchDate">Data</label>
+        <input id="matchDate" type="date">
+      </div>
+      <div class="field">
+        <label>Castellar juga com a</label>
+        <div class="segmented">
+          <button type="button" data-venue="home" class="active">Local</button>
+          <button type="button" data-venue="away">Visitant</button>
+        </div>
+      </div>
+    </div>
+    <button id="step1Next" class="primary-action" type="button">Continuar ›</button>
+  </div>
+
+  <!-- PAS 2 -->
+  <div id="matchStep2" class="match-step card" hidden>
+    <div class="step-kicker">PAS 2 DE 4</div>
+    <h2>Jugadores disponibles</h2>
+    <p class="step-help">Selecciona les jugadores convocades per aquest partit.</p>
+    <div id="availablePlayers" class="available-list"></div>
+    <button id="guestPlayerBtn" class="secondary-action" type="button">＋ Afegir convidada puntual</button>
+    <div class="step-actions">
+      <button class="secondary-action" type="button" data-match-prev="1">← Enrere</button>
+      <button id="step2Next" class="primary-action" type="button">Continuar ›</button>
+    </div>
+  </div>
+
+  <!-- PAS 3 -->
+  <div id="matchStep3" class="match-step card" hidden>
+    <div class="step-kicker">PAS 3 DE 4</div>
+    <h2>Sis inicial</h2>
+    <p class="step-help">Selecciona exactament 6 jugadores per començar el set.</p>
+    <div id="startingSixList" class="available-list"></div>
+    <div id="sixCounter" class="selection-counter">0 / 6 seleccionades</div>
+    <div class="step-actions">
+      <button class="secondary-action" type="button" data-match-prev="2">← Enrere</button>
+      <button id="step3Next" class="primary-action" type="button">Col·locar a pista ›</button>
+    </div>
+  </div>
+
+  <!-- PAS 4 -->
+  <div id="matchStep4" class="match-step card" hidden>
+    <div class="step-kicker">PAS 4 DE 4</div>
+    <h2>Posicions a pista</h2>
+    <p class="step-help">Assigna les sis jugadores a les posicions 1–6. Pots corregir qualsevol posició abans de començar.</p>
+
+    <div class="court-wrap">
+      <div class="court-label court-front">XARXA</div>
+      <div id="court" class="volley-court">
+        <button type="button" class="court-slot" data-pos="4"><span class="pos">4</span><span class="court-player">—</span></button>
+        <button type="button" class="court-slot" data-pos="3"><span class="pos">3</span><span class="court-player">—</span></button>
+        <button type="button" class="court-slot" data-pos="2"><span class="pos">2</span><span class="court-player">—</span></button>
+        <button type="button" class="court-slot" data-pos="5"><span class="pos">5</span><span class="court-player">—</span></button>
+        <button type="button" class="court-slot" data-pos="6"><span class="pos">6</span><span class="court-player">—</span></button>
+        <button type="button" class="court-slot" data-pos="1"><span class="pos">1</span><span class="court-player">—</span></button>
+      </div>
+      <div class="court-note">Toca una posició per canviar la jugadora.</div>
+    </div>
+
+    <div id="positionPool" class="position-pool"></div>
+
+    <div class="step-actions">
+      <button class="secondary-action" type="button" data-match-prev="3">← Enrere</button>
+      <button id="readyForSet" class="primary-action" type="button">Preparat per començar el Set 1</button>
+    </div>
+  </div>
+</section>
   <section id="history" class="screen">
     <div class="topbar"><button class="back" data-back>←</button><h1>Historial de partits</h1><span></span></div>
     <div class="card placeholder">Pantalla reservada per a l'historial.</div>
@@ -649,6 +789,148 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
 
   renderTeams();
+})();
+</script>
+
+
+<script id="new-match-flow-v08">
+(() => {
+  const TEAM_KEY='statsCastellarTeamsV1';
+  const state={step:1,teamId:'infantil-a',opponent:'',date:'',venue:'home',available:[],guests:[],starting:[],positions:{}};
+
+  const $=id=>document.getElementById(id);
+  const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function teams(){try{return JSON.parse(localStorage.getItem(TEAM_KEY)||'[]')}catch(e){return[]}}
+  function selectedTeam(){return teams().find(t=>t.id===state.teamId)}
+  function allPlayers(){
+    const t=selectedTeam();
+    return [...((t&&t.players)||[]),...state.guests].sort((a,b)=>(Number(a.number)||999)-(Number(b.number)||999));
+  }
+  function showStep(n){
+    state.step=n;
+    [1,2,3,4].forEach(i=>{const el=$('matchStep'+i);if(el)el.hidden=i!==n});
+    if(n===2)renderAvailable();
+    if(n===3)renderStarting();
+    if(n===4)renderCourt();
+    window.scrollTo(0,0);
+  }
+  function prepare(){
+    const sel=$('matchTeam'); if(!sel)return;
+    const list=teams(); sel.innerHTML='';
+    list.forEach(t=>{const o=document.createElement('option');o.value=t.id;o.textContent=t.name;sel.appendChild(o)});
+    if(list.length && !list.some(t=>t.id===state.teamId))state.teamId=list[0].id;
+    sel.value=state.teamId;
+    if(!$('matchDate').value){
+      const d=new Date(), local=new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);
+      $('matchDate').value=local; state.date=local;
+    }
+  }
+  document.querySelector('[data-go="new-match"]').addEventListener('click',()=>{prepare();showStep(1)});
+
+  $('matchTeam').addEventListener('change',e=>{
+    state.teamId=e.target.value;state.available=[];state.guests=[];state.starting=[];state.positions={}
+  });
+  document.querySelectorAll('[data-venue]').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('[data-venue]').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');state.venue=b.dataset.venue;
+  });
+  $('step1Next').onclick=()=>{
+    state.opponent=$('matchOpponent').value.trim();state.date=$('matchDate').value;
+    if(!state.opponent)return alert('Indica el nom del rival.');
+    if(!state.date)return alert('Indica la data del partit.');
+    state.teamId=$('matchTeam').value; showStep(2);
+  };
+
+  function renderAvailable(){
+    const host=$('availablePlayers');host.innerHTML='';
+    const players=allPlayers();
+    if(!state.available.length)state.available=players.map(p=>p.id);
+    players.forEach(p=>{
+      const b=document.createElement('button');b.type='button';
+      b.className='available-player'+(state.available.includes(p.id)?' selected':'');
+      b.innerHTML='<span class="num">'+esc(p.number)+'</span><span class="name">'+esc(p.name)+(p.guest?' · convidada':'')+'</span><span class="check">'+(state.available.includes(p.id)?'✓':'')+'</span>';
+      b.onclick=()=>{
+        state.available=state.available.includes(p.id)?state.available.filter(x=>x!==p.id):[...state.available,p.id];
+        state.starting=state.starting.filter(x=>state.available.includes(x));renderAvailable();
+      };
+      host.appendChild(b);
+    });
+  }
+  $('guestPlayerBtn').onclick=()=>{
+    const number=prompt('Dorsal de la convidada:');if(number===null)return;
+    const name=prompt('Nom de la convidada:');if(name===null||!name.trim()||!number.trim())return;
+    const p={id:'guest-'+Date.now().toString(36),number:number.trim(),name:name.trim(),guest:true};
+    state.guests.push(p);state.available.push(p.id);renderAvailable();
+  };
+  document.querySelector('[data-match-prev="1"]').onclick=()=>showStep(1);
+  $('step2Next').onclick=()=>{
+    if(state.available.length<6)return alert('Cal tenir com a mínim 6 jugadores disponibles.');
+    showStep(3);
+  };
+
+  function renderStarting(){
+    const host=$('startingSixList');host.innerHTML='';
+    const players=allPlayers().filter(p=>state.available.includes(p.id));
+    players.forEach(p=>{
+      const selected=state.starting.includes(p.id);
+      const b=document.createElement('button');b.type='button';b.className='available-player'+(selected?' selected':'');
+      b.innerHTML='<span class="num">'+esc(p.number)+'</span><span class="name">'+esc(p.name)+'</span><span class="check">'+(selected?'✓':'')+'</span>';
+      b.onclick=()=>{
+        if(selected)state.starting=state.starting.filter(x=>x!==p.id);
+        else{
+          if(state.starting.length>=6)return alert('Ja has seleccionat les 6 jugadores.');
+          state.starting.push(p.id);
+        }
+        renderStarting();
+      };
+      host.appendChild(b);
+    });
+    $('sixCounter').textContent=state.starting.length+' / 6 seleccionades';
+  }
+  document.querySelector('[data-match-prev="2"]').onclick=()=>showStep(2);
+  $('step3Next').onclick=()=>{
+    if(state.starting.length!==6)return alert('Has de seleccionar exactament 6 jugadores.');
+    state.positions={};showStep(4);
+  };
+
+  function playerById(id){return allPlayers().find(p=>p.id===id)}
+  function renderCourt(){
+    document.querySelectorAll('.court-slot').forEach(slot=>{
+      const id=state.positions[slot.dataset.pos],p=id&&playerById(id);
+      slot.querySelector('.court-player').textContent=p?(p.number+' · '+p.name):'—';
+      slot.classList.toggle('filled',!!p);
+    });
+    const pool=$('positionPool');pool.innerHTML='';
+    state.starting.map(playerById).filter(Boolean).forEach(p=>{
+      const b=document.createElement('button');b.type='button';b.className='position-chip';
+      const assigned=Object.values(state.positions).includes(p.id);
+      if(assigned)b.classList.add('assigned');
+      b.textContent=p.number+' · '+p.name;
+      pool.appendChild(b);
+    });
+  }
+  document.querySelectorAll('.court-slot').forEach(slot=>slot.onclick=()=>{
+    const pos=slot.dataset.pos;
+    const candidates=state.starting.map(playerById).filter(Boolean);
+    const current=state.positions[pos];
+    let text='Posició '+pos+'. Escriu el dorsal de la jugadora:\n\n'+candidates.map(p=>p.number+' · '+p.name).join('\n');
+    const answer=prompt(text,current?(playerById(current)||{}).number||'':'');
+    if(answer===null)return;
+    const p=candidates.find(x=>String(x.number)===answer.trim());
+    if(!p)return alert('No he trobat cap jugadora del sis inicial amb aquest dorsal.');
+    const oldPos=Object.keys(state.positions).find(k=>state.positions[k]===p.id);
+    if(oldPos&&oldPos!==pos){
+      const displaced=state.positions[pos];
+      state.positions[pos]=p.id;
+      if(displaced)state.positions[oldPos]=displaced; else delete state.positions[oldPos];
+    }else state.positions[pos]=p.id;
+    renderCourt();
+  });
+  document.querySelector('[data-match-prev="3"]').onclick=()=>showStep(3);
+  $('readyForSet').onclick=()=>{
+    if(Object.keys(state.positions).length!==6)return alert('Cal col·locar les 6 jugadores a pista.');
+    alert('Configuració del Set 1 completada. La pantalla d’anotació serà el següent bloc que construirem.');
+  };
 })();
 </script>
 
