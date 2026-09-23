@@ -2574,7 +2574,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
  function buildTestMatch(){
-   const team=(state.teams||[]).find(t=>t.id==='infantil-a')||(state.teams||[])[0];
+   const teams=loadTeams();
+   const team=(teams||[]).find(t=>t.id==='infantil-a')||(teams||[])[0];
    if(!team||!(team.players||[]).length)throw new Error('No hi ha plantilla disponible');
    const roster=team.players.slice().sort((a,b)=>+a.number-+b.number);
    const m={id:'TEST-'+Date.now(),teamId:team.id,teamName:team.name||'Infantil A',opponent:'Rival de prova',
