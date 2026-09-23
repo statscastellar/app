@@ -327,6 +327,74 @@ body:has(#home.active) footer { display:none!important; }
 }
 </style>
 
+
+<style id="global-orange-background-v07">
+/* Mateix fons gràfic de la portada per a tota l'app */
+html,body{
+  background:#e85b00!important;
+  min-height:100%;
+}
+body:not(:has(#home.active)){
+  background:#e85b00!important;
+}
+body:not(:has(#home.active))::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  background-image:var(--app-bg-image);
+  background-size:cover;
+  background-position:center center;
+  background-repeat:no-repeat;
+}
+body:not(:has(#home.active))::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  background:rgba(230,91,0,.20);
+  pointer-events:none;
+}
+body:not(:has(#home.active)) main{
+  background:transparent!important;
+}
+body:not(:has(#home.active)) .screen.active{
+  background:transparent!important;
+}
+body:not(:has(#home.active)) .card{
+  background:rgba(255,255,255,.94)!important;
+  backdrop-filter:blur(2px);
+}
+body:not(:has(#home.active)) footer{
+  color:#fff!important;
+  text-shadow:0 1px 4px rgba(0,0,0,.85);
+}
+
+/* Capçalera interior llegible damunt el fons taronja */
+body:not(:has(#home.active)) .topbar h1{
+  color:#fff!important;
+  text-shadow:0 2px 5px rgba(0,0,0,.55);
+}
+body:not(:has(#home.active)) .back{
+  background:rgba(255,255,255,.96)!important;
+}
+
+/* En vertical usem el mateix enquadrament que la portada */
+@media (orientation:portrait){
+  body:not(:has(#home.active))::before{
+    background-size:auto 100%;
+    background-position:31% center;
+  }
+}
+</style>
+<script id="global-bg-variable-v07">
+document.addEventListener('DOMContentLoaded',()=>{
+  const home=document.getElementById('home');
+  const bg=getComputedStyle(home).backgroundImage;
+  document.documentElement.style.setProperty('--app-bg-image',bg);
+});
+</script>
+
 </head>
 <body>
 <div id="app">
@@ -487,7 +555,17 @@ body:has(#home.active) footer { display:none!important; }
       const row=document.createElement('div'); row.className='team-row';
       const open=document.createElement('button'); open.type='button'; open.className='team-open';
       open.innerHTML='<span>'+esc(t.name)+'</span><span class="arrow">›</span>';
-      open.onclick=()=>{selectedTeamId=t.id; renderRoster(); render('roster',true)};
+      open.onclick=()=>{
+        selectedTeamId=t.id;
+        renderRoster();
+        const bridge=document.createElement('button');
+        bridge.type='button';
+        bridge.dataset.go='roster';
+        bridge.style.display='none';
+        document.body.appendChild(bridge);
+        bridge.click();
+        bridge.remove();
+      };
       row.appendChild(open);
       if(!t.protected){
         const del=document.createElement('button'); del.type='button'; del.className='team-delete';
