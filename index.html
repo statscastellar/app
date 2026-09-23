@@ -946,6 +946,13 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 <style id="assessment-export-v23">
 #exportAssessPdfBtn{white-space:nowrap}
 @media(max-width:620px){.report-export-buttons{grid-template-columns:1fr 1fr!important}}
+</style><style id="recover-v24">
+.recover-match-card{width:min(92%,560px);margin:22px auto;padding:20px!important;text-align:center}
+.recover-kicker{font-size:10px;font-weight:950;letter-spacing:.12em;color:#667085}
+.recover-match-card h2{margin:7px 0 6px;color:#17283f}
+.recover-meta{font-size:12px;line-height:1.55;color:#667085;margin-bottom:15px}
+#recoverMatchNow{width:100%;min-height:48px;border:0;border-radius:10px;background:#17283f;color:#fff;font-weight:950}
+.recover-discard{width:100%;min-height:40px;margin-top:8px;border:1px solid #d0d5dd;border-radius:9px;background:#fff;color:#667085;font-weight:850}
 </style></head>
 <body>
 
@@ -1279,7 +1286,13 @@ https://github.com/nodeca/pako/blob/main/LICENSE
   </section>
   <section id="recover" class="screen">
     <div class="topbar"><button class="back" data-back>←</button><h1>Recuperar partit</h1><span></span></div>
-    <div class="card placeholder">Pantalla reservada per recuperar un partit interromput.</div>
+    <div id="recoverMatchCard" class="card recover-match-card">
+      <div class="recover-kicker">PARTIT PENDENT</div>
+      <h2 id="recoverMatchTitle">No hi ha cap partit pendent</h2>
+      <div id="recoverMatchMeta" class="recover-meta"></div>
+      <button id="recoverMatchNow" type="button" hidden>↻ CONTINUAR PARTIT</button>
+      <button id="discardRecoverMatch" type="button" class="recover-discard" hidden>Descartar partit pendent</button>
+    </div>
   </section>
   
 <section id="teams" class="screen">
@@ -1905,7 +1918,8 @@ document.addEventListener('DOMContentLoaded', () => {
    if(!match)return;
    match.undoHistory=history.slice(-30);
    match.savedAt=Date.now();
-   localStorage.setItem('statsCastellarCurrentMatchV1',JSON.stringify(match));
+   localStorage.setItem(CURRENT_MATCH_KEY,JSON.stringify(match));
+   updateRecoverHome();
  }
  function rotate(){
    const cycle=['1','6','5','4','3','2'];
@@ -2133,7 +2147,7 @@ document.addEventListener('DOMContentLoaded', () => {
  document.addEventListener('stats-start-scoring',e=>{
    const d=e.detail;
    let saved=null;
-   try{saved=JSON.parse(localStorage.getItem('statsCastellarCurrentMatchV1')||'null')}catch(_){}
+   try{saved=JSON.parse(localStorage.getItem(CURRENT_MATCH_KEY)||'null')}catch(_){}
    const continuing=Number(d.set)>1 && saved && !saved.finished;
    match={
      teamId:d.teamId,opponent:d.opponent,date:d.date,venue:d.venue,set:Number(d.set)||1,players:d.players,
@@ -2279,7 +2293,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
  $('finishMatchBtn').onclick=()=>{
    if(!match)return;
-   match.finished=true;match.finishedAt=Date.now();save();archiveMatch(match);$('finishSetModal').hidden=true;
+   match.finished=true;match.finishedAt=Date.now();save();archiveMatch(match);localStorage.removeItem(CURRENT_MATCH_KEY);updateRecoverHome();$('finishSetModal').hidden=true;
    renderFinalReport(match);
    const bridge=document.createElement('button');bridge.type='button';bridge.dataset.go='final-report';bridge.style.display='none';
    document.body.appendChild(bridge);bridge.click();bridge.remove();
@@ -3123,12 +3137,44 @@ document.addEventListener('DOMContentLoaded', () => {
    $('corrPlus').onclick=()=>change(1);$('corrMinus').onclick=()=>change(-1);
  }
  document.addEventListener('click',e=>{if(e.target.closest('[data-go="history"]'))setTimeout(renderHistory,0)},true);
- function hasRecoverableMatch(){
+
+ const CURRENT_MATCH_KEY='statsCastellarCurrentMatchV1';
+
+ function getRecoverableMatch(){
    try{
-     const saved=JSON.parse(localStorage.getItem('statsCastellarCurrentMatchV1')||'null');
-     return !!(saved && saved.players && saved.positions && saved.scores && !saved.finished);
-   }catch(_){return false}
+     const saved=JSON.parse(localStorage.getItem(CURRENT_MATCH_KEY)||'null');
+     return saved && saved.players && saved.positions && saved.scores && !saved.finished ? saved : null;
+   }catch(_){return null}
  }
+ function recoverSummary(saved){
+   if(!saved)return null;
+   const d=String(saved.date||'').split('-');
+   const date=d.length===3?d[2]+'/'+d[1]+'/'+d[0]:(saved.date||'');
+   return {
+     title:'Castellar – '+(saved.opponent||'Rival'),
+     meta:'Set '+(Number(saved.set)||1)+' · '+(saved.scores?.castellar||0)+'–'+(saved.scores?.rival||0)+' · '+date
+   };
+ }
+ function renderRecoverScreen(){
+   const saved=getRecoverableMatch(),title=$('recoverMatchTitle'),meta=$('recoverMatchMeta'),
+         go=$('recoverMatchNow'),discard=$('discardRecoverMatch');
+   if(!title)return;
+   if(!saved){
+     title.textContent='No hi ha cap partit pendent';
+     meta.textContent='Quan un partit quedi interromput, apareixerà aquí per continuar-lo.';
+     go.hidden=true;discard.hidden=true;return;
+   }
+   const s=recoverSummary(saved);
+   title.textContent=s.title;meta.textContent=s.meta;
+   go.hidden=false;discard.hidden=false;
+ }
+ function updateRecoverHome(){
+   const b=document.querySelector('[data-go="recover"]');
+   if(!b)return;
+   const saved=getRecoverableMatch(),span=b.querySelector('span:nth-child(2)');
+   if(span)span.textContent=saved?'RECUPERAR · '+(saved.opponent||'PARTIT'):'RECUPERAR PARTIT';
+ }
+ function hasRecoverableMatch(){return !!getRecoverableMatch()}
 
  function restoreSavedMatch(){
    let saved=null;
@@ -3209,20 +3255,35 @@ document.addEventListener('DOMContentLoaded', () => {
      if(restoreSavedMatch())openLiveScreen();
    },true);
  }
+ const recoverNow=$('recoverMatchNow');
+ if(recoverNow)recoverNow.onclick=()=>{if(restoreSavedMatch())openLiveScreen()};
+ const discardRecover=$('discardRecoverMatch');
+ if(discardRecover)discardRecover.onclick=()=>{
+   if(!hasRecoverableMatch())return;
+   if(!confirm('Descartar definitivament aquest partit pendent?'))return;
+   localStorage.removeItem(CURRENT_MATCH_KEY);
+   renderRecoverScreen();updateRecoverHome();
+ };
+ document.addEventListener('click',e=>{
+   if(e.target.closest('[data-go="recover"]'))setTimeout(renderRecoverScreen,0);
+ },true);
+
 
  /* Guardat extra quan l'app queda en segon pla o es tanca/recarrega. */
- document.addEventListener('visibilitychange',()=>{if(document.hidden&&match)save()});
- window.addEventListener('pagehide',()=>{if(match)save()});
+ document.addEventListener('visibilitychange',()=>{if(document.hidden&&match&&!match.finished)save()});
+ window.addEventListener('pagehide',()=>{if(match&&!match.finished)save()});
+ setInterval(()=>{if(match&&!match.finished)save()},5000);
 
  /* Si el navegador intenta sortir/recarregar durant un partit,
     demanem confirmació nativa com a segona xarxa de seguretat. */
  window.addEventListener('beforeunload',e=>{
-   if(!match)return;
+   if(!match||match.finished)return;
    save();
    e.preventDefault();
    e.returnValue='';
  });
 
+ updateRecoverHome();
 })();
 </script>
 
