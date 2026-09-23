@@ -1048,6 +1048,14 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 #deleteHistoryMatchBtn{width:100%;min-height:42px;border:1px solid #d92d20;border-radius:9px;background:#fff;color:#b42318;font-weight:950}
 .history-delete-help{text-align:center;font-size:9px;color:#98a2b3;margin-top:6px}
 .history-load-more{width:100%;min-height:42px;margin-top:10px;border:1px solid #d0d5dd;border-radius:9px;background:#fff;color:#344054;font-weight:900}
+</style><style id="recover-discard-v10">
+#discardRecoverMatch{
+  width:100%;min-height:42px;margin-top:10px;
+  border:1px solid #d92d20!important;border-radius:9px;
+  background:#fff!important;color:#b42318!important;font-weight:950!important;
+  display:block;
+}
+#discardRecoverMatch[hidden]{display:none!important}
 </style></head>
 <body>
 
@@ -1391,7 +1399,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
       <h2 id="recoverMatchTitle">No hi ha cap partit pendent</h2>
       <div id="recoverMatchMeta" class="recover-meta"></div>
       <button id="recoverMatchNow" type="button" hidden>↻ CONTINUAR PARTIT</button>
-      <button id="discardRecoverMatch" type="button" class="recover-discard" hidden>Descartar partit pendent</button>
+      <button id="discardRecoverMatch" type="button" class="recover-discard" hidden>🗑 Descartar partit pendent</button>
     </div>
   </section>
   
@@ -3428,12 +3436,22 @@ document.addEventListener('DOMContentLoaded', () => {
  const recoverBtn=document.querySelector('[data-go="recover"]');
  if(recoverBtn){
    recoverBtn.addEventListener('click',e=>{
-     e.preventDefault();e.stopImmediatePropagation();
+     e.preventDefault();
+     e.stopImmediatePropagation();
      if(!hasRecoverableMatch()){
        alert('No hi ha cap partit pendent de recuperar.');
        return;
      }
-     if(restoreSavedMatch())openLiveScreen();
+     /* Obrim primer la pantalla Recuperar. Des d'allà l'usuari
+        pot continuar el partit o descartar-lo amb doble confirmació. */
+     const nav=document.createElement('button');
+     nav.type='button';
+     nav.dataset.go='recover';
+     nav.style.display='none';
+     document.body.appendChild(nav);
+     nav.click();
+     nav.remove();
+     setTimeout(renderRecoverScreen,0);
    },true);
  }
  const recoverNow=$('recoverMatchNow');
@@ -3441,8 +3459,10 @@ document.addEventListener('DOMContentLoaded', () => {
  const discardRecover=$('discardRecoverMatch');
  if(discardRecover)discardRecover.onclick=()=>{
    if(!hasRecoverableMatch())return;
-   if(!confirm('Descartar definitivament aquest partit pendent?'))return;
+   if(!confirm('Vols descartar aquest partit pendent?'))return;
+   if(!confirm('SEGONA CONFIRMACIÓ\n\nEl partit pendent s’eliminarà definitivament i no es podrà recuperar. Descartar-lo?'))return;
    localStorage.removeItem(CURRENT_MATCH_KEY);
+   match=null;
    renderRecoverScreen();updateRecoverHome();
  };
  document.addEventListener('click',e=>{
