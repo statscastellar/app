@@ -257,6 +257,76 @@ body:has(#home.active) footer { display:none!important; }
 }
 </style>
 
+
+<style id="teams-rosters-v06">
+.teams-card,.roster-card{width:min(100%,720px);margin:0 auto}
+.team-list{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.team-row{display:grid;grid-template-columns:1fr auto;gap:9px;align-items:stretch}
+.team-open{
+  min-height:62px;border:0;border-radius:15px;background:#000;color:#fff;
+  padding:13px 18px;display:flex;align-items:center;justify-content:space-between;
+  text-align:left;font-size:18px;font-weight:850;cursor:pointer
+}
+.team-open .arrow{font-size:30px;font-weight:400}
+.team-delete{
+  width:54px;border:1px solid #e4e7ec;border-radius:15px;background:#fff;color:#b42318;
+  font-size:24px;font-weight:800;cursor:pointer
+}
+.add-button,.add-player-button{
+  border:2px dashed #f36b00;border-radius:15px;background:#fff7ed;color:#c65300;
+  min-height:56px;padding:11px 16px;font-weight:850;cursor:pointer
+}
+.add-button{width:100%;font-size:17px}
+.roster-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.roster-heading h2{margin:2px 0 0;font-size:24px}
+.eyebrow{font-size:10px;font-weight:900;letter-spacing:.18em;color:#667085}
+.player-list{display:flex;flex-direction:column;gap:8px}
+.player-row{
+  min-height:58px;border:1px solid #e4e7ec;border-radius:14px;background:#fff;
+  display:grid;grid-template-columns:56px 1fr auto;align-items:center;overflow:hidden
+}
+.player-number{
+  height:100%;display:flex;align-items:center;justify-content:center;background:#17283f;
+  color:#fff;font-size:18px;font-weight:900
+}
+.player-name{padding:10px 14px;font-size:17px;font-weight:800}
+.player-edit{
+  margin-right:9px;border:0;border-radius:10px;background:#eef3f8;color:#17283f;
+  min-width:72px;min-height:38px;font-weight:800;cursor:pointer
+}
+.empty-roster{padding:26px 12px;text-align:center;color:#667085}
+.modal-backdrop{
+  position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.58);display:flex;
+  align-items:center;justify-content:center;padding:20px
+}
+.modal-backdrop[hidden]{display:none}
+.app-modal{
+  width:min(100%,440px);max-height:90dvh;overflow:auto;background:#fff;border-radius:20px;
+  padding:20px;box-shadow:0 18px 55px rgba(0,0,0,.35)
+}
+.app-modal h2{margin:0 0 15px;font-size:22px}
+.field{display:flex;flex-direction:column;gap:6px;margin:12px 0}
+.field label{font-size:12px;font-weight:900;color:#475467}
+.field input{
+  width:100%;min-height:48px;border:1px solid #cfd6df;border-radius:12px;padding:10px 12px;
+  font-size:16px
+}
+.modal-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
+.modal-actions button{min-height:44px;border:0;border-radius:11px;padding:9px 15px;font-weight:850;cursor:pointer}
+.btn-cancel{background:#eef2f6;color:#344054}
+.btn-save{background:#17283f;color:#fff}
+.danger-zone{margin-top:22px;padding-top:16px;border-top:1px solid #e4e7ec}
+.btn-danger{background:#fff1f0!important;color:#b42318!important;border:1px solid #f4b4ae!important}
+.confirm-name{font-weight:900}
+.confirm-warning{color:#667085;line-height:1.45}
+@media(max-width:520px){
+ .roster-heading{align-items:stretch;flex-direction:column}
+ .add-player-button{width:100%}
+ .player-row{grid-template-columns:50px 1fr auto}
+ .player-edit{min-width:60px}
+}
+</style>
+
 </head>
 <body>
 <div id="app">
@@ -294,14 +364,28 @@ body:has(#home.active) footer { display:none!important; }
     <div class="topbar"><button class="back" data-back>←</button><h1>Recuperar partit</h1><span></span></div>
     <div class="card placeholder">Pantalla reservada per recuperar un partit interromput.</div>
   </section>
-  <section id="teams" class="screen">
-    <div class="topbar"><button class="back" data-back>←</button><h1>Equips</h1><span></span></div>
-    <div class="card"><p class="placeholder">Pantalla reservada per als equips.</p><button type="button" data-go="roster">Prova: entrar a Infantil A ›</button></div>
-  </section>
-  <section id="roster" class="screen">
-    <div class="topbar"><button class="back" data-back>←</button><h1>Plantilla</h1><span></span></div>
-    <div class="card placeholder">Pantalla reservada per a la plantilla de l'equip.</div>
-  </section>
+  
+<section id="teams" class="screen">
+  <div class="topbar"><button class="back" data-back>←</button><h1>Equips</h1><span></span></div>
+  <div class="card teams-card">
+    <div id="teamList" class="team-list"></div>
+    <button id="addTeamBtn" class="add-button" type="button">＋ Afegir equip</button>
+  </div>
+</section>
+  
+<section id="roster" class="screen">
+  <div class="topbar"><button class="back" data-back>←</button><h1 id="rosterTitle">Plantilla</h1><span></span></div>
+  <div class="card roster-card">
+    <div class="roster-heading">
+      <div>
+        <div class="eyebrow">EQUIP</div>
+        <h2 id="rosterTeamName">Infantil A</h2>
+      </div>
+      <button id="addPlayerBtn" class="add-player-button" type="button">＋ Afegir jugadora</button>
+    </div>
+    <div id="playerList" class="player-list"></div>
+  </div>
+</section>
   <section id="settings" class="screen">
     <div class="topbar"><button class="back" data-back>←</button><h1>Configuració</h1><span></span></div>
     <div class="card placeholder">Pantalla reservada per a Configuració.</div>
@@ -349,5 +433,146 @@ body:has(#home.active) footer { display:none!important; }
   window.addEventListener('popstate', () => back());
 })();
 </script>
+
+<div id="appModal" class="modal-backdrop" hidden>
+  <div class="app-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+
+<script id="teams-rosters-logic-v06">
+(() => {
+  const STORAGE_KEY='statsCastellarTeamsV1';
+  const DEFAULT_PLAYERS=[
+    {id:'ia-3',number:'3',name:'Nora'},
+    {id:'ia-4',number:'4',name:'Aran'},
+    {id:'ia-6',number:'6',name:'Avril'},
+    {id:'ia-7',number:'7',name:'Emma'},
+    {id:'ia-8',number:'8',name:'Isona'},
+    {id:'ia-10',number:'10',name:'Thais'},
+    {id:'ia-11',number:'11',name:'Yveth'},
+    {id:'ia-13',number:'13',name:'Maria'},
+    {id:'ia-16',number:'16',name:'Ainhoa'},
+    {id:'ia-18',number:'18',name:'Ària'},
+    {id:'ia-28',number:'28',name:'Mariona'},
+    {id:'ia-66',number:'66',name:'Núria'}
+  ];
+  const DEFAULT_TEAM={id:'infantil-a',name:'Infantil A',protected:true,players:DEFAULT_PLAYERS};
+  let selectedTeamId='infantil-a';
+
+  function clone(x){return JSON.parse(JSON.stringify(x))}
+  function loadTeams(){
+    try{
+      const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');
+      if(Array.isArray(saved)){
+        const base=saved.find(t=>t.id==='infantil-a');
+        if(!base) saved.unshift(clone(DEFAULT_TEAM));
+        else base.protected=true;
+        return saved;
+      }
+    }catch(e){}
+    return [clone(DEFAULT_TEAM)];
+  }
+  let teams=loadTeams();
+  function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(teams))}
+  function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+  function uid(prefix){return prefix+'-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7)}
+  function team(){return teams.find(t=>t.id===selectedTeamId)||teams[0]}
+
+  function renderTeams(){
+    const host=document.getElementById('teamList'); if(!host)return;
+    host.innerHTML='';
+    teams.forEach(t=>{
+      const row=document.createElement('div'); row.className='team-row';
+      const open=document.createElement('button'); open.type='button'; open.className='team-open';
+      open.innerHTML='<span>'+esc(t.name)+'</span><span class="arrow">›</span>';
+      open.onclick=()=>{selectedTeamId=t.id; renderRoster(); render('roster',true)};
+      row.appendChild(open);
+      if(!t.protected){
+        const del=document.createElement('button'); del.type='button'; del.className='team-delete';
+        del.setAttribute('aria-label','Eliminar '+t.name); del.textContent='×';
+        del.onclick=()=>confirmDeleteTeam(t.id);
+        row.appendChild(del);
+      }
+      host.appendChild(row);
+    });
+  }
+
+  function renderRoster(){
+    const t=team(); if(!t)return;
+    document.getElementById('rosterTeamName').textContent=t.name;
+    const host=document.getElementById('playerList'); host.innerHTML='';
+    const players=[...(t.players||[])].sort((a,b)=>(Number(a.number)||999)-(Number(b.number)||999));
+    if(!players.length){host.innerHTML='<div class="empty-roster">Encara no hi ha jugadores en aquesta plantilla.</div>';return}
+    players.forEach(p=>{
+      const row=document.createElement('div');row.className='player-row';
+      row.innerHTML='<div class="player-number">'+esc(p.number)+'</div><div class="player-name">'+esc(p.name)+'</div>';
+      const edit=document.createElement('button');edit.type='button';edit.className='player-edit';edit.textContent='Editar';
+      edit.onclick=()=>openPlayerEditor(p.id);
+      row.appendChild(edit);host.appendChild(row);
+    });
+  }
+
+  const modal=document.getElementById('appModal'), body=document.getElementById('modalBody');
+  function closeModal(){modal.hidden=true;body.innerHTML=''}
+  modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
+
+  document.getElementById('addTeamBtn').onclick=()=>{
+    body.innerHTML='<h2>Afegir equip</h2><div class="field"><label>Nom de l’equip</label><input id="newTeamName" maxlength="40" autocomplete="off"></div><div class="modal-actions"><button class="btn-cancel" id="cancelModal">Cancel·lar</button><button class="btn-save" id="saveTeam">Crear equip</button></div>';
+    modal.hidden=false; document.getElementById('newTeamName').focus();
+    document.getElementById('cancelModal').onclick=closeModal;
+    document.getElementById('saveTeam').onclick=()=>{
+      const name=document.getElementById('newTeamName').value.trim();
+      if(!name)return;
+      if(teams.some(t=>t.name.toLowerCase()===name.toLowerCase()))return alert('Ja existeix un equip amb aquest nom.');
+      teams.push({id:uid('team'),name,protected:false,players:[]});save();renderTeams();closeModal();
+    };
+  };
+
+  function confirmDeleteTeam(id){
+    const t=teams.find(x=>x.id===id); if(!t||t.protected)return;
+    body.innerHTML='<h2>Eliminar equip</h2><p class="confirm-warning">Segur que vols eliminar <span class="confirm-name">'+esc(t.name)+'</span>? Aquesta acció elimina la seva plantilla actual. Els partits històrics, quan els incorporem, es guardaran separadament i no dependran de la plantilla actual.</p><div class="modal-actions"><button class="btn-cancel" id="cancelModal">Cancel·lar</button><button class="btn-danger" id="deleteTeamConfirm">Eliminar definitivament</button></div>';
+    modal.hidden=false;
+    document.getElementById('cancelModal').onclick=closeModal;
+    document.getElementById('deleteTeamConfirm').onclick=()=>{teams=teams.filter(x=>x.id!==id);save();renderTeams();closeModal()};
+  }
+
+  document.getElementById('addPlayerBtn').onclick=()=>openPlayerEditor(null);
+
+  function openPlayerEditor(playerId){
+    const t=team(), existing=playerId?(t.players||[]).find(p=>p.id===playerId):null;
+    body.innerHTML='<h2>'+(existing?'Editar jugadora':'Afegir jugadora')+'</h2>'+
+      '<div class="field"><label>Dorsal</label><input id="playerNumber" inputmode="numeric" maxlength="3" value="'+esc(existing?existing.number:'')+'"></div>'+
+      '<div class="field"><label>Nom</label><input id="playerName" maxlength="40" value="'+esc(existing?existing.name:'')+'"></div>'+
+      '<div class="modal-actions"><button class="btn-cancel" id="cancelModal">Cancel·lar</button><button class="btn-save" id="savePlayer">Desar</button></div>'+
+      (existing?'<div class="danger-zone"><button class="btn-danger" id="askDeletePlayer">Eliminar jugadora…</button></div>':'');
+    modal.hidden=false;
+    document.getElementById(existing?'playerName':'playerNumber').focus();
+    document.getElementById('cancelModal').onclick=closeModal;
+    document.getElementById('savePlayer').onclick=()=>{
+      const number=document.getElementById('playerNumber').value.trim();
+      const name=document.getElementById('playerName').value.trim();
+      if(!number||!name)return alert('Cal indicar dorsal i nom.');
+      if((t.players||[]).some(p=>p.id!==playerId && String(p.number)===number))return alert('Ja hi ha una jugadora amb aquest dorsal.');
+      if(existing){existing.number=number;existing.name=name}
+      else{t.players=t.players||[];t.players.push({id:uid('player'),number,name})}
+      save();renderRoster();closeModal();
+    };
+    if(existing) document.getElementById('askDeletePlayer').onclick=()=>confirmDeletePlayer(existing.id);
+  }
+
+  function confirmDeletePlayer(id){
+    const t=team(), p=(t.players||[]).find(x=>x.id===id); if(!p)return;
+    body.innerHTML='<h2>Eliminar jugadora</h2><p class="confirm-warning">Segur que vols eliminar <span class="confirm-name">'+esc(p.name)+' ('+esc(p.number)+')</span> de la plantilla de '+esc(t.name)+'?</p><p class="confirm-warning">Aquesta acció només afecta la plantilla actual. Les estadístiques de partits antics no s’eliminaran quan incorporem l’historial.</p><div class="modal-actions"><button class="btn-cancel" id="cancelModal">Cancel·lar</button><button class="btn-danger" id="deletePlayerConfirm">Eliminar definitivament</button></div>';
+    modal.hidden=false;
+    document.getElementById('cancelModal').onclick=closeModal;
+    document.getElementById('deletePlayerConfirm').onclick=()=>{t.players=t.players.filter(x=>x.id!==id);save();renderRoster();closeModal()};
+  }
+
+  renderTeams();
+})();
+</script>
+
 </body>
 </html>
