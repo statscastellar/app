@@ -883,6 +883,35 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 @media(max-width:520px){.report-export-buttons{grid-template-columns:1fr}}
 </style>
 
+
+<style id="report-v19">
+.report-table{min-width:1320px}
+.report-table thead tr:first-child th.group-head{background:#d9eaf7;color:#17283f;border-color:#fff;font-size:11px}
+.report-table thead tr:nth-child(2) th{color:#17283f}
+.report-table thead .sub-red{background:#f4cccc!important}
+.report-table thead .sub-yellow{background:#fff2cc!important}
+.report-table thead .sub-blue{background:#cfe2f3!important}
+.report-table thead .sub-green{background:#d9ead3!important}
+.report-table thead .sub-neutral{background:#eef3f7!important}
+.report-table .sticky-number,.report-table .sticky-name{background:#fff}
+.report-table thead .sticky-number,.report-table thead .sticky-name{background:#17283f!important;color:#fff!important}
+.report-table td.rating-red{background:#f4cccc!important}
+.report-table td.rating-yellow{background:#fff2cc!important}
+.report-table td.rating-blue{background:#cfe2f3!important}
+.report-table td.rating-green{background:#d9ead3!important}
+.report-table td.set-cell{font-weight:850}
+.report-evaluations{padding:14px!important}
+.report-evaluations>strong{display:block;color:#17283f;font-size:15px}
+.report-evaluations>small{display:block;color:#667085;margin:3px 0 12px}
+.player-eval{border-top:1px solid #e4e7ec;padding:12px 0}
+.player-eval:first-child{border-top:0}
+.player-eval-title{font-weight:950;color:#17283f;margin-bottom:7px}
+.player-eval-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.eval-box{background:#f8fafc;border-radius:9px;padding:9px 10px;font-size:11px;line-height:1.45;color:#475467}
+.eval-box b{display:block;color:#17283f;margin-bottom:2px}
+.eval-note{margin-top:7px;font-size:11px;line-height:1.45;color:#475467}
+@media(max-width:620px){.player-eval-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 
@@ -1189,6 +1218,11 @@ https://github.com/nodeca/pako/blob/main/LICENSE
       <div><b>Recepció, Col·locació i Atac:</b> 0 = Error · 1 = Dolenta · 2 = Correcte · 3 = Perfecta</div>
       <div><b>Bloqueig:</b> 0 = Bloqueig fora · 1 = Bloqueig · 2 = Bloqueig punt</div>
       <div><b>Participació:</b> percentatge de temps jugat.</div>
+    </div>
+    <div class="report-evaluations card">
+      <strong>Valoració individual</strong>
+      <small>Lectura orientativa basada en les accions registrades i el volum de dades de cada jugadora.</small>
+      <div id="playerEvaluations"></div>
     </div>
   </div>
 </section>
@@ -2225,15 +2259,95 @@ document.addEventListener('DOMContentLoaded', () => {
    ss.forEach(s=>{const r=s.participation&&s.participation[id];if(r)played+=Number(r.playedMs)||0;const vals=Object.values(s.participation||{}).map(x=>Number(x.playedMs)||0);total+=vals.length?Math.max(...vals):0});
    return total?Math.round(played/total*1000)/10:0;
  }
+ function reportSetPct(m,id,setNo){
+   const s=allReportSets(m).find(x=>Number(x.set)===Number(setNo));
+   const r=s&&s.participation&&s.participation[id];
+   return r&&Number(r.playedMs)>0?Number(r.percentage||0):null;
+ }
+ function ratingClass(action,value){
+   value=Number(value);
+   if(value===0)return 'rating-red';
+   if(action==='Bloqueig')return value===1?'rating-blue':'rating-green';
+   if(value===1)return 'rating-yellow';
+   if(value===2)return 'rating-blue';
+   return 'rating-green';
+ }
  function renderReportTable(m,f='all'){
-   const table=$('reportTable'),acts=reportActionsFor(m,f);
-   const hs=[['Dorsal','sticky-number'],['Jugadora','sticky-name'],['Servei 0/1/2/3','action-head'],['Recepció 0/1/2/3','action-head'],['Col·locació 0/1/2/3','action-head'],['Atac 0/1/2/3','action-head'],['Bloqueig 0/1/2','action-head'],['Participació','participation-head']];
-   table.tHead.innerHTML='<tr>'+hs.map(x=>'<th class="'+x[1]+'">'+x[0]+'</th>').join('')+'</tr>';
+   const table=$('reportTable'),acts=reportActionsFor(m,f),allMode=f==='all';
+   let top='<tr><th rowspan="2" class="sticky-number">Dorsal</th><th rowspan="2" class="sticky-name">Jugadora</th>';
+   if(allMode)top+='<th colspan="6" class="group-head">SETS</th>';
+   else top+='<th colspan="1" class="group-head">PARTICIPACIÓ</th>';
+   top+='<th colspan="4" class="group-head">SERVEI</th><th colspan="4" class="group-head">RECEPCIÓ</th><th colspan="4" class="group-head">COL·LOCACIÓ</th><th colspan="4" class="group-head">ATAC</th><th colspan="3" class="group-head">BLOQUEIG</th></tr>';
+   let sub='<tr>';
+   if(allMode)sub+=['S1','S2','S3','S4','S5','Total'].map(x=>'<th class="sub-neutral">'+x+'</th>').join('');
+   else sub+='<th class="sub-neutral">Set '+f+'</th>';
+   const sub4=['sub-red','sub-yellow','sub-blue','sub-green'];
+   for(let g=0;g<4;g++)sub+=sub4.map((c,i)=>'<th class="'+c+'">'+i+'</th>').join('');
+   sub+=['sub-red','sub-blue','sub-green'].map((c,i)=>'<th class="'+c+'">'+i+'</th>').join('');
+   sub+='</tr>';
+   table.tHead.innerHTML=top+sub;
+
    const body=table.tBodies[0];body.innerHTML='';
    (m.players||[]).slice().sort((a,b)=>Number(a.number)-Number(b.number)).forEach(pl=>{
      const tr=document.createElement('tr');
-     const vals=[[pl.number,'sticky-number'],[pl.name,'sticky-name'],[actionCounts(acts,pl.id,'Servei').join(' / '),'stat-values'],[actionCounts(acts,pl.id,'Recepció').join(' / '),'stat-values'],[actionCounts(acts,pl.id,'Col·locació').join(' / '),'stat-values'],[actionCounts(acts,pl.id,'Atac').join(' / '),'stat-values'],[actionCounts(acts,pl.id,'Bloqueig').join(' / '),'stat-values'],[reportParticipation(m,pl.id,f).toFixed(1)+'%','participation-cell']];
-     vals.forEach(v=>{const td=document.createElement('td');td.className=v[1];td.textContent=v[0];tr.appendChild(td)});body.appendChild(tr);
+     const add=(txt,cls='')=>{const td=document.createElement('td');td.className=cls;td.textContent=txt;tr.appendChild(td)};
+     add(pl.number,'sticky-number');add(pl.name,'sticky-name');
+     if(allMode){
+       let total=0;
+       for(let s=1;s<=5;s++){const p=reportSetPct(m,pl.id,s);if(p!==null)total+=p/100;add(p===null?'':Math.round(p)+'%','set-cell')}
+       add(total?total.toFixed(2).replace(/\.00$/,''):'','set-cell');
+     }else{
+       const p=reportSetPct(m,pl.id,Number(f));add(p===null?'':Math.round(p)+'%','set-cell');
+     }
+     ['Servei','Recepció','Col·locació','Atac','Bloqueig'].forEach(action=>{
+       const vals=actionCounts(acts,pl.id,action);
+       vals.forEach((n,v)=>add(n,ratingClass(action,v)));
+     });
+     body.appendChild(tr);
+   });
+ }
+
+ function playerAssessment(m,pl){
+   const acts=reportActionsFor(m,'all');
+   const configs=[
+     {name:'Servei',good:[2,3],bad:[0],labels:['error','fàcil','correcte','ace']},
+     {name:'Recepció',good:[2,3],bad:[0,1],labels:['error','dolenta','correcte','perfecta']},
+     {name:'Col·locació',good:[2,3],bad:[0,1],labels:['error','dolenta','correcte','perfecta']},
+     {name:'Atac',good:[2,3],bad:[0,1],labels:['error','dolent','correcte','perfecte']},
+     {name:'Bloqueig',good:[1,2],bad:[0],labels:['fora','bloqueig','bloqueig punt']}
+   ];
+   const metrics=configs.map(c=>{
+     const counts=actionCounts(acts,pl.id,c.name),n=counts.reduce((a,b)=>a+b,0);
+     const good=c.good.reduce((a,i)=>a+(counts[i]||0),0),bad=c.bad.reduce((a,i)=>a+(counts[i]||0),0);
+     const maxIndex=counts.reduce((best,x,i)=>x>counts[best]?i:best,0);
+     return {...c,counts,n,goodPct:n?good/n:0,badPct:n?bad/n:0,dominant:c.labels[maxIndex]};
+   });
+   const usable=metrics.filter(x=>x.n>=4);
+   if(!usable.length)return {strong:'Mostra insuficient',improve:'Mostra insuficient',note:'Hi ha massa poques accions registrades per fer una valoració fiable d’aquest partit.'};
+   const strong=usable.slice().sort((a,b)=>(b.goodPct-a.goodPct)||(b.n-a.n))[0];
+   const improve=usable.slice().sort((a,b)=>(b.badPct-a.badPct)||(b.n-a.n))[0];
+   const strongText=strong.name+': '+Math.round(strong.goodPct*100)+'% de valoracions positives (2–'+(strong.name==='Bloqueig'?'2':'3')+') en '+strong.n+' accions.';
+   let improveText;
+   if(improve.badPct<=0.15)improveText='No destaca cap debilitat clara amb la mostra disponible.';
+   else improveText=improve.name+': '+Math.round(improve.badPct*100)+'% de valoracions baixes en '+improve.n+' accions.';
+   const total=metrics.reduce((a,x)=>a+x.n,0);
+   const low=total<15;
+   const note=low
+     ? 'Lectura amb prudència: només hi ha '+total+' accions registrades en total.'
+     : 'La dada suggereix reforçar '+(improve.badPct<=0.15?'la regularitat general':improve.name.toLowerCase())+' i mantenir el rendiment en '+strong.name.toLowerCase()+'.';
+   return {strong:strongText,improve:improveText,note};
+ }
+ function renderPlayerEvaluations(m){
+   const root=$('playerEvaluations');if(!root)return;root.innerHTML='';
+   (m.players||[]).slice().sort((a,b)=>Number(a.number)-Number(b.number)).forEach(pl=>{
+     const played=[1,2,3,4,5].some(s=>reportSetPct(m,pl.id,s)!==null);
+     if(!played)return;
+     const a=playerAssessment(m,pl),box=document.createElement('div');box.className='player-eval';
+     box.innerHTML='<div class="player-eval-title">'+pl.number+' · '+pl.name+'</div>'+
+       '<div class="player-eval-grid"><div class="eval-box"><b>Punt fort</b>'+a.strong+'</div>'+
+       '<div class="eval-box"><b>A treballar</b>'+a.improve+'</div></div>'+
+       '<div class="eval-note">'+a.note+'</div>';
+     root.appendChild(box);
    });
  }
  function renderFinalReport(m){
@@ -2241,7 +2355,7 @@ document.addEventListener('DOMContentLoaded', () => {
    $('reportMatchTitle').textContent='Castellar – '+(m.opponent||'Rival');$('reportFinalResult').textContent=won.c+' – '+won.r;
    $('reportSetsLine').textContent=ss.map(s=>'Set '+s.set+': '+s.scores.castellar+'–'+s.scores.rival).join(' · ');
    const f=$('reportSetFilter');f.innerHTML='<option value="all">Total partit</option>';ss.forEach(s=>{const o=document.createElement('option');o.value=s.set;o.textContent='Set '+s.set;f.appendChild(o)});
-   f.onchange=()=>renderReportTable(m,f.value);renderReportTable(m,'all');
+   f.onchange=()=>renderReportTable(m,f.value);renderReportTable(m,'all');renderPlayerEvaluations(m);
  }
  const reportBack=$('reportBackBtn');
  if(reportBack)reportBack.onclick=()=>{const b=document.createElement('button');b.type='button';b.dataset.go='home';b.style.display='none';document.body.appendChild(b);b.click();b.remove()};
