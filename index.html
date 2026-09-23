@@ -1043,6 +1043,11 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 .about-creator{margin-top:13px;font-size:13px;color:#17283f}.about-copy{font-size:10px;color:#667085;margin-top:4px}
 .about-warning{font-size:9px;line-height:1.45;color:#98a2b3;max-width:470px;margin:12px auto 0;padding-top:10px;border-top:1px solid #eaecf0}
 @media(max-width:520px){.settings-actions{grid-template-columns:1fr}}
+</style><style id="history-storage-v10">
+.history-delete-card{padding:13px 14px!important}
+#deleteHistoryMatchBtn{width:100%;min-height:42px;border:1px solid #d92d20;border-radius:9px;background:#fff;color:#b42318;font-weight:950}
+.history-delete-help{text-align:center;font-size:9px;color:#98a2b3;margin-top:6px}
+.history-load-more{width:100%;min-height:42px;margin-top:10px;border:1px solid #d0d5dd;border-radius:9px;background:#fff;color:#344054;font-weight:900}
 </style></head>
 <body>
 
@@ -1356,6 +1361,10 @@ https://github.com/nodeca/pako/blob/main/LICENSE
       <small>Lectura orientativa basada en les accions registrades i el volum de dades de cada jugadora.</small>
       <div id="playerEvaluations"></div>
     </div>
+    <div id="historyDeleteCard" class="card history-delete-card" hidden>
+      <button id="deleteHistoryMatchBtn" type="button">Eliminar aquest partit</button>
+      <div class="history-delete-help">Aquesta acció requereix dues confirmacions i no es pot desfer.</div>
+    </div>
     <div id="directEditCard" class="card direct-edit-card" hidden>
       <button id="directEditBtn" type="button">✏️ Editar estadístiques</button>
       <div id="directEditActions" hidden>
@@ -1372,6 +1381,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 <section id="history" class="screen">
     <div class="topbar"><button class="back" data-back>←</button><h1>Historial de partits</h1><span></span></div>
     <div class="history-wrap"><div id="historyList" class="history-list"></div>
+<button id="historyLoadMore" class="history-load-more" type="button" hidden>Carregar més partits</button>
 <div id="historyEmpty" class="card placeholder" hidden>Encara no hi ha cap partit a l’historial.</div></div>
   </section>
   <section id="recover" class="screen">
@@ -2507,11 +2517,9 @@ document.addEventListener('DOMContentLoaded', () => {
      renderReportTable(m,$('reportSetFilter').value);renderPlayerEvaluations(m);
    };
 
-   $('saveDirectEdit').onclick=()=>{
+   $('saveDirectEdit').onclick=async()=>{
      if(!directEditDraft)return;
-     const list=loadHistory(),i=list.findIndex(x=>x.id===directEditDraft.id);
-     if(i>=0)list[i]=JSON.parse(JSON.stringify(directEditDraft));
-     saveHistory(list);
+     await idbPut(directEditDraft);await refreshHistoryCache();
      match=JSON.parse(JSON.stringify(directEditDraft));
      m=match;
      directEditMode=false;directEditDraft=null;btn.hidden=false;actions.hidden=true;
@@ -2711,6 +2719,16 @@ document.addEventListener('DOMContentLoaded', () => {
      renderReportTable(m,f.value);
    };
    renderReportTable(m,'all');renderPlayerEvaluations(m);setupDirectEdit(m);
+   const delCard=$('historyDeleteCard'),delBtn=$('deleteHistoryMatchBtn');
+   if(delCard)delCard.hidden=!viewingHistory;
+   if(delBtn&&viewingHistory)delBtn.onclick=async()=>{
+     if(!confirm('Vols eliminar aquest partit de l’historial?'))return;
+     if(!confirm('SEGONA CONFIRMACIÓ\n\nAquesta acció és definitiva i no es pot desfer. Eliminar el partit?'))return;
+     await deleteArchivedMatch(m.id);
+     viewingHistory=false;match=null;
+     const b=document.createElement('button');b.type='button';b.dataset.go='history';b.style.display='none';document.body.appendChild(b);b.click();b.remove();
+     setTimeout(renderHistory,0);
+   };
  }
  const reportBack=$('reportBackBtn');
  if(reportBack)reportBack.onclick=()=>{directEditMode=false;directEditDraft=null;const dest=viewingHistory?'history':'home';viewingHistory=false;const b=document.createElement('button');b.type='button';b.dataset.go=dest;b.style.display='none';document.body.appendChild(b);b.click();b.remove();if(dest==='history')setTimeout(renderHistory,0)};
@@ -3210,31 +3228,77 @@ document.addEventListener('DOMContentLoaded', () => {
  }
  const testBtn=$('loadTestMatchBtn');if(testBtn)testBtn.onclick=loadTestMatch;
 
- const HISTORY_KEY='statsCastellarHistoryV2';
+ const HISTORY_KEY='statsCastellarHistoryV2'; // clau antiga: només per migració
+ const HISTORY_DB='StatsCastellarDB';
+ const HISTORY_STORE='matches';
  const LEGACY_SEED=[{"id":"legacy-Sant_Celoni_13-09-2026","opponent":"Sant Celoni","date":"2026-09-13","venue":"away","legacyResult":"0-3","players":[{"number":3,"name":"Nora","parts":[100,null,100,null,null],"counts":{"Servei":[4,3,0,1],"Recepció":[2,2,6,5],"Col·locació":[0,2,2,2],"Atac":[3,3,5,6],"Bloqueig":[1,0,0]}},{"number":4,"name":"Aran","parts":[100,100,100,null,null],"counts":{"Servei":[2,7,0,4],"Recepció":[0,1,7,8],"Col·locació":[0,0,7,12],"Atac":[2,0,6,5],"Bloqueig":[0,2,0]}},{"number":6,"name":"Avril","parts":[null,null,null,null,null],"counts":{"Servei":[0,0,0,0],"Recepció":[0,0,0,0],"Col·locació":[0,0,0,0],"Atac":[0,0,0,0],"Bloqueig":[0,0,0]}},{"number":7,"name":"Emma","parts":[null,null,null,null,null],"counts":{"Servei":[0,0,0,0],"Recepció":[0,0,0,0],"Col·locació":[0,0,0,0],"Atac":[0,0,0,0],"Bloqueig":[0,0,0]}},{"number":8,"name":"Isona","parts":[null,100,100,null,null],"counts":{"Servei":[2,3,0,0],"Recepció":[3,1,0,2],"Col·locació":[2,1,1,4],"Atac":[0,2,5,0],"Bloqueig":[1,0,0]}},{"number":10,"name":"Thais","parts":[null,null,null,null,null],"counts":{"Servei":[0,0,0,0],"Recepció":[0,0,0,0],"Col·locació":[0,0,0,0],"Atac":[0,0,0,0],"Bloqueig":[0,0,0]}},{"number":11,"name":"Yveth","parts":[null,100,100,null,null],"counts":{"Servei":[2,4,0,1],"Recepció":[2,6,4,3],"Col·locació":[1,1,4,3],"Atac":[4,4,2,3],"Bloqueig":[0,1,0]}},{"number":13,"name":"Maria","parts":[100,100,null,null,null],"counts":{"Servei":[1,4,0,6],"Recepció":[1,2,3,6],"Col·locació":[0,0,6,7],"Atac":[0,2,0,1],"Bloqueig":[0,0,1]}},{"number":16,"name":"Ainhoa","parts":[null,null,null,null,null],"counts":{"Servei":[0,0,0,0],"Recepció":[0,0,0,0],"Col·locació":[0,0,0,0],"Atac":[0,0,0,0],"Bloqueig":[0,0,0]}},{"number":18,"name":"Ària","parts":[100,100,100,null,null],"counts":{"Servei":[1,10,0,11],"Recepció":[1,5,7,5],"Col·locació":[0,1,5,13],"Atac":[2,2,5,4],"Bloqueig":[1,1,0]}},{"number":28,"name":"Mariona","parts":[100,null,100,null,null],"counts":{"Servei":[2,1,0,3],"Recepció":[0,7,5,4],"Col·locació":[0,0,0,8],"Atac":[1,4,3,2],"Bloqueig":[1,0,0]}},{"number":66,"name":"Núria","parts":[100,100,null,null,null],"counts":{"Servei":[2,1,0,0],"Recepció":[3,1,6,6],"Col·locació":[1,1,2,4],"Atac":[3,5,4,2],"Bloqueig":[0,0,0]}}]},{"id":"legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)","opponent":"Sant Cugat Vermell","date":"2026-09-20","venue":"home","legacyResult":"2-3","players":[{"number":3,"name":"Nora","parts":[100.0,null,100.0,40.0,100.0],"counts":{"Servei":[3,8,0,4],"Recepció":[7,6,8,6],"Col·locació":[0,1,9,6],"Atac":[1,3,13,2],"Bloqueig":[0,2,6]}},{"number":4,"name":"Aran","parts":[100.0,null,null,100.0,null],"counts":{"Servei":[0,3,0,0],"Recepció":[1,2,5,11],"Col·locació":[0,1,2,5],"Atac":[1,0,7,3],"Bloqueig":[0,1,0]}},{"number":6,"name":"Avril","parts":[null,100.0,100.0,null,100.0],"counts":{"Servei":[2,4,0,2],"Recepció":[3,3,6,4],"Col·locació":[0,2,10,6],"Atac":[2,5,5,3],"Bloqueig":[1,1,0]}},{"number":7,"name":"Emma","parts":[null,100.0,null,60.0,null],"counts":{"Servei":[2,1,0,0],"Recepció":[1,1,4,1],"Col·locació":[0,3,5,3],"Atac":[2,0,1,1],"Bloqueig":[0,0,0]}},{"number":8,"name":"Isona","parts":[null,100.0,null,60.0,null],"counts":{"Servei":[0,6,0,1],"Recepció":[3,2,5,7],"Col·locació":[1,2,2,1],"Atac":[2,5,5,1],"Bloqueig":[0,0,0]}},{"number":10,"name":"Thais","parts":[null,100.0,100.0,null,100.0],"counts":{"Servei":[2,7,0,0],"Recepció":[7,3,7,2],"Col·locació":[1,4,2,3],"Atac":[2,7,5,1],"Bloqueig":[0,2,1]}},{"number":11,"name":"Yveth","parts":[null,100.0,null,60.0,null],"counts":{"Servei":[2,3,0,0],"Recepció":[7,8,4,3],"Col·locació":[1,1,5,2],"Atac":[1,1,3,1],"Bloqueig":[0,1,0]}},{"number":13,"name":"Maria","parts":[100.0,null,100.0,40.0,100.0],"counts":{"Servei":[2,8,0,3],"Recepció":[3,3,8,12],"Col·locació":[1,0,7,10],"Atac":[2,2,4,8],"Bloqueig":[1,1,0]}},{"number":16,"name":"Ainhoa","parts":[100.0,null,null,100.0,null],"counts":{"Servei":[1,5,0,0],"Recepció":[5,1,4,5],"Col·locació":[0,2,2,1],"Atac":[1,1,5,1],"Bloqueig":[0,2,1]}},{"number":18,"name":"Ària","parts":[100.0,null,100.0,40.0,100.0],"counts":{"Servei":[1,14,0,5],"Recepció":[4,4,6,5],"Col·locació":[4,1,9,9],"Atac":[2,1,5,2],"Bloqueig":[0,1,0]}},{"number":28,"name":"Mariona","parts":[100.0,null,100.0,40.0,100.0],"counts":{"Servei":[4,5,0,2],"Recepció":[4,8,6,9],"Col·locació":[1,5,7,9],"Atac":[2,0,13,5],"Bloqueig":[0,2,1]}},{"number":66,"name":"Núria","parts":[null,100.0,null,60.0,null],"counts":{"Servei":[2,1,0,2],"Recepció":[2,5,3,2],"Col·locació":[0,0,2,1],"Atac":[2,3,2,1],"Bloqueig":[0,0,0]}}]},{"id":"legacy-Stats_Castellar_Gadex_20-09-2026(1)","opponent":"Gadex","date":"2026-09-20","venue":"home","legacyResult":"3-0","players":[{"number":3,"name":"Nora","parts":[100.0,null,69.0,null,null],"counts":{"Servei":[0,4,0,4],"Recepció":[2,0,4,4],"Col·locació":[0,0,1,3],"Atac":[1,0,2,1],"Bloqueig":[0,0,0]}},{"number":4,"name":"Aran","parts":[null,100.0,38.0,null,null],"counts":{"Servei":[1,5,0,0],"Recepció":[3,1,3,9],"Col·locació":[0,0,2,2],"Atac":[1,0,10,2],"Bloqueig":[0,0,0]}},{"number":6,"name":"Avril","parts":[null,100.0,31.0,null,null],"counts":{"Servei":[1,2,0,0],"Recepció":[0,3,6,2],"Col·locació":[1,0,6,0],"Atac":[2,3,7,1],"Bloqueig":[0,0,0]}},{"number":7,"name":"Emma","parts":[null,100.0,null,null,null],"counts":{"Servei":[1,1,0,0],"Recepció":[3,4,2,2],"Col·locació":[0,0,4,3],"Atac":[0,0,2,3],"Bloqueig":[0,3,1]}},{"number":8,"name":"Isona","parts":[null,100.0,100.0,null,null],"counts":{"Servei":[1,5,0,0],"Recepció":[2,4,6,1],"Col·locació":[0,6,5,7],"Atac":[0,2,2,4],"Bloqueig":[0,0,2]}},{"number":10,"name":"Thais","parts":[null,100.0,45.0,null,null],"counts":{"Servei":[1,10,0,2],"Recepció":[2,1,3,1],"Col·locació":[0,4,3,2],"Atac":[0,2,2,2],"Bloqueig":[0,0,0]}},{"number":11,"name":"Yveth","parts":[100.0,null,null,null,null],"counts":{"Servei":[1,0,0,1],"Recepció":[0,1,1,2],"Col·locació":[0,0,0,0],"Atac":[0,0,4,0],"Bloqueig":[0,0,0]}},{"number":13,"name":"Maria","parts":[100.0,null,55.0,null,null],"counts":{"Servei":[0,5,0,3],"Recepció":[1,0,2,7],"Col·locació":[0,0,2,1],"Atac":[0,0,1,1],"Bloqueig":[0,0,1]}},{"number":16,"name":"Ainhoa","parts":[100.0,null,50.0,null,null],"counts":{"Servei":[2,6,0,2],"Recepció":[0,0,3,2],"Col·locació":[1,2,0,6],"Atac":[1,0,4,4],"Bloqueig":[0,1,0]}},{"number":18,"name":"Ària","parts":[100.0,null,62.0,null,null],"counts":{"Servei":[1,3,0,2],"Recepció":[1,1,1,3],"Col·locació":[0,0,2,3],"Atac":[1,0,2,2],"Bloqueig":[0,1,2]}},{"number":28,"name":"Mariona","parts":[100.0,null,50.0,null,null],"counts":{"Servei":[1,2,0,3],"Recepció":[1,0,1,3],"Col·locació":[1,0,0,1],"Atac":[1,0,1,3],"Bloqueig":[0,0,0]}},{"number":66,"name":"Núria","parts":[null,100.0,100.0,null,null],"counts":{"Servei":[2,2,0,0],"Recepció":[2,1,10,6],"Col·locació":[1,2,4,3],"Atac":[0,3,7,0],"Bloqueig":[0,2,1]}}]}];
  let viewingHistory=false;
+ let historyCache=[];
+ let historyVisibleCount=20;
+
  function legacyToMatch(rec){
    const players=rec.players.map(p=>({id:'legacy-'+rec.id+'-'+p.number,number:p.number,name:p.name}));
    let sets=[1,2,3,4,5].map(n=>{const participation={};rec.players.forEach((rp,i)=>{const q=rp.parts[n-1];if(q!=null)participation[players[i].id]={playerId:players[i].id,number:rp.number,name:rp.name,playedMs:q*600,percentage:q}});return {set:n,scores:{castellar:0,rival:0},actions:[],participation,substitutions:[]}}).filter(s=>Object.keys(s.participation).length);
    if(!sets.length)sets=[{set:1,scores:{castellar:0,rival:0},actions:[],participation:{},substitutions:[]}];
    rec.players.forEach((rp,i)=>Object.entries(rp.counts).forEach(([a,cs])=>cs.forEach((n,v)=>{for(let k=0;k<n;k++)sets[0].actions.push({playerId:players[i].id,action:a,value:v,set:sets[0].set,time:k})})));
-   return {id:rec.id,teamId:'infantil-a',teamName:'Infantil A',opponent:rec.opponent,date:rec.date,venue:rec.venue,players,completedSets:sets,finished:true,finishedAt:new Date(rec.date+'T12:00:00').getTime(),legacy:true,legacyResult:rec.legacyResult,correctionLog:[]};
+   return {id:rec.id,teamId:'infantil-a',teamName:'Infantil A',opponent:rec.opponent,date:rec.date,venue:rec.venue,players,completedSets:sets,finished:true,finishedAt:new Date(rec.date+'T12:00:00').getTime(),legacy:true,legacyResult:rec.legacyResult};
  }
- function loadHistory(){
-   let list=[];try{list=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]')}catch(e){}
-   const ids=new Set(list.map(x=>x.id));LEGACY_SEED.forEach(r=>{if(!ids.has(r.id))list.push(legacyToMatch(r))});
-   list.sort((a,b)=>(b.date||'').localeCompare(a.date||'')||((b.finishedAt||0)-(a.finishedAt||0)));localStorage.setItem(HISTORY_KEY,JSON.stringify(list));return list;
+ function openHistoryDB(){
+   return new Promise((resolve,reject)=>{
+     const req=indexedDB.open(HISTORY_DB,1);
+     req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(HISTORY_STORE)){const s=db.createObjectStore(HISTORY_STORE,{keyPath:'id'});s.createIndex('date','date',{unique:false});s.createIndex('finishedAt','finishedAt',{unique:false})}};
+     req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
+   });
  }
- function saveHistory(list){list.sort((a,b)=>(b.date||'').localeCompare(a.date||'')||((b.finishedAt||0)-(a.finishedAt||0)));localStorage.setItem(HISTORY_KEY,JSON.stringify(list))}
- function archiveMatch(m){if(!m||String(m.id||'').startsWith('TEST-'))return;const list=loadHistory(),copy=JSON.parse(JSON.stringify(m));copy.correctionLog=copy.correctionLog||[];const i=list.findIndex(x=>x.id===copy.id);if(i>=0)list[i]=copy;else list.push(copy);saveHistory(list)}
+ async function idbAll(){
+   const db=await openHistoryDB();
+   return new Promise((resolve,reject)=>{const tx=db.transaction(HISTORY_STORE,'readonly'),r=tx.objectStore(HISTORY_STORE).getAll();r.onsuccess=()=>resolve(r.result||[]);r.onerror=()=>reject(r.error)});
+ }
+ async function idbPut(m){
+   const db=await openHistoryDB();
+   return new Promise((resolve,reject)=>{const tx=db.transaction(HISTORY_STORE,'readwrite');tx.objectStore(HISTORY_STORE).put(JSON.parse(JSON.stringify(m)));tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)});
+ }
+ async function idbDelete(id){
+   const db=await openHistoryDB();
+   return new Promise((resolve,reject)=>{const tx=db.transaction(HISTORY_STORE,'readwrite');tx.objectStore(HISTORY_STORE).delete(id);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)});
+ }
+ async function ensureHistoryMigrated(){
+   let current=await idbAll(),ids=new Set(current.map(x=>x.id));
+   try{
+     const old=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');
+     for(const m of old||[])if(m&&m.id&&!ids.has(m.id)){await idbPut(m);ids.add(m.id)}
+   }catch(_){}
+   for(const rec of LEGACY_SEED){if(!ids.has(rec.id)){const m=legacyToMatch(rec);await idbPut(m);ids.add(m.id)}}
+   // No esborrem immediatament l'antic localStorage: queda com a xarxa de seguretat
+   // durant aquesta versió de migració.
+ }
+ async function refreshHistoryCache(){
+   await ensureHistoryMigrated();
+   historyCache=await idbAll();
+   historyCache.sort((a,b)=>(b.date||'').localeCompare(a.date||'')||((b.finishedAt||0)-(a.finishedAt||0)));
+   return historyCache;
+ }
+ async function archiveMatch(m){
+   if(!m||String(m.id||'').startsWith('TEST-'))return;
+   await idbPut(m);await refreshHistoryCache();
+ }
+ async function deleteArchivedMatch(id){await idbDelete(id);await refreshHistoryCache()}
  function historyScoreText(m){if(m.legacyResult)return m.legacyResult;const s=finalScore(m);return s[0]+'-'+s[1]}
- function renderHistory(){
-   const root=$('historyList'),empty=$('historyEmpty');if(!root)return;const list=loadHistory();root.innerHTML='';empty.hidden=!!list.length;
-   list.forEach(m=>{const d=(m.date||'').split('-'),el=document.createElement('div');el.className='card history-item';
+ async function renderHistory(){
+   const root=$('historyList'),empty=$('historyEmpty'),more=$('historyLoadMore');if(!root)return;
+   const list=await refreshHistoryCache();root.innerHTML='';empty.hidden=!!list.length;
+   list.slice(0,historyVisibleCount).forEach(m=>{
+     const d=(m.date||'').split('-'),el=document.createElement('div');el.className='card history-item';
      el.innerHTML='<div class="history-date">'+(d[2]||'')+'/'+(d[1]||'')+'<small>'+(d[0]||'')+'</small></div><div class="history-rival">'+(m.opponent||'Rival')+'<small>'+(m.venue==='home'?'Casa':'Fora')+(m.legacy?' · Importat':'')+'</small></div><div class="history-score">'+historyScoreText(m)+'</div>';
-     el.onclick=()=>openHistoryMatch(m.id);root.appendChild(el)});
+     el.onclick=()=>openHistoryMatch(m.id);root.appendChild(el);
+   });
+   if(more){more.hidden=list.length<=historyVisibleCount;more.onclick=()=>{historyVisibleCount+=20;renderHistory()}}
  }
- function openHistoryMatch(id){const m=loadHistory().find(x=>x.id===id);if(!m)return;match=JSON.parse(JSON.stringify(m));viewingHistory=true;renderFinalReport(match);const b=document.createElement('button');b.type='button';b.dataset.go='final-report';b.style.display='none';document.body.appendChild(b);b.click();b.remove()}
+ async function openHistoryMatch(id){
+   await refreshHistoryCache();const m=historyCache.find(x=>x.id===id);if(!m)return;
+   match=JSON.parse(JSON.stringify(m));viewingHistory=true;renderFinalReport(match);
+   const b=document.createElement('button');b.type='button';b.dataset.go='final-report';b.style.display='none';document.body.appendChild(b);b.click();b.remove();
+ }
  function setupCorrection(m){
    const card=$('historyCorrectionCard');if(!card)return;card.hidden=!viewingHistory;if(!viewingHistory)return;
    const pp=$('corrPlayer'),aa=$('corrAction'),vv=$('corrValue'),panel=$('correctionPanel'),toggle=$('toggleCorrectionBtn');
@@ -3411,12 +3475,13 @@ document.addEventListener('DOMContentLoaded', () => {
    document.querySelectorAll('[data-test-mode],#testMatchBtn,.test-match-btn').forEach(el=>el.style.display=on?'':'none');
    const t=document.getElementById('testModeToggle');if(t)t.checked=on;
  }
- function exportStatsBackup(){
+ async function exportStatsBackup(){
    const data={format:'Stats Castellar Backup',version:'1.0',createdAt:new Date().toISOString(),localStorage:{}};
    for(let i=0;i<localStorage.length;i++){
      const k=localStorage.key(i);
      if(k && (k.startsWith('statsCastellar') || k.startsWith('stats_')))data.localStorage[k]=localStorage.getItem(k);
    }
+   try{data.history=await idbAll()}catch(_){data.history=[]}
    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
    a.download='Stats_Castellar_copia_'+new Date().toISOString().slice(0,10)+'.json';a.click();
@@ -3429,6 +3494,10 @@ document.addEventListener('DOMContentLoaded', () => {
    if(!confirm('Restaurar aquesta còpia substituirà les dades locals de Stats Castellar d’aquest dispositiu. Continuar?'))return;
    Object.keys(localStorage).filter(k=>k.startsWith('statsCastellar')||k.startsWith('stats_')).forEach(k=>localStorage.removeItem(k));
    Object.entries(data.localStorage).forEach(([k,v])=>localStorage.setItem(k,v));
+   if(Array.isArray(data.history)){
+     const db=await openHistoryDB();
+     await new Promise((resolve,reject)=>{const tx=db.transaction(HISTORY_STORE,'readwrite'),st=tx.objectStore(HISTORY_STORE);st.clear();data.history.forEach(m=>st.put(m));tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)});
+   }
    alert('Còpia restaurada correctament. L’app es tornarà a carregar.');
    location.reload();
  }
