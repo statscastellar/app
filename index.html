@@ -953,7 +953,50 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 .recover-meta{font-size:12px;line-height:1.55;color:#667085;margin-bottom:15px}
 #recoverMatchNow{width:100%;min-height:48px;border:0;border-radius:10px;background:#17283f;color:#fff;font-weight:950}
 .recover-discard{width:100%;min-height:40px;margin-top:8px;border:1px solid #d0d5dd;border-radius:9px;background:#fff;color:#667085;font-weight:850}
-</style></head>
+</style>
+<style id="modal-centering-v241">
+/* Tots els overlays/modals queden centrats respecte la pantalla sencera,
+   també en PC i dispositiu horitzontal. Sense enfosquir el fons. */
+.modal-overlay,
+.confirm-overlay,
+.dialog-overlay,
+.live-exit-overlay,
+[id$="Modal"]:not([hidden]) {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+  max-width: none !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important;
+  z-index: 10000 !important;
+  box-sizing: border-box !important;
+  padding: 14px !important;
+}
+.modal-overlay[hidden],
+.confirm-overlay[hidden],
+.dialog-overlay[hidden],
+.live-exit-overlay[hidden],
+[id$="Modal"][hidden] {
+  display: none !important;
+}
+/* La caixa conserva la mida/disseny original i no queda lligada
+   a cap columna o contenidor de l'app. */
+.modal-overlay > *,
+.confirm-overlay > *,
+.dialog-overlay > *,
+.live-exit-overlay > *,
+[id$="Modal"]:not([hidden]) > * {
+  flex: 0 1 auto;
+  max-width: min(94vw, 560px);
+  max-height: calc(100dvh - 28px);
+  box-sizing: border-box;
+}
+</style>
+</head>
 <body>
 
 <script id="mandatory-default-team-v131">
