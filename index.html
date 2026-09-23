@@ -816,6 +816,22 @@ document.addEventListener('DOMContentLoaded',()=>{
 }
 </style>
 
+
+<style id="substitution-participation-v16">
+.player-tools{grid-template-columns:repeat(3,minmax(0,1fr))}
+.player-tools .sub-btn{background:#fff;color:#17283f;border:1px solid #17283f}
+.bench-player-list{display:flex;flex-direction:column;gap:8px;margin:14px 0;max-height:50vh;overflow:auto}
+.bench-player-list button{
+ width:100%;min-height:46px;border:1px solid #d0d5dd;border-radius:10px;background:#f8fafc;
+ color:#17283f;font-weight:900;text-align:left;padding:9px 12px
+}
+.bench-player-list button strong{display:inline-block;min-width:34px}
+.sub-cancel{width:100%;min-height:46px;border:0;border-radius:11px;font-weight:950}
+@media(max-width:620px){
+ .player-tools button{font-size:7px;padding:2px 1px}
+}
+</style>
+
 </head>
 <body>
 
@@ -1044,6 +1060,18 @@ document.addEventListener('DOMContentLoaded',()=>{
     <button id="finishSetBtn" class="finish-set-btn" type="button">FINALITZAR SET 1</button>
   </div>
 
+
+
+  <div id="substitutionModal" class="app-modal" hidden>
+    <div class="app-modal-backdrop"></div>
+    <div class="app-modal-card" role="dialog" aria-modal="true" aria-labelledby="substitutionTitle">
+      <div class="app-modal-kicker">SUBSTITUCIÓ</div>
+      <h2 id="substitutionTitle">Canviar jugadora</h2>
+      <p id="substitutionOut"></p>
+      <div id="benchPlayers" class="bench-player-list"></div>
+      <button id="cancelSubstitution" type="button" class="modal-cancel sub-cancel">Cancel·lar</button>
+    </div>
+  </div>
 
   <div id="leaveMatchModal" class="app-modal" hidden>
     <div class="app-modal-backdrop"></div>
@@ -1704,7 +1732,7 @@ document.addEventListener('DOMContentLoaded', () => {
  };
  const actions=['Servei','Recepció','Col·locació','Atac','Bloqueig'];
  const p=id=>match&&match.players.find(x=>x.id===id);
- const snap=()=>JSON.parse(JSON.stringify({scores:match.scores,serving:match.serving,positions:match.positions,actions:match.actions,pinned:match.pinned}));
+ const snap=()=>JSON.parse(JSON.stringify({scores:match.scores,serving:match.serving,positions:match.positions,actions:match.actions,pinned:match.pinned,participation:match.participation,substitutions:match.substitutions}));
  function save(){
    if(!match)return;
    match.undoHistory=history.slice(-30);
@@ -1769,11 +1797,15 @@ document.addEventListener('DOMContentLoaded', () => {
      };
 
      const swap=document.createElement('button');swap.type='button';swap.className='swap-btn';
-     swap.textContent='⇄ Canviar';
+     swap.textContent='⇄ Posició';
      if(swapSource===pl.id)swap.classList.add('swap-source');
      swap.onclick=()=>beginOrCompleteSwap(pl.id);
 
-     tools.append(pin,swap);
+     const sub=document.createElement('button');sub.type='button';sub.className='sub-btn';
+     sub.textContent='⇆ Substituir';
+     sub.onclick=()=>openSubstitution(pl.id);
+
+     tools.append(pin,swap,sub);
      if(swapSource){
        const help=document.createElement('div');help.className='swap-help';
        help.textContent=swapSource===pl.id?'Tria una altra jugadora':'Toca “Canviar” per intercanviar';
@@ -1782,6 +1814,103 @@ document.addEventListener('DOMContentLoaded', () => {
      }
      cell.append(head,box,tools);
    });
+ }
+
+ function ensureParticipation(){
+   match.participation=match.participation||{};
+   (match.players||[]).forEach(pl=>{
+     if(!match.participation[pl.id])
+       match.participation[pl.id]={playedMs:0,onCourt:false,lastIn:null};
+   });
+   match.substitutions=Array.isArray(match.substitutions)?match.substitutions:[];
+   match.setStartedAt=match.setStartedAt||Date.now();
+ }
+ function bench(){
+   const courtIds=new Set(Object.values(match.positions||{}));
+   return (match.players||[]).filter(pl=>!courtIds.has(pl.id));
+ }
+ function closeParticipationInterval(playerId,now){
+   ensureParticipation();
+   const rec=match.participation[playerId];
+   if(rec && rec.onCourt && rec.lastIn){
+     rec.playedMs += Math.max(0,now-rec.lastIn);
+     rec.lastIn=null;rec.onCourt=false;
+   }
+ }
+ function openParticipationInterval(playerId,now){
+   ensureParticipation();
+   const rec=match.participation[playerId];
+   if(rec){
+     rec.onCourt=true;rec.lastIn=now;
+   }
+ }
+ function currentPlayedMs(playerId,now=Date.now()){
+   ensureParticipation();
+   const rec=match.participation[playerId];
+   if(!rec)return 0;
+   return rec.playedMs + (rec.onCourt&&rec.lastIn ? Math.max(0,now-rec.lastIn) : 0);
+ }
+ function participationSnapshot(now=Date.now()){
+   ensureParticipation();
+   const elapsed=Math.max(1,now-match.setStartedAt);
+   const out={};
+   (match.players||[]).forEach(pl=>{
+     const ms=currentPlayedMs(pl.id,now);
+     out[pl.id]={
+       playerId:pl.id,number:pl.number,name:pl.name,
+       playedMs:ms,
+       percentage:Math.max(0,Math.min(100,Math.round(ms/elapsed*1000)/10))
+     };
+   });
+   return out;
+ }
+ function openSubstitution(outId){
+   if(!match)return;
+   ensureParticipation();
+   const out=p(outId), available=bench();
+   if(!out)return;
+   $('substitutionTitle').textContent='Substituir '+out.number+' · '+out.name;
+   $('substitutionOut').textContent='Tria la jugadora que entra a pista.';
+   const host=$('benchPlayers');host.innerHTML='';
+   if(!available.length){
+     host.innerHTML='<div style="text-align:center;color:#667085;padding:10px">No hi ha jugadores disponibles a la banqueta.</div>';
+   }else{
+     available.forEach(pl=>{
+       const b=document.createElement('button');b.type='button';
+       b.innerHTML='<strong>'+pl.number+'</strong> '+pl.name;
+       b.onclick=()=>completeSubstitution(outId,pl.id);
+       host.appendChild(b);
+     });
+   }
+   $('substitutionModal').hidden=false;
+ }
+ function completeSubstitution(outId,inId){
+   const pos=Object.keys(match.positions).find(k=>match.positions[k]===outId);
+   if(!pos)return;
+   const now=Date.now();
+
+   history.push(snap());
+   ensureParticipation();
+
+   closeParticipationInterval(outId,now);
+   openParticipationInterval(inId,now);
+
+   match.positions[pos]=inId;
+
+   /* Si la jugadora que surt estava fixada, la fixació no passa
+      automàticament a la substituta. */
+   match.pinned=match.pinned.filter(id=>id!==outId);
+
+   const out=p(outId), incoming=p(inId);
+   match.substitutions.push({
+     time:now,set:match.set,position:pos,
+     outId,inId,
+     outNumber:out?out.number:'',outName:out?out.name:'',
+     inNumber:incoming?incoming.number:'',inName:incoming?incoming.name:''
+   });
+
+   $('substitutionModal').hidden=true;
+   save();renderAll();
  }
  function beginOrCompleteSwap(playerId){
    if(!swapSource){
@@ -1842,8 +1971,19 @@ document.addEventListener('DOMContentLoaded', () => {
      teamId:d.teamId,opponent:d.opponent,date:d.date,venue:d.venue,set:Number(d.set)||1,players:d.players,
      positions:{...d.positions},starting:[...d.starting],serving:d.serving,
      scores:{castellar:0,rival:0},actions:[],pinned:[],
+     participation:{},substitutions:[],setStartedAt:Date.now(),
      completedSets:continuing&&Array.isArray(saved.completedSets)?saved.completedSets:[]
    };
+   const now=Date.now();
+   (match.players||[]).forEach(pl=>{
+     match.participation[pl.id]={playedMs:0,onCourt:false,lastIn:null};
+   });
+   Object.values(match.positions||{}).forEach(id=>{
+     if(match.participation[id]){
+       match.participation[id].onCourt=true;
+       match.participation[id].lastIn=now;
+     }
+   });
    history.length=0;swapSource=null;save();renderAll();
  });
  function manualPoint(visualSide,delta){
@@ -1887,7 +2027,10 @@ document.addEventListener('DOMContentLoaded', () => {
        finalPositions:{...match.positions},
        pinned:[...match.pinned],
        starting:[...match.starting],
-       serving:match.serving
+       serving:match.serving,
+       participation:participationSnapshot(Date.now()),
+       substitutions:JSON.parse(JSON.stringify(match.substitutions||[])),
+       setStartedAt:match.setStartedAt
      });
    }
    save();renderAll();
@@ -1925,6 +2068,19 @@ document.addEventListener('DOMContentLoaded', () => {
    match.pinned=[...(closed.pinned||[])];
    match.starting=[...(closed.starting||match.starting)];
    match.serving=closed.serving||match.serving;
+   match.substitutions=JSON.parse(JSON.stringify(closed.substitutions||[]));
+   match.participation={};
+   const now=Date.now();
+   const savedPart=closed.participation||{};
+   (match.players||[]).forEach(pl=>{
+     const rec=savedPart[pl.id]||{};
+     match.participation[pl.id]={
+       playedMs:Number(rec.playedMs)||0,
+       onCourt:Object.values(match.positions||{}).includes(pl.id),
+       lastIn:Object.values(match.positions||{}).includes(pl.id)?now:null
+     };
+   });
+   match.setStartedAt=now;
    match.finished=false;
 
    history.length=0;
@@ -1961,9 +2117,14 @@ document.addEventListener('DOMContentLoaded', () => {
    $('finishSetModal').hidden=true;
    alert('Partit finalitzat i guardat. El següent bloc serà l’informe final i les exportacions.');
  };
+
+ $('cancelSubstitution').onclick=()=>{$('substitutionModal').hidden=true};
+ $('substitutionModal').querySelector('.app-modal-backdrop').onclick=()=>{$('substitutionModal').hidden=true};
  $('undoAction').onclick=()=>{
    if(!history.length||!match)return;
    const s=history.pop();match.scores=s.scores;match.serving=s.serving;match.positions=s.positions;match.actions=s.actions;match.pinned=s.pinned||[];
+   match.participation=s.participation||match.participation||{};
+   match.substitutions=s.substitutions||match.substitutions||[];
    swapSource=null;save();renderAll();
  };
 
@@ -1983,8 +2144,26 @@ document.addEventListener('DOMContentLoaded', () => {
    match.actions=Array.isArray(match.actions)?match.actions:[];
    match.pinned=Array.isArray(match.pinned)?match.pinned:[];
    match.completedSets=Array.isArray(match.completedSets)?match.completedSets:[];
+   match.substitutions=Array.isArray(match.substitutions)?match.substitutions:[];
+   match.participation=match.participation||{};
+   match.setStartedAt=match.setStartedAt||Date.now();
    match.set=Number(match.set)||1;
    match.serving=match.serving||'castellar';
+   ensureParticipation();
+
+   const resumeNow=Date.now();
+   const courtNow=new Set(Object.values(match.positions||{}));
+   Object.keys(match.participation).forEach(id=>{
+     const rec=match.participation[id];
+     if(rec.onCourt && rec.lastIn){
+       rec.playedMs += Math.max(0,(match.savedAt||resumeNow)-rec.lastIn);
+     }
+     rec.onCourt=courtNow.has(id);
+     rec.lastIn=rec.onCourt?resumeNow:null;
+   });
+   match.setStartedAt=resumeNow-Math.max(1,
+     ...Object.values(match.participation).map(r=>Number(r.playedMs)||0)
+   );
 
    history.length=0;
    if(Array.isArray(match.undoHistory)){
