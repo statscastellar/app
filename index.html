@@ -958,6 +958,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         <div class="home-since">DES DE 2013</div>
       </div>
       <nav class="home-menu" aria-label="Menú principal">
+        <button id="loadTestMatchBtn" class="home-btn" style="background:linear-gradient(90deg,#555,#777)" type="button"><span class="ico">🧪</span><span>PARTIT DE PROVA</span><span class="chev">›</span></button>
         <button class="home-btn new" type="button" data-go="new-match"><span class="ico">▣</span><span>NOU PARTIT</span><span class="chev">›</span></button>
         <button class="home-btn recover" type="button" data-go="recover"><span class="ico">↻</span><span>RECUPERAR PARTIT</span><span class="chev">›</span></button>
         <button class="home-btn history" type="button" data-go="history"><span class="ico">▥</span><span>HISTORIAL DE PARTITS</span><span class="chev">›</span></button>
@@ -2571,6 +2572,45 @@ document.addEventListener('DOMContentLoaded', () => {
  $('exportOdsBtn').onclick=()=>runExport('ods');
  $('exportXlsxBtn').onclick=()=>runExport('xlsx');
 
+
+ function buildTestMatch(){
+   const team=(state.teams||[]).find(t=>t.id==='infantil-a')||(state.teams||[])[0];
+   if(!team||!(team.players||[]).length)throw new Error('No hi ha plantilla disponible');
+   const roster=team.players.slice().sort((a,b)=>+a.number-+b.number);
+   const m={id:'TEST-'+Date.now(),teamId:team.id,teamName:team.name||'Infantil A',opponent:'Rival de prova',
+     date:new Date().toISOString().slice(0,10),venue:'home',players:JSON.parse(JSON.stringify(roster)),
+     set:3,scores:{castellar:25,rival:19},actions:[],pinned:[],substitutions:[],participation:{},
+     completedSets:[],finished:true,finishedAt:Date.now()};
+   const defs=[
+     {score:[25,18],parts:[100,100,100,100,100,100,42,0,0,0,0,0]},
+     {score:[21,25],parts:[100,100,100,76,64,100,24,36,0,0,0,0]},
+     {score:[25,19],parts:[100,82,100,100,55,68,18,45,32,0,0,0]}
+   ];
+   const names=['Servei','Recepció','Col·locació','Atac','Bloqueig'];
+   defs.forEach((d,si)=>{
+     const participation={},actions=[];
+     roster.forEach((pl,pi)=>{
+       const pct=d.parts[pi]||0;if(!pct)return;
+       participation[pl.id]={playerId:pl.id,number:pl.number,name:pl.name,playedMs:pct*600,percentage:pct};
+       names.forEach((act,ai)=>{
+         const max=act==='Bloqueig'?2:3,count=1+((pi+ai+si)%3);
+         for(let n=0;n<count;n++)actions.push({playerId:pl.id,action:act,value:(pi+ai+n+si)%(max+1),set:si+1,time:Date.now()+actions.length});
+       });
+     });
+     const positions={};['1','2','3','4','5','6'].forEach((p,i)=>{if(roster[i])positions[p]=roster[i].id});
+     m.completedSets.push({set:si+1,scores:{castellar:d.score[0],rival:d.score[1]},actions,participation,substitutions:[],
+       finalPositions:positions,pinned:[],starting:roster.slice(0,6).map(p=>p.id),serving:si%2?'rival':'castellar',setStartedAt:Date.now()-60000});
+   });
+   return m;
+ }
+ function loadTestMatch(){
+   try{
+     match=buildTestMatch();localStorage.setItem(MATCH_KEY,JSON.stringify(match));renderFinalReport(match);
+     const b=document.createElement('button');b.type='button';b.dataset.go='final-report';b.style.display='none';
+     document.body.appendChild(b);b.click();b.remove();
+   }catch(e){alert('No s’ha pogut crear el partit de prova: '+e.message)}
+ }
+ const testBtn=$('loadTestMatchBtn');if(testBtn)testBtn.onclick=loadTestMatch;
  function hasRecoverableMatch(){
    try{
      const saved=JSON.parse(localStorage.getItem('statsCastellarCurrentMatchV1')||'null');
