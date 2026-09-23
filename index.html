@@ -943,7 +943,10 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 .edit-stat span{text-align:center;font-weight:950}
 .report-table td.editing-cell{padding:3px!important}
 </style>
-</head>
+<style id="assessment-export-v23">
+#exportAssessPdfBtn{white-space:nowrap}
+@media(max-width:620px){.report-export-buttons{grid-template-columns:1fr 1fr!important}}
+</style></head>
 <body>
 
 <script id="mandatory-default-team-v131">
@@ -1240,6 +1243,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         <button id="exportPdfBtn" type="button">PDF</button>
         <button id="exportOdsBtn" type="button">ODS</button>
         <button id="exportXlsxBtn" type="button">XLSX</button>
+        <button id="exportAssessPdfBtn" type="button">PDF VALORACIONS</button>
       </div>
       <small id="exportStatus"></small>
     </div>
@@ -2907,15 +2911,88 @@ document.addEventListener('DOMContentLoaded', () => {
    downloadBlob(blob,exportBaseName(m)+'.ods');
  }
 
+
+ async function exportAssessmentPDF(m){
+   if(!window.jspdf||!window.jspdf.jsPDF)throw new Error('No s’ha pogut carregar el generador PDF.');
+   const {jsPDF}=window.jspdf;
+   const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+   const W=210, margin=14, usable=W-margin*2;
+   let y=15;
+
+   const clean=s=>String(s??'').replace(/[–—]/g,'-');
+   const dateText=(()=>{
+     const p=String(m.date||'').split('-');
+     return p.length===3?p[2]+'-'+p[1]+'-'+p[0]:(m.date||'');
+   })();
+   const score=m.legacyResult || (()=>{
+     try{const s=finalScore(m);return s[0]+'-'+s[1]}catch(e){return ''}
+   })();
+
+   function pageHeader(first=false){
+     if(!first){doc.addPage();y=15}
+     doc.setFont('helvetica','bold');doc.setFontSize(16);
+     doc.text('VALORACIÓ INDIVIDUAL - INFANTIL FEMENÍ A',margin,y); y+=7;
+     doc.setFontSize(11);
+     doc.text(clean('F.S. Castellar Volei - '+(m.opponent||'Rival')),margin,y); y+=5;
+     doc.setFont('helvetica','normal');doc.setFontSize(9);
+     doc.text(clean('Data: '+dateText+'   Resultat: '+score+'   '+(m.venue==='home'?'Casa':'Fora')),margin,y); y+=5;
+     doc.setDrawColor(180);doc.line(margin,y,W-margin,y);y+=7;
+   }
+   function wrapped(text,x,width,size=9,style='normal'){
+     doc.setFont('helvetica',style);doc.setFontSize(size);
+     const lines=doc.splitTextToSize(clean(text),width);
+     doc.text(lines,x,y); y+=lines.length*(size*0.42)+2;
+   }
+   function ensure(space){if(y+space>282)pageHeader(false)}
+   pageHeader(true);
+
+   const players=(m.players||[]).slice().sort((a,b)=>Number(a.number)-Number(b.number));
+   players.forEach(pl=>{
+     const played=[1,2,3,4,5].some(s=>reportSetPct(m,pl.id,s)!==null);
+     if(!played)return;
+     const a=playerAssessment(m,pl);
+     ensure(48);
+     doc.setFillColor(238,243,247);doc.roundedRect(margin,y-4,usable,9,2,2,'F');
+     doc.setFont('helvetica','bold');doc.setFontSize(12);
+     doc.text(clean(pl.number+' · '+pl.name),margin+3,y+2);y+=10;
+
+     wrapped(a.context,margin,usable,8,'normal');
+     if(a.strongs.length){
+       wrapped('FORTALESES',margin,usable,9,'bold');
+       a.strongs.forEach(x=>wrapped('• '+x.text,margin+3,usable-3,9,'normal'));
+     }
+     if(a.works.length){
+       wrapped('ASPECTES A TREBALLAR',margin,usable,9,'bold');
+       a.works.forEach(x=>wrapped('• '+x.text,margin+3,usable-3,9,'normal'));
+     }
+     wrapped('SÍNTESI',margin,usable,9,'bold');
+     wrapped(a.summary,margin+3,usable-3,9,'normal');
+     doc.setFillColor(245,247,250);
+     const pr=doc.splitTextToSize(clean(a.priority),usable-8);
+     const bh=Math.max(10,pr.length*4.2+5);
+     ensure(bh+5);doc.roundedRect(margin,y-3,usable,bh,2,2,'F');
+     doc.setFont('helvetica','bold');doc.setFontSize(9);doc.text(pr,margin+4,y+2);
+     y+=bh+6;
+   });
+
+   const pages=doc.getNumberOfPages();
+   for(let i=1;i<=pages;i++){
+     doc.setPage(i);doc.setFont('helvetica','normal');doc.setFontSize(7);
+     doc.text('Stats Castellar · Valoració generada a partir de les estadístiques desades',margin,291);
+     doc.text(i+' / '+pages,W-margin,291,{align:'right'});
+   }
+   doc.save(exportBaseName(m)+'_valoracions.pdf');
+ }
  async function runExport(kind){
    if(!match||!match.finished)return;
-   const status=$('exportStatus'),btns=[$('exportPdfBtn'),$('exportOdsBtn'),$('exportXlsxBtn')];
+   const status=$('exportStatus'),btns=[$('exportPdfBtn'),$('exportOdsBtn'),$('exportXlsxBtn'),$('exportAssessPdfBtn')];
    btns.forEach(b=>b.disabled=true);status.textContent='Generant '+kind.toUpperCase()+'...';
    try{
      if(kind==='pdf')await exportPDF(match);
      else if(kind==='ods')await exportODS(match);
      else if(kind==='xlsx')await exportXLSX(match);
-     status.textContent=kind.toUpperCase()+' generat correctament.';
+     else if(kind==='valoracions')await exportAssessmentPDF(match);
+     status.textContent=(kind==='valoracions'?'PDF VALORACIONS':kind.toUpperCase())+' generat correctament.';
    }catch(e){
      console.error(e);status.textContent='Error generant '+kind.toUpperCase()+': '+(e&&e.message?e.message:'error desconegut');
    }finally{btns.forEach(b=>b.disabled=false)}
@@ -2923,6 +3000,7 @@ document.addEventListener('DOMContentLoaded', () => {
  $('exportPdfBtn').onclick=()=>runExport('pdf');
  $('exportOdsBtn').onclick=()=>runExport('ods');
  $('exportXlsxBtn').onclick=()=>runExport('xlsx');
+ $('exportAssessPdfBtn').onclick=()=>runExport('valoracions');
 
 
  function buildTestMatch(){
