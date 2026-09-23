@@ -954,6 +954,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.querySelectorAll('.court-slot').forEach(slot=>{
       const id=state.positions[slot.dataset.pos],p=id&&playerById(id);
       slot.querySelector('.court-player').textContent=p?(p.number+' · '+p.name):'—';
+      if(id) slot.dataset.playerId=id; else delete slot.dataset.playerId;
       slot.classList.toggle('filled',!!p);
     });
     const pool=$('positionPool');pool.innerHTML='';
@@ -962,6 +963,8 @@ document.addEventListener('DOMContentLoaded',()=>{
       const assigned=Object.values(state.positions).includes(p.id);
       if(assigned)b.classList.add('assigned');
       b.textContent=p.number+' · '+p.name;
+      b.dataset.playerId=p.id;
+      b.dataset.playerLabel=p.number+' · '+p.name;
       pool.appendChild(b);
     });
   }
@@ -982,7 +985,25 @@ document.addEventListener('DOMContentLoaded',()=>{
     }else state.positions[pos]=p.id;
     renderCourt();
   });
-  document.querySelector('[data-match-prev="3"]').onclick=()=>showStep(3);
+  
+  document.addEventListener('stats-court-assign',e=>{
+    const {playerId,pos}=e.detail||{};
+    if(!playerId||!pos||!state.starting.includes(playerId))return;
+
+    const oldPos=Object.keys(state.positions).find(k=>state.positions[k]===playerId);
+    const displaced=state.positions[pos];
+
+    if(oldPos && oldPos!==pos){
+      state.positions[pos]=playerId;
+      if(displaced) state.positions[oldPos]=displaced;
+      else delete state.positions[oldPos];
+    }else{
+      state.positions[pos]=playerId;
+    }
+    renderCourt();
+  });
+
+document.querySelector('[data-match-prev="3"]').onclick=()=>showStep(3);
   $('readyForSet').onclick=()=>{
     if(Object.keys(state.positions).length!==6)return alert('Cal col·locar les 6 jugadores a pista.');
     alert('Configuració del Set 1 completada. La pantalla d’anotació serà el següent bloc que construirem.');
@@ -1049,8 +1070,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     targetSlot.dataset.playerId=playerId;
 
-    /* Sincronitza amb l'estat del flux 0.8 a través de clics/camps visibles.
-       Guardem també una representació DOM estable per al següent bloc. */
+    /* Actualitza l'estat REAL del partit. Això és el que comprova
+       "Preparat per començar el Set 1". */
+    document.dispatchEvent(new CustomEvent('stats-court-assign',{
+      detail:{playerId:playerId,pos:targetSlot.dataset.pos}
+    }));
     refreshSlots();
   }
 
@@ -1093,10 +1117,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if(chip.dataset.dragReady)return;
       chip.dataset.dragReady='1';
 
-      /* Identitat: fem servir dorsal+nom, únics dins el sis inicial. */
+      /* La Base 0.8 ja posa l'ID real de la jugadora a la fitxa. */
       const label=chip.textContent.trim();
-      chip.dataset.playerLabel=label;
-      chip.dataset.playerId='court-player-'+label;
+      chip.dataset.playerLabel=chip.dataset.playerLabel || label;
 
       chip.addEventListener('pointerdown',e=>{
         if(e.pointerType==='mouse' && e.button!==0)return;
