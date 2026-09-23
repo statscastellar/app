@@ -922,6 +922,13 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 .correction-grid select,.correction-grid button{min-height:40px;border:1px solid #d0d5dd;border-radius:8px;background:#fff;padding:6px;font-weight:800}
 .correction-log{font-size:10px;color:#667085;margin-top:9px;max-height:110px;overflow:auto}
 @media(max-width:620px){.correction-grid{grid-template-columns:1fr 1fr}.correction-grid select:first-child{grid-column:1/-1}}
+</style><style id="assessment-v21">
+.eval-context{font-size:10px;color:#667085;margin:-2px 0 8px}
+.eval-section{display:flex;flex-direction:column;gap:6px}.eval-section>b{color:#17283f;font-size:11px}
+.eval-observation{font-size:11px;line-height:1.45;padding:8px 10px;border-radius:8px;background:#f8fafc;color:#475467}
+.eval-positive{border-left:4px solid #8fbf9f}.eval-work{border-left:4px solid #d9a0a0}
+.eval-summary{font-size:11px;line-height:1.45;margin-top:8px;color:#344054}
+.eval-priority{font-size:11px;line-height:1.45;margin-top:7px;padding:8px 10px;background:#eef3f7;border-radius:8px;color:#17283f}
 </style></head>
 <body>
 
@@ -2322,7 +2329,9 @@ document.addEventListener('DOMContentLoaded', () => {
        const p=reportSetPct(m,pl.id,Number(f));add(p===null?'':Math.round(p)+'%','set-cell');
      }
      ['Servei','Recepció','Col·locació','Atac','Bloqueig'].forEach(action=>{
-       const vals=actionCounts(acts,pl.id,action);
+       const vals=(m.legacy && !allMode)
+         ? Array(action==='Bloqueig'?3:4).fill('')
+         : actionCounts(acts,pl.id,action);
        vals.forEach((n,v)=>add(n,ratingClass(action,v)));
      });
      body.appendChild(tr);
@@ -2331,33 +2340,111 @@ document.addEventListener('DOMContentLoaded', () => {
 
  function playerAssessment(m,pl){
    const acts=reportActionsFor(m,'all');
-   const configs=[
-     {name:'Servei',good:[2,3],bad:[0],labels:['error','fàcil','correcte','ace']},
-     {name:'Recepció',good:[2,3],bad:[0,1],labels:['error','dolenta','correcte','perfecta']},
-     {name:'Col·locació',good:[2,3],bad:[0,1],labels:['error','dolenta','correcte','perfecta']},
-     {name:'Atac',good:[2,3],bad:[0,1],labels:['error','dolent','correcte','perfecte']},
-     {name:'Bloqueig',good:[1,2],bad:[0],labels:['fora','bloqueig','bloqueig punt']}
-   ];
-   const metrics=configs.map(c=>{
-     const counts=actionCounts(acts,pl.id,c.name),n=counts.reduce((a,b)=>a+b,0);
-     const good=c.good.reduce((a,i)=>a+(counts[i]||0),0),bad=c.bad.reduce((a,i)=>a+(counts[i]||0),0);
-     const maxIndex=counts.reduce((best,x,i)=>x>counts[best]?i:best,0);
-     return {...c,counts,n,goodPct:n?good/n:0,badPct:n?bad/n:0,dominant:c.labels[maxIndex]};
+   const totalParticipation=[1,2,3,4,5].reduce((sum,s)=>{
+     const p=reportSetPct(m,pl.id,s); return sum+(p===null?0:p/100);
+   },0);
+
+   function metric(action){
+     const c=actionCounts(acts,pl.id,action),n=c.reduce((a,b)=>a+b,0);
+     const pct=i=>n?(c[i]||0)/n:0;
+     if(action==='Servei'){
+       return {action,c,n,error:pct(0),low:pct(0)+pct(1),positive:pct(2)+pct(3),top:pct(3)};
+     }
+     if(action==='Bloqueig'){
+       return {action,c,n,error:pct(0),low:pct(0),positive:pct(1)+pct(2),top:pct(2)};
+     }
+     return {action,c,n,error:pct(0),low:pct(0)+pct(1),positive:pct(2)+pct(3),top:pct(3)};
+   }
+
+   const ms=['Servei','Recepció','Col·locació','Atac','Bloqueig'].map(metric);
+   const observations=[];
+   const priorities=[];
+
+   function enough(x){return x.n>=4}
+   function strongSample(x){return x.n>=7}
+   function pc(x){return Math.round(x*100)}
+   function add(kind,action,text,weight){observations.push({kind,action,text,weight})}
+
+   ms.forEach(x=>{
+     if(!x.n)return;
+
+     if(x.action==='Recepció'){
+       if(strongSample(x) && x.low>=0.50){
+         add('work',x.action,`Recepció — aspecte clar a treballar: ${x.c[0]+x.c[1]} de ${x.n} recepcions (${pc(x.low)}%) han estat 0–1. La primera pilota està dificultant massa la continuïtat del joc.`,x.low*100+x.n);
+         priorities.push({action:x.action,score:x.low*100+x.n});
+       } else if(enough(x) && x.positive>=0.70 && x.error<=0.15){
+         add('strong',x.action,`Recepció — fiable: ${x.c[2]+x.c[3]} de ${x.n} recepcions (${pc(x.positive)}%) han estat 2–3${x.c[0]===0?', sense errors directes':''}. Dona continuïtat i facilita la construcció de la jugada.`,x.positive*100+x.n);
+       } else if(enough(x) && x.low>=0.35){
+         add('watch',x.action,`Recepció — irregular: el ${pc(x.low)}% de les ${x.n} recepcions són 0–1. Hi ha marge per estabilitzar la primera pilota.`,x.low*80+x.n);
+         priorities.push({action:x.action,score:x.low*80+x.n});
+       }
+     }
+
+     if(x.action==='Col·locació'){
+       if(enough(x) && x.positive>=0.75){
+         add('strong',x.action,`Col·locació — molt consistent: ${x.c[2]+x.c[3]} de ${x.n} accions (${pc(x.positive)}%) són 2–3. Quan intervé, construeix el joc amb molta fiabilitat.`,x.positive*95+x.n);
+       } else if(strongSample(x) && x.low>=0.45){
+         add('work',x.action,`Col·locació — a estabilitzar: ${pc(x.low)}% de ${x.n} accions han estat 0–1. Cal millorar la qualitat de la segona pilota per donar més opcions a l’atac.`,x.low*90+x.n);
+         priorities.push({action:x.action,score:x.low*90+x.n});
+       }
+     }
+
+     if(x.action==='Atac'){
+       if(strongSample(x) && x.positive>=0.65){
+         add('strong',x.action,`Atac — genera perill: ${x.c[2]+x.c[3]} de ${x.n} atacs (${pc(x.positive)}%) són 2–3, amb ${x.c[3]||0} de màxima valoració. Manté una aportació ofensiva alta.`,x.positive*105+x.top*20+x.n);
+       } else if(enough(x) && x.error>=0.30){
+         add('work',x.action,`Atac — massa error: ${x.c[0]} de ${x.n} atacs (${pc(x.error)}%) acaben en 0. La prioritat és reduir l’error sense perdre iniciativa ofensiva.`,x.error*100+x.n);
+         priorities.push({action:x.action,score:x.error*100+x.n});
+       } else if(enough(x) && x.positive<0.45){
+         add('watch',x.action,`Atac — poca incidència: només el ${pc(x.positive)}% de ${x.n} atacs arriben a 2–3. Pot treballar per convertir més pilotes en accions ofensives de qualitat.`,(1-x.positive)*65+x.n);
+         priorities.push({action:x.action,score:(1-x.positive)*65+x.n});
+       }
+     }
+
+     if(x.action==='Servei'){
+       if(strongSample(x) && x.top>=0.25 && x.error<=0.20){
+         add('strong',x.action,`Servei — pressiona el rival: ${x.c[3]||0} de ${x.n} serveis (${pc(x.top)}%) són ace i l’error es manté en ${pc(x.error)}%. Combina agressivitat i control.`,x.top*100-x.error*30+x.n);
+       } else if(enough(x) && x.error>=0.25){
+         const tail=x.top>=0.20?' Tot i generar perill, el cost en error és elevat.':'';
+         add('work',x.action,`Servei — risc elevat: ${x.c[0]} errors en ${x.n} serveis (${pc(x.error)}%).${tail} Convindria mantenir la pressió reduint el servei perdut.`,x.error*95+x.n);
+         priorities.push({action:x.action,score:x.error*95+x.n});
+       } else if(enough(x) && x.positive>=0.65){
+         add('strong',x.action,`Servei — segur i exigent: ${pc(x.positive)}% dels ${x.n} serveis són 2–3 i només ${pc(x.error)}% acaben en error.`,x.positive*80-x.error*20+x.n);
+       }
+     }
+
+     if(x.action==='Bloqueig'){
+       if(x.n>=4 && x.top>=0.30){
+         add('strong',x.action,`Bloqueig — impacte real: ${x.c[2]||0} de ${x.n} accions (${pc(x.top)}%) acaben directament en punt.`,x.top*70+x.n);
+       } else if(x.n>=5 && x.error>=0.40){
+         add('work',x.action,`Bloqueig — marge de millora: ${x.c[0]} de ${x.n} intents (${pc(x.error)}%) acaben fora. Cal ajustar lectura i timing.`,x.error*65+x.n);
+         priorities.push({action:x.action,score:x.error*65+x.n});
+       }
+     }
    });
-   const usable=metrics.filter(x=>x.n>=4);
-   if(!usable.length)return {strong:'Mostra insuficient',improve:'Mostra insuficient',note:'Hi ha massa poques accions registrades per fer una valoració fiable d’aquest partit.'};
-   const strong=usable.slice().sort((a,b)=>(b.goodPct-a.goodPct)||(b.n-a.n))[0];
-   const improve=usable.slice().sort((a,b)=>(b.badPct-a.badPct)||(b.n-a.n))[0];
-   const strongText=strong.name+': '+Math.round(strong.goodPct*100)+'% de valoracions positives (2–'+(strong.name==='Bloqueig'?'2':'3')+') en '+strong.n+' accions.';
-   let improveText;
-   if(improve.badPct<=0.15)improveText='No destaca cap debilitat clara amb la mostra disponible.';
-   else improveText=improve.name+': '+Math.round(improve.badPct*100)+'% de valoracions baixes en '+improve.n+' accions.';
-   const total=metrics.reduce((a,x)=>a+x.n,0);
-   const low=total<15;
-   const note=low
-     ? 'Lectura amb prudència: només hi ha '+total+' accions registrades en total.'
-     : 'La dada suggereix reforçar '+(improve.badPct<=0.15?'la regularitat general':improve.name.toLowerCase())+' i mantenir el rendiment en '+strong.name.toLowerCase()+'.';
-   return {strong:strongText,improve:improveText,note};
+
+   observations.sort((a,b)=>b.weight-a.weight);
+   const strongs=observations.filter(x=>x.kind==='strong').slice(0,2);
+   const works=observations.filter(x=>x.kind!=='strong').slice(0,2);
+   priorities.sort((a,b)=>b.score-a.score);
+
+   const total=ms.reduce((s,x)=>s+x.n,0);
+   let context='';
+   if(total<10) context=`Mostra petita (${total} accions): les tendències són orientatives.`;
+   else if(totalParticipation<1.5) context=`Ha participat aproximadament ${totalParticipation.toFixed(1).replace('.',',')} sets; tot i jugar poc, hi ha ${total} accions registrades per detectar tendències.`;
+   else context=`Lectura basada en ${total} accions i aproximadament ${totalParticipation.toFixed(1).replace('.',',')} sets de participació.`;
+
+   let summary;
+   if(strongs.length && works.length) summary=`Perfil amb una aportació positiva en ${strongs.map(x=>x.action.toLowerCase()).join(' i ')}, però amb marge especialment en ${works[0].action.toLowerCase()}.`;
+   else if(strongs.length) summary=`Partit sòlid en ${strongs.map(x=>x.action.toLowerCase()).join(' i ')}; amb les dades disponibles no apareix cap debilitat clara.`;
+   else if(works.length) summary=`Les dades assenyalen marge de millora sobretot en ${works.map(x=>x.action.toLowerCase()).join(' i ')}.`;
+   else summary='Partit sense una tendència prou marcada per destacar una fortalesa o una debilitat concreta.';
+
+   const priority=priorities.length
+     ? `Prioritat d’entrenament: ${priorities[0].action}. És l’àrea on les dades d’aquest partit mostren més marge de millora.`
+     : `Prioritat d’entrenament: mantenir la regularitat i ampliar la mostra abans de fixar un aspecte prioritari.`;
+
+   return {strongs,works,context,summary,priority,total};
  }
  function renderPlayerEvaluations(m){
    const root=$('playerEvaluations');if(!root)return;root.innerHTML='';
@@ -2365,10 +2452,18 @@ document.addEventListener('DOMContentLoaded', () => {
      const played=[1,2,3,4,5].some(s=>reportSetPct(m,pl.id,s)!==null);
      if(!played)return;
      const a=playerAssessment(m,pl),box=document.createElement('div');box.className='player-eval';
-     box.innerHTML='<div class="player-eval-title">'+pl.number+' · '+pl.name+'</div>'+
-       '<div class="player-eval-grid"><div class="eval-box"><b>Punt fort</b>'+a.strong+'</div>'+
-       '<div class="eval-box"><b>A treballar</b>'+a.improve+'</div></div>'+
-       '<div class="eval-note">'+a.note+'</div>';
+     const strengths=a.strongs.length
+       ? a.strongs.map(x=>'<div class="eval-observation eval-positive">'+x.text+'</div>').join('')
+       : '<div class="eval-observation">No hi ha cap fortalesa prou marcada amb la mostra disponible.</div>';
+     const work=a.works.length
+       ? a.works.map(x=>'<div class="eval-observation eval-work">'+x.text+'</div>').join('')
+       : '<div class="eval-observation">No apareix cap aspecte clarament deficitari en aquest partit.</div>';
+     box.innerHTML=
+       '<div class="player-eval-title">'+pl.number+' · '+pl.name+'</div>'+
+       '<div class="eval-context">'+a.context+'</div>'+
+       '<div class="eval-section"><b>Lectura tècnica</b>'+strengths+work+'</div>'+
+       '<div class="eval-summary"><b>Síntesi</b> '+a.summary+'</div>'+
+       '<div class="eval-priority"><b>'+a.priority+'</b></div>';
      root.appendChild(box);
    });
  }
@@ -2377,7 +2472,12 @@ document.addEventListener('DOMContentLoaded', () => {
    $('reportMatchTitle').textContent='Castellar – '+(m.opponent||'Rival');$('reportFinalResult').textContent=m.legacyResult||((won.c)+' – '+(won.r));
    $('reportSetsLine').textContent=ss.map(s=>'Set '+s.set+': '+s.scores.castellar+'–'+s.scores.rival).join(' · ');
    const f=$('reportSetFilter');f.innerHTML='<option value="all">Total partit</option>';ss.forEach(s=>{const o=document.createElement('option');o.value=s.set;o.textContent='Set '+s.set;f.appendChild(o)});
-   if(m.legacy){f.innerHTML='<option value="all">Total partit</option>';f.disabled=true;$('reportSetsLine').textContent='Partit importat de l’ODS original · les accions disponibles són totals del partit';}else f.disabled=false;
+   if(m.legacy){
+     const legacySets=allReportSets(m).map(s=>Number(s.set)).filter(Boolean);
+     f.innerHTML='<option value="all">Total partit</option>'+legacySets.map(n=>'<option value="'+n+'">Set '+n+'</option>').join('');
+     f.disabled=false;
+     $('reportSetsLine').textContent='Partit importat de l’ODS original · per set es conserva la participació; les accions de l’ODS són totals del partit';
+   }else f.disabled=false;
    f.onchange=()=>renderReportTable(m,f.value);renderReportTable(m,'all');renderPlayerEvaluations(m);setupCorrection(m);
  }
  const reportBack=$('reportBackBtn');
