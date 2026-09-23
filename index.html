@@ -649,6 +649,31 @@ document.addEventListener('DOMContentLoaded',()=>{
 }
 </style>
 
+
+<style id="finish-set-v13">
+.finish-set-btn{
+ width:100%;min-height:54px;border:0;border-radius:13px;background:#17283f;color:#fff;
+ font-size:14px;font-weight:950;letter-spacing:.06em;cursor:pointer;
+ box-shadow:0 6px 15px rgba(0,0,0,.15)
+}
+.finish-set-btn:active{transform:scale(.99)}
+.app-modal[hidden]{display:none!important}
+.app-modal{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:20px}
+.app-modal-backdrop{position:absolute;inset:0;background:rgba(10,20,35,.62);backdrop-filter:blur(2px)}
+.app-modal-card{
+ position:relative;width:min(100%,430px);background:#fff;border-radius:18px;padding:22px;
+ box-shadow:0 24px 60px rgba(0,0,0,.30);text-align:center;color:#17283f
+}
+.app-modal-kicker{font-size:10px;font-weight:950;letter-spacing:.16em;color:#e45e00}
+.app-modal-card h2{margin:7px 0 8px;font-size:23px}
+.app-modal-card p{margin:10px 0 18px;color:#667085;font-size:13px}
+.finish-set-score{font-size:20px;font-weight:950;margin:14px 0}
+.app-modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.app-modal-actions button{min-height:46px;border:0;border-radius:11px;font-weight:950}
+.modal-cancel{background:#e9eef4;color:#344054}
+.modal-confirm{background:#17283f;color:#fff}
+</style>
+
 </head>
 <body>
 <div id="app">
@@ -811,6 +836,22 @@ document.addEventListener('DOMContentLoaded',()=>{
     <div class="last-action card">
       <div><span class="last-label">ÚLTIMA ACCIÓ</span><div id="lastActionText">Encara no hi ha cap acció.</div></div>
       <button id="undoAction" type="button" disabled>Desfer</button>
+    </div>
+
+    <button id="finishSetBtn" class="finish-set-btn" type="button">FINALITZAR SET 1</button>
+  </div>
+
+  <div id="finishSetModal" class="app-modal" hidden>
+    <div class="app-modal-backdrop"></div>
+    <div class="app-modal-card" role="dialog" aria-modal="true" aria-labelledby="finishSetTitle">
+      <div class="app-modal-kicker">FINAL DE SET</div>
+      <h2 id="finishSetTitle">Finalitzar el Set 1?</h2>
+      <div id="finishSetScore" class="finish-set-score"></div>
+      <p>Es guardaran el resultat i totes les estadístiques d'aquest set.</p>
+      <div class="app-modal-actions">
+        <button id="cancelFinishSet" type="button" class="modal-cancel">Cancel·lar</button>
+        <button id="confirmFinishSet" type="button" class="modal-confirm">Finalitzar set</button>
+      </div>
     </div>
   </div>
 </section>
@@ -1522,12 +1563,16 @@ document.addEventListener('DOMContentLoaded', () => {
    $('lastActionText').textContent=a?`${a.playerNumber} ${a.playerName} · ${a.action} · ${a.value} (${a.label})`:'Encara no hi ha cap acció.';
    $('undoAction').disabled=!history.length;
  }
- function renderAll(){renderScore();renderCourt();renderLast()}
+ function renderAll(){
+   renderScore();renderCourt();renderLast();
+   if($('liveSet'))$('liveSet').textContent='SET '+match.set;
+   if($('finishSetBtn'))$('finishSetBtn').textContent='FINALITZAR SET '+match.set;
+ }
  document.addEventListener('stats-start-scoring',e=>{
    const d=e.detail;
    match={teamId:d.teamId,opponent:d.opponent,date:d.date,venue:d.venue,set:1,players:d.players,
           positions:{...d.positions},starting:[...d.starting],serving:d.serving,
-          scores:{castellar:0,rival:0},actions:[],pinned:[]};
+          scores:{castellar:0,rival:0},actions:[],pinned:[],completedSets:[]};
    history.length=0;save();renderAll();
  });
  function manualPoint(visualSide,delta){
@@ -1542,6 +1587,36 @@ document.addEventListener('DOMContentLoaded', () => {
  $('leftPlus').onclick=()=>manualPoint('left',1);
  $('rightMinus').onclick=()=>manualPoint('right',-1);
  $('rightPlus').onclick=()=>manualPoint('right',1);
+
+ $('finishSetBtn').onclick=()=>{
+   if(!match)return;
+   const n=names();
+   $('finishSetTitle').textContent='Finalitzar el Set '+match.set+'?';
+   $('finishSetScore').textContent=n.l+' '+match.scores[n.lk]+' – '+match.scores[n.rk]+' '+n.r;
+   $('finishSetModal').hidden=false;
+ };
+ $('cancelFinishSet').onclick=()=>{$('finishSetModal').hidden=true};
+ $('finishSetModal').querySelector('.app-modal-backdrop').onclick=()=>{$('finishSetModal').hidden=true};
+
+ $('confirmFinishSet').onclick=()=>{
+   if(!match)return;
+   match.completedSets=match.completedSets||[];
+   match.completedSets.push({
+     set:match.set,
+     scores:{...match.scores},
+     actions:JSON.parse(JSON.stringify(match.actions)),
+     finalPositions:{...match.positions},
+     pinned:[...match.pinned],
+     starting:[...match.starting]
+   });
+   save();
+   $('finishSetModal').hidden=true;
+
+   /* De moment tanquem i preservem el set. El següent bloc serà la
+      configuració del Set 2 (sis inicial, posicions i primer servei). */
+   alert('Set '+match.set+' guardat correctament.');
+ };
+
  $('undoAction').onclick=()=>{
    if(!history.length||!match)return;
    const s=history.pop();match.scores=s.scores;match.serving=s.serving;match.positions=s.positions;match.actions=s.actions;match.pinned=s.pinned||[];
