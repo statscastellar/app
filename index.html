@@ -690,6 +690,132 @@ document.addEventListener('DOMContentLoaded',()=>{
 }
 </style>
 
+
+<style id="ui-polish-v153">
+/* Regla comuna: accions equivalents = mateixa geometria */
+:root{
+  --action-h:48px;
+  --action-radius:11px;
+  --action-gap:10px;
+}
+
+/* Final de set */
+.after-set-actions{
+  width:100%;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:var(--action-gap);
+  margin-top:8px;
+}
+.after-set-actions[hidden]{display:none!important}
+.after-set-actions button{
+  width:100%;
+  min-width:0;
+  height:var(--action-h);
+  min-height:var(--action-h);
+  margin:0!important;
+  padding:7px 10px!important;
+  border-radius:var(--action-radius)!important;
+  font-size:12px!important;
+  line-height:1.15;
+  font-weight:950;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+.return-set-secondary{
+  border:1px solid #98a2b3;
+  background:#eef2f6;
+  color:#344054;
+}
+
+/* Botons de navegació dels passos de Nou partit:
+   mateix espai, mateixa alçada, mateixa amplada. */
+#new-match .step-actions,
+#newMatch .step-actions,
+.match-step .step-actions{
+  width:100%;
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:var(--action-gap)!important;
+  align-items:stretch;
+}
+#new-match .step-actions > button,
+#newMatch .step-actions > button,
+.match-step .step-actions > button{
+  width:100%!important;
+  min-width:0!important;
+  height:var(--action-h)!important;
+  min-height:var(--action-h)!important;
+  margin:0!important;
+  padding:7px 10px!important;
+  border-radius:var(--action-radius)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  line-height:1.15!important;
+}
+
+/* Selector Local/Visitant i primer servei: parelles perfectament simètriques */
+.venue-options,
+.first-serve-options{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:var(--action-gap)!important;
+}
+.venue-options > button,
+.first-serve-options > button{
+  width:100%!important;
+  min-width:0!important;
+  height:var(--action-h)!important;
+  min-height:var(--action-h)!important;
+  margin:0!important;
+}
+
+/* Modal: les dues opcions de confirmació també són equivalents */
+.app-modal-actions{
+  width:100%;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:var(--action-gap);
+}
+.app-modal-actions > button{
+  width:100%!important;
+  height:var(--action-h)!important;
+  min-height:var(--action-h)!important;
+  margin:0!important;
+}
+
+/* En vertical prioritzem llegibilitat: una columna, però tots iguals.
+   En horitzontal aprofitem l'amplada amb columnes simètriques. */
+@media (orientation:portrait), (max-width:620px){
+  .after-set-actions{
+    grid-template-columns:1fr;
+  }
+  .after-set-actions button{
+    width:100%;
+  }
+}
+@media (orientation:landscape) and (min-width:621px){
+  .after-set-actions{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+}
+
+/* Evita que cap conjunt s'estiri exageradament en pantalles grans */
+.after-set-actions,
+.app-modal-actions,
+#new-match .step-actions,
+#newMatch .step-actions,
+.match-step .step-actions{
+  max-width:680px;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+</style>
+
 </head>
 <body>
 
@@ -945,6 +1071,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       </div>
       <div id="afterSetActions" class="after-set-actions" hidden>
         <button id="nextSetBtn" type="button" class="modal-confirm">Preparar següent set</button>
+        <button id="returnToSetBtn" type="button" class="return-set-secondary">Tornar al set</button>
         <button id="finishMatchBtn" type="button" class="finish-match-secondary">Finalitzar partit</button>
       </div>
     </div>
@@ -1759,7 +1886,8 @@ document.addEventListener('DOMContentLoaded', () => {
        actions:JSON.parse(JSON.stringify(match.actions)),
        finalPositions:{...match.positions},
        pinned:[...match.pinned],
-       starting:[...match.starting]
+       starting:[...match.starting],
+       serving:match.serving
      });
    }
    save();renderAll();
@@ -1768,6 +1896,8 @@ document.addEventListener('DOMContentLoaded', () => {
    $('finishSetScore').textContent=n.l+' '+match.scores[n.lk]+' – '+match.scores[n.rk]+' '+n.r;
    const nextBtn=$('nextSetBtn');
    if(nextBtn)nextBtn.textContent='Preparar Set '+(Number(match.set)+1);
+   const returnBtn=$('returnToSetBtn');
+   if(returnBtn)returnBtn.textContent='Tornar al Set '+match.set;
    $('finishSetConfirmActions').hidden=true;
    $('finishSetConfirmActions').style.display='none';
    $('afterSetActions').hidden=false;
@@ -1775,6 +1905,40 @@ document.addEventListener('DOMContentLoaded', () => {
  };
 
 
+
+ $('returnToSetBtn').onclick=()=>{
+   if(!match)return;
+   match.completedSets=match.completedSets||[];
+
+   const idx=match.completedSets.findIndex(s=>Number(s.set)===Number(match.set));
+   if(idx<0)return;
+
+   const closed=match.completedSets[idx];
+
+   /* Reobrim exactament el set que acabem de tancar.
+      En eliminar-lo de completedSets deixa de considerar-se finalitzat
+      fins que l'usuari torni a prémer FINALITZAR SET. */
+   match.completedSets.splice(idx,1);
+   match.scores={...closed.scores};
+   match.actions=JSON.parse(JSON.stringify(closed.actions||[]));
+   match.positions={...(closed.finalPositions||match.positions)};
+   match.pinned=[...(closed.pinned||[])];
+   match.starting=[...(closed.starting||match.starting)];
+   match.serving=closed.serving||match.serving;
+   match.finished=false;
+
+   history.length=0;
+   swapSource=null;
+   save();
+
+   $('finishSetModal').hidden=true;
+   $('finishSetConfirmActions').hidden=false;
+   $('finishSetConfirmActions').style.display='grid';
+   $('afterSetActions').hidden=true;
+   $('afterSetActions').style.display='none';
+
+   renderAll();
+ };
  $('nextSetBtn').onclick=()=>{
    if(!match)return;
    const next=Number(match.set)+1;
