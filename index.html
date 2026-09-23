@@ -938,7 +938,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       <div class="app-modal-kicker">FINAL DE SET</div>
       <h2 id="finishSetTitle">Finalitzar el Set 1?</h2>
       <div id="finishSetScore" class="finish-set-score"></div>
-      <p>Es guardaran el resultat i totes les estadístiques d'aquest set.</p>
+      <p>En confirmar, el set quedarà finalitzat i guardat.</p>
       <div id="finishSetConfirmActions" class="app-modal-actions">
         <button id="cancelFinishSet" type="button" class="modal-cancel">Cancel·lar</button>
         <button id="confirmFinishSet" type="button" class="modal-confirm">Finalitzar set</button>
@@ -1734,6 +1734,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
  $('finishSetBtn').onclick=()=>{
    if(!match)return;
+   const already=(match.completedSets||[]).some(s=>Number(s.set)===Number(match.set));
+   if(already)return;
    const n=names();
    $('finishSetTitle').textContent='Finalitzar el Set '+match.set+'?';
    $('finishSetScore').textContent=n.l+' '+match.scores[n.lk]+' – '+match.scores[n.rk]+' '+n.r;
@@ -1761,9 +1763,11 @@ document.addEventListener('DOMContentLoaded', () => {
      });
    }
    save();renderAll();
-   $('finishSetTitle').textContent='Set '+match.set+' guardat';
+   $('finishSetTitle').textContent='Set '+match.set+' finalitzat';
    const n=names();
    $('finishSetScore').textContent=n.l+' '+match.scores[n.lk]+' – '+match.scores[n.rk]+' '+n.r;
+   const nextBtn=$('nextSetBtn');
+   if(nextBtn)nextBtn.textContent='Preparar Set '+(Number(match.set)+1);
    $('finishSetConfirmActions').hidden=true;
    $('finishSetConfirmActions').style.display='none';
    $('afterSetActions').hidden=false;
