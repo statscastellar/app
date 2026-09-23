@@ -1026,7 +1026,24 @@ https://github.com/nodeca/pako/blob/main/LICENSE
   opacity: 1 !important;
 }
 </style>
-</head>
+<style id="settings-v10">
+.settings-wrap{width:min(92%,620px);margin:16px auto 30px;display:flex;flex-direction:column;gap:12px}
+.settings-card{padding:16px!important}.settings-card h2{margin:0 0 5px;color:#17283f;font-size:16px}
+.settings-help{margin:0;color:#667085;font-size:11px;line-height:1.45}
+.settings-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:13px}
+.settings-actions button{min-height:44px;border:0;border-radius:9px;font-weight:900;background:#17283f;color:#fff}
+.settings-status{min-height:14px;margin-top:8px;font-size:10px;color:#667085}
+.settings-row{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.switch{position:relative;width:52px;height:30px;flex:0 0 auto}.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#d0d5dd;border-radius:30px;cursor:pointer;transition:.2s}
+.slider:before{content:"";position:absolute;width:24px;height:24px;left:3px;top:3px;background:white;border-radius:50%;transition:.2s;box-shadow:0 1px 3px #0003}
+.switch input:checked+.slider{background:#e86516}.switch input:checked+.slider:before{transform:translateX(22px)}
+.about-card{text-align:center}.about-name{font-size:20px;font-weight:1000;color:#17283f;letter-spacing:.04em}
+.about-sub{font-size:11px;color:#667085;margin-top:2px}.about-version{display:inline-block;margin-top:10px;padding:4px 10px;border-radius:20px;background:#eef3f7;color:#17283f;font-size:10px;font-weight:900}
+.about-creator{margin-top:13px;font-size:13px;color:#17283f}.about-copy{font-size:10px;color:#667085;margin-top:4px}
+.about-warning{font-size:9px;line-height:1.45;color:#98a2b3;max-width:470px;margin:12px auto 0;padding-top:10px;border-top:1px solid #eaecf0}
+@media(max-width:520px){.settings-actions{grid-template-columns:1fr}}
+</style></head>
 <body>
 
 <script id="mandatory-default-team-v131">
@@ -1391,7 +1408,34 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 </section>
   <section id="settings" class="screen">
     <div class="topbar"><button class="back" data-back>←</button><h1>Configuració</h1><span></span></div>
-    <div class="card placeholder">Pantalla reservada per a Configuració.</div>
+    <div class="settings-wrap">
+  <div class="card settings-card">
+    <h2>Dades</h2>
+    <p class="settings-help">Fes una còpia de seguretat de l’historial, partits pendents i dades locals de l’app.</p>
+    <div class="settings-actions">
+      <button id="backupExportBtn" type="button">⬇ Exportar còpia de seguretat</button>
+      <button id="backupImportBtn" type="button">⬆ Restaurar còpia</button>
+      <input id="backupImportFile" type="file" accept=".json,application/json" hidden>
+    </div>
+    <div id="backupStatus" class="settings-status"></div>
+  </div>
+
+  <div class="card settings-card">
+    <div class="settings-row">
+      <div><h2>Mode de prova</h2><p class="settings-help">Mostra o amaga les eines de prova de l’app.</p></div>
+      <label class="switch"><input id="testModeToggle" type="checkbox"><span class="slider"></span></label>
+    </div>
+  </div>
+
+  <div class="card settings-card about-card">
+    <div class="about-name">STATS CASTELLAR</div>
+    <div class="about-sub">Aplicació d’estadístiques de voleibol</div>
+    <div class="about-version">Versió 1.0</div>
+    <div class="about-creator">Creat per <strong>Curu</strong></div>
+    <div class="about-copy">© 2026 Curu. Tots els drets reservats.</div>
+    <p class="about-warning">Aquesta aplicació és d’ús privat. No se’n permet la còpia, modificació, redistribució ni publicació sense autorització expressa del creador.</p>
+  </div>
+</div>
   </section>
 </main>
 <footer>Creat per Curu</footer>
@@ -3357,6 +3401,47 @@ document.addEventListener('DOMContentLoaded', () => {
  });
 
  updateRecoverHome();
+
+ // CONFIGURACIÓ — versió pública 1.0
+ const SETTINGS_KEY='statsCastellarSettingsV1';
+ function getSettings(){try{return JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}')}catch(_){return {}}}
+ function saveSettingsObj(s){localStorage.setItem(SETTINGS_KEY,JSON.stringify(s))}
+ function applyTestMode(){
+   const on=!!getSettings().testMode;
+   document.querySelectorAll('[data-test-mode],#testMatchBtn,.test-match-btn').forEach(el=>el.style.display=on?'':'none');
+   const t=document.getElementById('testModeToggle');if(t)t.checked=on;
+ }
+ function exportStatsBackup(){
+   const data={format:'Stats Castellar Backup',version:'1.0',createdAt:new Date().toISOString(),localStorage:{}};
+   for(let i=0;i<localStorage.length;i++){
+     const k=localStorage.key(i);
+     if(k && (k.startsWith('statsCastellar') || k.startsWith('stats_')))data.localStorage[k]=localStorage.getItem(k);
+   }
+   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+   const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+   a.download='Stats_Castellar_copia_'+new Date().toISOString().slice(0,10)+'.json';a.click();
+   setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+   const s=document.getElementById('backupStatus');if(s)s.textContent='Còpia de seguretat creada correctament.';
+ }
+ async function importStatsBackup(file){
+   const text=await file.text(),data=JSON.parse(text);
+   if(!data || data.format!=='Stats Castellar Backup' || !data.localStorage)throw new Error('El fitxer no és una còpia vàlida de Stats Castellar.');
+   if(!confirm('Restaurar aquesta còpia substituirà les dades locals de Stats Castellar d’aquest dispositiu. Continuar?'))return;
+   Object.keys(localStorage).filter(k=>k.startsWith('statsCastellar')||k.startsWith('stats_')).forEach(k=>localStorage.removeItem(k));
+   Object.entries(data.localStorage).forEach(([k,v])=>localStorage.setItem(k,v));
+   alert('Còpia restaurada correctament. L’app es tornarà a carregar.');
+   location.reload();
+ }
+ const backupExportBtn=document.getElementById('backupExportBtn');
+ if(backupExportBtn)backupExportBtn.onclick=exportStatsBackup;
+ const backupImportBtn=document.getElementById('backupImportBtn'),backupImportFile=document.getElementById('backupImportFile');
+ if(backupImportBtn&&backupImportFile){
+   backupImportBtn.onclick=()=>backupImportFile.click();
+   backupImportFile.onchange=async()=>{try{if(backupImportFile.files[0])await importStatsBackup(backupImportFile.files[0])}catch(e){alert(e.message||'No s’ha pogut restaurar la còpia.')}finally{backupImportFile.value=''}};
+ }
+ const testModeToggle=document.getElementById('testModeToggle');
+ if(testModeToggle)testModeToggle.onchange=()=>{const s=getSettings();s.testMode=testModeToggle.checked;saveSettingsObj(s);applyTestMode()};
+ applyTestMode();
 })();
 </script>
 
