@@ -1065,8 +1065,15 @@ body.stats-dark{background:#111827;color:#e5e7eb}body.stats-dark .screen{backgro
 <style id="senyera-lema-prova">
 /* PROVA VISUAL: senyera integrada darrere del lema. No altera dades ni funcionalitat. */
 #home .home-motto-flag{position:relative;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;margin-top:2px;padding:7px 22px 6px;isolation:isolate}
-#home .home-motto-flag::before{content:"";position:absolute;z-index:-1;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-2deg);width:100%;height:100%;border-radius:28px;opacity:.22;filter:saturate(.92);background:linear-gradient(to bottom,#f7d117 0 11.111%,#d71920 11.111% 22.222%,#f7d117 22.222% 33.333%,#d71920 33.333% 44.444%,#f7d117 44.444% 55.555%,#d71920 55.555% 66.666%,#f7d117 66.666% 77.777%,#d71920 77.777% 88.888%,#f7d117 88.888% 100%);-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 10%,#000 90%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 10%,#000 90%,transparent 100%)}
+#home .home-motto-flag::before{content:"";position:absolute;z-index:-1;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-2deg);width:100vw;height:100%;border-radius:0;opacity:.22;filter:saturate(.92);background:linear-gradient(to bottom,#f7d117 0 11.111%,#d71920 11.111% 22.222%,#f7d117 22.222% 33.333%,#d71920 33.333% 44.444%,#f7d117 44.444% 55.555%,#d71920 55.555% 66.666%,#f7d117 66.666% 77.777%,#d71920 77.777% 88.888%,#f7d117 88.888% 100%)}
 #home .home-motto-flag .home-script,#home .home-motto-flag .home-since{position:relative;z-index:1}
+</style>
+
+<style id="senyera-amplada-completa-prova">
+/* PROVA: la senyera ocupa tot l'ample de la pantalla. En horitzontal queda al fons, darrere de la zona del menú. */
+#home .home-menu{position:relative;z-index:2}
+#home .home-brand{position:relative;z-index:1}
+#home .home-credit{position:relative;z-index:2}
 </style>
 </head>
 <body>
