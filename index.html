@@ -185,7 +185,7 @@ body:has(#home.active) footer { display:none!important; }
 /* MÒBIL / TAULETA VERTICAL */
 @media (orientation:portrait) {
   #home {
-    /* Prova v1.0.1: una mica menys de zoom en vertical per mostrar més silueta.
+    /* Prova v1.0.2: una mica menys de zoom en vertical per mostrar més silueta.
        El color taronja del mateix #home omple qualsevol marge residual. */
     background-size:auto 92%!important;
     background-position:31% center!important;
@@ -1356,6 +1356,7 @@ body.stats-dark{background:#111827;color:#e5e7eb}body.stats-dark .screen{backgro
       <strong>Exportar informe</strong>
       <div class="report-export-buttons">
         <button id="exportPdfBtn" type="button">PDF</button>
+        <button id="sharePdfBtn" type="button">COMPARTIR PDF</button>
         <button id="exportOdsBtn" type="button">ODS</button>
         <button id="exportXlsxBtn" type="button">XLSX</button>
         <button id="exportAssessPdfBtn" type="button">PDF VALORACIONS</button>
@@ -1429,6 +1430,15 @@ body.stats-dark{background:#111827;color:#e5e7eb}body.stats-dark .screen{backgro
     <div id="playerList" class="player-list"></div>
   </div>
 </section>
+<section id="player-stats" class="screen">
+  <div class="topbar"><button class="back" data-back>←</button><h1 id="playerStatsTitle">Estadístiques</h1><span></span></div>
+  <div class="player-stats-wrap">
+    <div id="playerStatsSummary" class="card player-stats-summary"></div>
+    <div class="card player-stats-card"><h2>Resum global</h2><div id="playerStatsActions"></div></div>
+    <div class="card player-stats-card"><h2>Evolució partit a partit</h2><label class="stats-select-label">Acció <select id="playerStatsAction"><option>Servei</option><option>Recepció</option><option>Col·locació</option><option>Atac</option><option>Bloqueig</option></select></label><div id="playerStatsTrend" class="stats-trend"></div></div>
+    <div class="card player-stats-card"><h2>Partits</h2><div id="playerStatsMatches"></div></div>
+  </div>
+</section>
   <section id="settings" class="screen">
     <div class="topbar"><button class="back" data-back>←</button><h1>Configuració</h1><span></span></div>
     <div class="settings-wrap">
@@ -1436,7 +1446,7 @@ body.stats-dark{background:#111827;color:#e5e7eb}body.stats-dark .screen{backgro
         <div class="settings-section-head"><div class="settings-icon">▣</div><div><h2 class="settings-title">Informació de l’app</h2></div></div>
         <div class="app-info-grid">
           <div class="label">Nom</div><div class="value">Stats Castellar</div>
-          <div class="label">Versió</div><div class="value">v1.0.1</div>
+          <div class="label">Versió</div><div class="value">v1.0.2</div>
           <div class="label">Data de creació</div><div class="value">Setembre del 2026</div>
           <div class="label">Última actualització</div><div class="value">24/09/2026</div>
         </div>
@@ -1494,6 +1504,8 @@ body.stats-dark{background:#111827;color:#e5e7eb}body.stats-dark .screen{backgro
     screens.get(id).classList.add('active');
     window.scrollTo(0,0);
   }
+
+  window.statsNavigate=(id,push=true)=>render(id,push);
 
   function back(){
     let destination = 'home';
@@ -1594,13 +1606,13 @@ body.stats-dark{background:#111827;color:#e5e7eb}body.stats-dark .screen{backgro
 
   function renderRoster(){
     const t=team(); if(!t)return;
-    document.getElementById('rosterTeamName').textContent=t.name;
+    document.getElementById('rosterTeamName').textContent=t.name; document.getElementById('roster').dataset.teamId=t.id;
     const host=document.getElementById('playerList'); host.innerHTML='';
     const players=[...(t.players||[])].sort((a,b)=>(Number(a.number)||999)-(Number(b.number)||999));
     if(!players.length){host.innerHTML='<div class="empty-roster">Encara no hi ha jugadores en aquesta plantilla.</div>';return}
     players.forEach(p=>{
       const row=document.createElement('div');row.className='player-row';
-      row.innerHTML='<div class="player-number">'+esc(p.number)+'</div><div class="player-name">'+esc(p.name)+'</div>';
+      row.dataset.playerId=p.id; row.dataset.playerNumber=p.number; row.dataset.playerName=p.name; row.style.cursor='pointer'; row.innerHTML='<div class="player-number">'+esc(p.number)+'</div><div class="player-name">'+esc(p.name)+'</div>'; row.onclick=(e)=>{if(e.target.closest('.player-edit'))return; window.openPlayerSeasonStats&&window.openPlayerSeasonStats(t.id,p);};
       const edit=document.createElement('button');edit.type='button';edit.className='player-edit';edit.textContent='Editar';
       edit.onclick=()=>openPlayerEditor(p.id);
       row.appendChild(edit);host.appendChild(row);
@@ -2762,7 +2774,7 @@ document.addEventListener('DOMContentLoaded', () => {
    const delCard=$('historyDeleteCard'),delBtn=$('deleteHistoryMatchBtn');
    if(delCard)delCard.hidden=!viewingHistory;
    if(delBtn&&viewingHistory)delBtn.onclick=async()=>{
-     if(!confirm('Vols eliminar aquest partit de l’historial?'))return;
+     if(!confirm('Vols eliminar aquest partit de l’historial?\n\nAquest partit deixarà de comptar en les estadístiques globals i en l’evolució de les jugadores.'))return;
      if(!confirm('SEGONA CONFIRMACIÓ\n\nAquesta acció és definitiva i no es pot desfer. Eliminar el partit?'))return;
      await deleteArchivedMatch(m.id);
      viewingHistory=false;match=null;
@@ -2879,7 +2891,7 @@ document.addEventListener('DOMContentLoaded', () => {
  }
 
  // ---------- PDF: 2 pàgines, mateix esquema lògic que l'ODS ----------
- async function exportPDF(m){
+ async function exportPDF(m,mode='save'){
    if(!window.jspdf||!window.jspdf.jsPDF)throw new Error('No s’ha pogut carregar el generador PDF.');
    const {jsPDF}=window.jspdf, doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
    const score=finalScore(m), rival=m.opponent||'Rival', ss=exportSets(m);
@@ -2939,7 +2951,9 @@ document.addEventListener('DOMContentLoaded', () => {
    });
    y=doc.lastAutoTable.finalY+5;doc.setFontSize(7.2);
    legendLines().slice(0,3).forEach(line=>{doc.text(line,10,y);y+=4});
-   doc.save(exportBaseName(m)+'.pdf');
+   const fileName=exportBaseName(m)+'.pdf';
+   if(mode==='blob') return {blob:doc.output('blob'),fileName};
+   doc.save(fileName);
  }
 
  // ---------- XLSX ----------
@@ -3190,6 +3204,26 @@ document.addEventListener('DOMContentLoaded', () => {
  $('exportOdsBtn').onclick=()=>runExport('ods');
  $('exportXlsxBtn').onclick=()=>runExport('xlsx');
  $('exportAssessPdfBtn').onclick=()=>runExport('valoracions');
+ const sharePdfBtn=$('sharePdfBtn');
+ if(sharePdfBtn) sharePdfBtn.onclick=async()=>{
+   if(!match||!match.finished)return;
+   const status=$('exportStatus');
+   try{
+     status.textContent='Preparant PDF per compartir...';
+     const out=await exportPDF(match,'blob');
+     const file=new File([out.blob],out.fileName,{type:'application/pdf'});
+     if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
+       await navigator.share({title:'Stats Castellar',text:'Informe del partit',files:[file]});
+       status.textContent='PDF compartit.';
+     }else{
+       downloadBlob(out.blob,out.fileName);
+       status.textContent='Aquest dispositiu no permet compartir directament. S’ha descarregat el PDF.';
+     }
+   }catch(e){
+     if(e&&e.name==='AbortError'){status.textContent='Compartició cancel·lada.';return;}
+     console.error(e);status.textContent='No s’ha pogut compartir el PDF.';
+   }
+ };
 
 
  function buildTestMatch(){
@@ -3515,12 +3549,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
  updateRecoverHome();
 
- // CONFIGURACIÓ — versió pública 1.0.1
+ // CONFIGURACIÓ — versió pública 1.0.2
  const SETTINGS_KEY='statsCastellarSettingsV1';
  function getSettings(){try{return JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}')}catch(_){return {}}}
  function saveSettingsObj(s){localStorage.setItem(SETTINGS_KEY,JSON.stringify(s))}
  async function exportStatsBackup(){
-   const data={format:'Stats Castellar Backup',version:'1.0.1',createdAt:new Date().toISOString(),localStorage:{}};
+   const data={format:'Stats Castellar Backup',version:'1.0.2',createdAt:new Date().toISOString(),localStorage:{}};
    for(let i=0;i<localStorage.length;i++){
      const k=localStorage.key(i);
      if(k && (k.startsWith('statsCastellar') || k.startsWith('stats_')))data.localStorage[k]=localStorage.getItem(k);
@@ -3596,5 +3630,59 @@ if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   });
 }
 </script>
+
+<style id="player-season-stats-v101">
+.player-stats-wrap{width:min(100%,850px);margin:0 auto}.player-stats-card,.player-stats-summary{padding:16px!important;margin-bottom:12px}.player-stats-summary h2,.player-stats-card h2{margin:0 0 10px;color:#17283f}.player-stats-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.player-stats-kpi{background:#f8fafc;border:1px solid #e4e7ec;border-radius:10px;padding:10px;text-align:center}.player-stats-kpi strong{display:block;font-size:22px;color:#17283f}.player-stats-kpi small{color:#667085}.global-action{margin:12px 0;padding:12px;border:1px solid #e4e7ec;border-radius:10px}.global-action-head{display:flex;justify-content:space-between;gap:8px;font-weight:900;color:#17283f}.rating-dist{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:8px}.rating-dist.three{grid-template-columns:repeat(3,1fr)}.rating-chip{padding:7px 4px;border-radius:7px;text-align:center;font-size:12px;font-weight:800;background:#f2f4f7}.stats-select-label{display:flex;align-items:center;gap:8px;font-weight:800;margin-bottom:10px}.stats-select-label select{flex:1;padding:8px;border:1px solid #d0d5dd;border-radius:8px}.trend-row{display:grid;grid-template-columns:90px 1fr 50px;gap:8px;align-items:center;margin:8px 0;font-size:12px}.trend-bar{height:10px;background:#eaecf0;border-radius:999px;overflow:hidden}.trend-bar span{display:block;height:100%;background:#f28c18;border-radius:999px}.stats-match-row{padding:9px 0;border-bottom:1px solid #eaecf0;display:flex;justify-content:space-between;gap:10px}.stats-match-row:last-child{border-bottom:0}.stats-empty{color:#667085;padding:8px 0}.player-row:hover{background:#fff8ef}@media(max-width:520px){.player-stats-kpis{grid-template-columns:1fr 1fr}.trend-row{grid-template-columns:78px 1fr 44px}}
+</style>
+<script id="player-season-stats-logic-v101">
+(()=>{
+ const ACTIONS=['Servei','Recepció','Col·locació','Atac','Bloqueig'];
+ const DB='StatsCastellarDB',STORE='matches';
+ let ctx=null, matches=[];
+ const esc=s=>String(s??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
+ function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open(DB,1);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);r.onupgradeneeded=()=>{const db=r.result;if(!db.objectStoreNames.contains(STORE))db.createObjectStore(STORE,{keyPath:'id'})}})}
+ async function all(){const db=await openDB();return new Promise((res,rej)=>{const r=db.transaction(STORE,'readonly').objectStore(STORE).getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)})}
+ function playerInMatch(m,p){return (m.players||[]).find(x=>String(x.number)===String(p.number))||(m.players||[]).find(x=>String(x.name||'').toLowerCase()===String(p.name||'').toLowerCase())}
+ function sets(m){return (m.completedSets||[]).slice().sort((a,b)=>Number(a.set)-Number(b.set))}
+ function actionsFor(m,p){const mp=playerInMatch(m,p);if(!mp)return[];return sets(m).flatMap(s=>(s.actions||[]).filter(a=>a.playerId===mp.id))}
+ function counts(acts,action){const max=action==='Bloqueig'?2:3,out=Array(max+1).fill(0);acts.filter(a=>a.action===action).forEach(a=>{const v=Number(a.value);if(v>=0&&v<=max)out[v]++});return out}
+ function avgPct(c){const n=c.reduce((a,b)=>a+b,0);if(!n)return null;const max=c.length-1;return c.reduce((s,n,i)=>s+n*i,0)/(n*max)*100}
+ function playedSets(m,p){const mp=playerInMatch(m,p);if(!mp)return 0;let total=0;sets(m).forEach(s=>{const r=s.participation&&s.participation[mp.id];if(r&&Number(r.percentage)>0)total+=Number(r.percentage)/100});return total}
+ function fmtDate(d){const x=String(d||'').split('-');return x.length===3?x[2]+'/'+x[1]+'/'+x[0]:d||''}
+ async function render(){
+   if(!ctx)return; matches=(await all()).filter(m=>m&&m.finished&&m.teamId===ctx.teamId&&playerInMatch(m,ctx.player)).sort((a,b)=>String(a.date||'').localeCompare(String(b.date||'')));
+   document.getElementById('playerStatsTitle').textContent=ctx.player.number+' · '+ctx.player.name;
+   const totalSets=matches.reduce((s,m)=>s+playedSets(m,ctx.player),0);
+   const allActs=matches.flatMap(m=>actionsFor(m,ctx.player));
+   document.getElementById('playerStatsSummary').innerHTML='<h2>'+esc(ctx.player.number)+' · '+esc(ctx.player.name)+'</h2><div class="player-stats-kpis"><div class="player-stats-kpi"><strong>'+matches.length+'</strong><small>Partits</small></div><div class="player-stats-kpi"><strong>'+totalSets.toFixed(1).replace('.',',')+'</strong><small>Sets equivalents</small></div><div class="player-stats-kpi"><strong>'+allActs.length+'</strong><small>Accions registrades</small></div></div>';
+   const host=document.getElementById('playerStatsActions');
+   if(!matches.length){host.innerHTML='<div class="stats-empty">Encara no hi ha partits d’aquesta jugadora a l’historial.</div>';document.getElementById('playerStatsTrend').innerHTML='';document.getElementById('playerStatsMatches').innerHTML='';return}
+   host.innerHTML=ACTIONS.map(a=>{const c=counts(allActs,a),n=c.reduce((x,y)=>x+y,0),avg=avgPct(c);return '<div class="global-action"><div class="global-action-head"><span>'+a+'</span><span>'+(avg===null?'—':Math.round(avg)+'%')+' · '+n+' acc.</span></div><div class="rating-dist '+(c.length===3?'three':'')+'">'+c.map((v,i)=>'<div class="rating-chip">'+i+': '+(n?Math.round(v/n*100):0)+'%</div>').join('')+'</div></div>'}).join('');
+   document.getElementById('playerStatsMatches').innerHTML=matches.slice().reverse().map(m=>'<div class="stats-match-row"><span><b>'+esc(m.opponent||'Rival')+'</b><br><small>'+fmtDate(m.date)+'</small></span><span>'+actionsFor(m,ctx.player).length+' acc.</span></div>').join('');
+   renderTrend();
+ }
+ function renderTrend(){const action=document.getElementById('playerStatsAction').value,host=document.getElementById('playerStatsTrend');const rows=matches.map(m=>{const c=counts(actionsFor(m,ctx.player),action);return {m,v:avgPct(c),n:c.reduce((a,b)=>a+b,0)}}).filter(x=>x.n);host.innerHTML=rows.length?rows.map(x=>'<div class="trend-row"><span>'+fmtDate(x.m.date)+'</span><div class="trend-bar"><span style="width:'+Math.max(0,Math.min(100,x.v))+'%"></span></div><b>'+Math.round(x.v)+'%</b></div>').join(''):'<div class="stats-empty">No hi ha dades de '+esc(action.toLowerCase())+'.</div>'}
+ window.openPlayerSeasonStats=async(teamId,player)=>{
+   ctx={teamId,player};
+   if(typeof window.statsNavigate==='function') window.statsNavigate('player-stats',true);
+   else {
+     document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+     document.getElementById('player-stats')?.classList.add('active');
+     window.scrollTo(0,0);
+   }
+   try{await render()}catch(err){
+     console.error('Estadístiques jugadora:',err);
+     const title=document.getElementById('playerStatsTitle');
+     const summary=document.getElementById('playerStatsSummary');
+     const actions=document.getElementById('playerStatsActions');
+     if(title) title.textContent=player.number+' · '+player.name;
+     if(summary) summary.innerHTML='<h2>'+esc(player.number)+' · '+esc(player.name)+'</h2><div class="player-stats-kpis"><div class="player-stats-kpi"><strong>0</strong><small>Partits</small></div><div class="player-stats-kpi"><strong>0</strong><small>Sets equivalents</small></div><div class="player-stats-kpi"><strong>0</strong><small>Accions registrades</small></div></div>';
+     if(actions) actions.innerHTML='<div class="stats-empty">Encara no hi ha estadístiques disponibles. Les dades apareixeran automàticament quan hi hagi partits desats d’aquest equip.</div>';
+   }
+ };
+ document.getElementById('playerStatsAction')?.addEventListener('change',renderTrend);
+})();
+</script>
+
 </body>
 </html>
