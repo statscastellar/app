@@ -2938,13 +2938,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
    doc.addPage();
    doc.setFontSize(16);doc.text('PERCENTATGES PER JUGADORA',12,12);
-   const ph=percentageHeaders(), pb=percentageRows(m).map(r=>r.map((v,i)=>i>=3?(v===null?'':Math.round(v*100)+'%'):v));
+   const pb=percentageRows(m).map(r=>r.map((v,i)=>i>=3?(v===null?'':Math.round(v*100)+'%'):v));
+   const percentagePdfHead=[
+     [
+       {content:'DORSAL',rowSpan:2},{content:'NOM',rowSpan:2},{content:'SETS',rowSpan:2},
+       {content:'SERVEI',colSpan:4,styles:{fillColor:[207,226,243],textColor:[0,0,0]}},
+       {content:'RECEPCIÓ',colSpan:4,styles:{fillColor:[207,226,243],textColor:[0,0,0]}},
+       {content:'COL·LOCACIÓ',colSpan:4,styles:{fillColor:[207,226,243],textColor:[0,0,0]}},
+       {content:'ATAC',colSpan:4,styles:{fillColor:[207,226,243],textColor:[0,0,0]}},
+       {content:'BLOQUEIG',colSpan:3,styles:{fillColor:[207,226,243],textColor:[0,0,0]}}
+     ],
+     ['0','1','2','3','0','1','2','3','0','1','2','3','0','1','2','3','0','1','2']
+   ];
    const ps={0:{cellWidth:10},1:{cellWidth:22},2:{cellWidth:11}};
    idx=3;
    actionGroups().forEach(g=>g.values.forEach(v=>{ps[idx++]={cellWidth:9,fillColor:'#'+ratingColor(g.name,v)}}));
    const team=teamPercentageRow(m).map((v,i)=>i>=3?(v===null?'':Math.round(v*100)+'%'):v);
    doc.autoTable({
-     startY:18,head:[ph],body:[...pb,team],
+     startY:18,head:percentagePdfHead,body:[...pb,team],
      styles:{fontSize:6,cellPadding:1.1,lineWidth:.08,lineColor:[166,166,166],halign:'center'},
      headStyles:{fillColor:[31,78,120],textColor:[255,255,255],fontStyle:'bold'},
      columnStyles:ps,margin:{left:7,right:7}
