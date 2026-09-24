@@ -1357,6 +1357,7 @@ body.stats-dark{background:#111827;color:#e5e7eb}body.stats-dark .screen{backgro
       <div class="report-export-buttons">
         <button id="exportPdfBtn" type="button">PDF</button>
         <button id="sharePdfBtn" type="button">COMPARTIR PDF</button>
+        <button id="shareMatchBtn" type="button">COMPARTIR PARTIT</button>
         <button id="exportOdsBtn" type="button">ODS</button>
         <button id="exportXlsxBtn" type="button">XLSX</button>
         <button id="exportAssessPdfBtn" type="button">PDF VALORACIONS</button>
@@ -1394,7 +1395,13 @@ body.stats-dark{background:#111827;color:#e5e7eb}body.stats-dark .screen{backgro
 </section>
 <section id="history" class="screen">
     <div class="topbar"><button class="back" data-back>←</button><h1>Historial de partits</h1><span></span></div>
-    <div class="history-wrap"><div id="historyList" class="history-list"></div>
+    <div class="history-wrap">
+<div class="card" style="margin-bottom:12px">
+  <button id="importMatchBtn" type="button" style="width:100%;font-weight:800">📥 IMPORTAR PARTIT</button>
+  <input id="importMatchFile" type="file" accept="application/json,.json" hidden>
+  <small style="display:block;margin-top:8px;color:#667085">Importa un partit compartit des d’un altre dispositiu. Si el partit ja existeix, no es duplicarà.</small>
+</div>
+<div id="historyList" class="history-list"></div>
 <button id="historyLoadMore" class="history-load-more" type="button" hidden>Carregar més partits</button>
 <div id="historyEmpty" class="card placeholder" hidden>Encara no hi ha cap partit a l’historial.</div></div>
   </section>
@@ -3235,6 +3242,81 @@ document.addEventListener('DOMContentLoaded', () => {
      console.error(e);status.textContent='No s’ha pogut compartir el PDF.';
    }
  };
+
+
+ // COMPARTIR / IMPORTAR PARTIT — intercanvi de dades entre dispositius
+ function safeFilePart(v){
+   return String(v||'partit').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9_-]+/g,'_').replace(/^_+|_+$/g,'');
+ }
+ function sharedMatchPayload(m){
+   return {
+     format:'Stats Castellar Match',
+     version:'1.0',
+     exportedAt:new Date().toISOString(),
+     match:JSON.parse(JSON.stringify(m))
+   };
+ }
+ function sharedMatchFile(m){
+   const payload=sharedMatchPayload(m);
+   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+   const name='Stats_Castellar_Partit_'+safeFilePart(m.date)+'_'+safeFilePart(m.opponent)+'.json';
+   return new File([blob],name,{type:'application/json'});
+ }
+ const shareMatchBtn=$('shareMatchBtn');
+ if(shareMatchBtn) shareMatchBtn.onclick=async()=>{
+   if(!match||!match.finished)return;
+   const status=$('exportStatus');
+   try{
+     status.textContent='Preparant partit per compartir...';
+     const file=sharedMatchFile(match);
+     if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
+       await navigator.share({title:'Stats Castellar · '+(match.opponent||'Partit'),text:'Partit complet de Stats Castellar per importar a l’historial.',files:[file]});
+       status.textContent='Partit compartit.';
+     }else{
+       downloadBlob(file,file.name);
+       status.textContent='Aquest dispositiu no permet compartir directament. S’ha descarregat el fitxer del partit.';
+     }
+   }catch(e){
+     if(e&&e.name==='AbortError'){status.textContent='Compartició cancel·lada.';return;}
+     console.error(e);status.textContent='No s’ha pogut compartir el partit.';
+   }
+ };
+ function validImportedMatch(m){
+   return !!(m && typeof m==='object' && m.id && m.opponent && m.date && Array.isArray(m.players) && Array.isArray(m.completedSets) && m.finished);
+ }
+ async function importSharedMatchFile(file){
+   let payload;
+   try{payload=JSON.parse(await file.text())}catch(_){throw new Error('El fitxer no és un partit vàlid de Stats Castellar.');}
+   const m=(payload && payload.format==='Stats Castellar Match')?payload.match:null;
+   if(!validImportedMatch(m))throw new Error('El fitxer no conté un partit complet de Stats Castellar.');
+   await refreshHistoryCache();
+   if(historyCache.some(x=>String(x.id)===String(m.id))){
+     alert('Aquest partit ja existeix a l’Historial i no s’ha importat de nou.');
+     return false;
+   }
+   const d=String(m.date||'').split('-');
+   const date=d.length===3?d[2]+'/'+d[1]+'/'+d[0]:m.date;
+   const score=historyScoreText(m);
+   const ok=confirm('IMPORTAR PARTIT\n\n'+(m.opponent||'Rival')+'\n'+date+' · '+score+'\n'+m.players.length+' jugadores · '+m.completedSets.length+' sets\n\nAfegir aquest partit a l’Historial?');
+   if(!ok)return false;
+   const copy=JSON.parse(JSON.stringify(m));
+   copy.imported=true;
+   copy.importedAt=Date.now();
+   await idbPut(copy);
+   await refreshHistoryCache();
+   await renderHistory();
+   alert('Partit importat correctament. Ja forma part de l’Historial i de les estadístiques globals.');
+   return true;
+ }
+ const importMatchBtn=$('importMatchBtn'),importMatchFile=$('importMatchFile');
+ if(importMatchBtn&&importMatchFile){
+   importMatchBtn.onclick=()=>{importMatchFile.value='';importMatchFile.click();};
+   importMatchFile.onchange=async()=>{
+     const file=importMatchFile.files&&importMatchFile.files[0];if(!file)return;
+     try{await importSharedMatchFile(file)}catch(e){console.error(e);alert(e&&e.message?e.message:'No s’ha pogut importar el partit.');}
+     finally{importMatchFile.value='';}
+   };
+ }
 
 
  function buildTestMatch(){
