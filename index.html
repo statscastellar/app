@@ -185,7 +185,9 @@ body:has(#home.active) footer { display:none!important; }
 /* MÒBIL / TAULETA VERTICAL */
 @media (orientation:portrait) {
   #home {
-    background-size:auto 100%!important;
+    /* Prova v1.0.1: una mica menys de zoom en vertical per mostrar més silueta.
+       El color taronja del mateix #home omple qualsevol marge residual. */
+    background-size:auto 92%!important;
     background-position:31% center!important;
   }
   #home::before {
@@ -1026,23 +1028,18 @@ https://github.com/nodeca/pako/blob/main/LICENSE
   opacity: 1 !important;
 }
 </style>
-<style id="settings-v10">
-.settings-wrap{width:min(92%,620px);margin:16px auto 30px;display:flex;flex-direction:column;gap:12px}
-.settings-card{padding:16px!important}.settings-card h2{margin:0 0 5px;color:#17283f;font-size:16px}
-.settings-help{margin:0;color:#667085;font-size:11px;line-height:1.45}
-.settings-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:13px}
-.settings-actions button{min-height:44px;border:0;border-radius:9px;font-weight:900;background:#17283f;color:#fff}
-.settings-status{min-height:14px;margin-top:8px;font-size:10px;color:#667085}
-.settings-row{display:flex;align-items:center;justify-content:space-between;gap:20px}
-.switch{position:relative;width:52px;height:30px;flex:0 0 auto}.switch input{opacity:0;width:0;height:0}
-.slider{position:absolute;inset:0;background:#d0d5dd;border-radius:30px;cursor:pointer;transition:.2s}
-.slider:before{content:"";position:absolute;width:24px;height:24px;left:3px;top:3px;background:white;border-radius:50%;transition:.2s;box-shadow:0 1px 3px #0003}
-.switch input:checked+.slider{background:#e86516}.switch input:checked+.slider:before{transform:translateX(22px)}
-.about-card{text-align:center}.about-name{font-size:20px;font-weight:1000;color:#17283f;letter-spacing:.04em}
-.about-sub{font-size:11px;color:#667085;margin-top:2px}.about-version{display:inline-block;margin-top:10px;padding:4px 10px;border-radius:20px;background:#eef3f7;color:#17283f;font-size:10px;font-weight:900}
-.about-creator{margin-top:13px;font-size:13px;color:#17283f}.about-copy{font-size:10px;color:#667085;margin-top:4px}
-.about-warning{font-size:9px;line-height:1.45;color:#98a2b3;max-width:470px;margin:12px auto 0;padding-top:10px;border-top:1px solid #eaecf0}
-@media(max-width:520px){.settings-actions{grid-template-columns:1fr}}
+<style id="settings-v101">
+.settings-wrap{width:min(94%,720px);margin:18px auto 34px;display:flex;flex-direction:column;gap:14px}
+.settings-card{padding:18px!important;border-radius:18px!important;box-shadow:0 6px 20px rgba(23,40,63,.08)!important}
+.settings-section-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:12px}.settings-icon{width:48px;height:48px;flex:0 0 48px;border-radius:50%;display:grid;place-items:center;font-size:25px;background:#fff0df;color:#d75d00}.settings-icon.info{background:#e6f1ff;color:#0757b7}.settings-icon.danger{background:#ffe8e8;color:#d92d20}
+.settings-title{margin:0;color:#17283f;font-size:20px;font-weight:950}.settings-help{margin:3px 0 0;color:#667085;font-size:13px;line-height:1.45}
+.app-info-grid{display:grid;grid-template-columns:minmax(150px,1fr) minmax(150px,1fr);gap:7px 18px;margin-left:62px;font-size:14px}.app-info-grid .label{color:#667085}.app-info-grid .value{color:#17283f;font-weight:800}
+.settings-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.settings-actions button{min-height:58px;border-radius:13px;font-weight:900;font-size:14px;padding:10px 12px}.backup-export{border:0;background:linear-gradient(135deg,#0758a9,#0877cc);color:#fff}.backup-import{border:1px solid #aab7c8;background:#fff;color:#102a56}.settings-status{min-height:14px;margin-top:8px;font-size:11px;color:#667085}
+.danger-action{width:100%;min-height:52px;border:0;border-radius:13px;background:#fff0f0;color:#c71919;font-size:15px;font-weight:950}.danger-warning{margin:9px 0 0;padding:10px 12px;border-radius:12px;background:#fff3f3;color:#c71919;font-size:11px;line-height:1.4}
+.theme-choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}.theme-choice{min-height:58px;border:1px solid #cbd5e1;border-radius:13px;background:#f7f9fc;color:#17283f;font-size:15px;font-weight:900}.theme-choice.active{border:2px solid #ef6c00;background:#fff8f1;color:#df6200}.theme-choice .theme-mark{float:right;font-size:19px}
+.about-card{text-align:left}.about-name{font-size:21px;font-weight:1000;color:#17283f}.about-sub{font-size:13px;color:#667085;margin-top:3px}.about-meta{display:grid;grid-template-columns:1fr auto;gap:7px 18px;margin-top:14px;padding-top:13px;border-top:1px solid #e3e8ef;font-size:13px}.about-meta .label{color:#667085}.about-meta .value{color:#667085}.about-warning{font-size:11px;line-height:1.5;color:#5f6f82;margin:13px 0 0;padding-top:12px;border-top:1px solid #e3e8ef}.creator-link{color:#0969da;text-decoration:underline;font-weight:800}
+body.stats-dark{background:#111827;color:#e5e7eb}body.stats-dark .screen{background:#111827!important}body.stats-dark .topbar{background:#172033!important;color:#f8fafc!important}body.stats-dark .topbar h1{color:#f8fafc!important}body.stats-dark .card,body.stats-dark .settings-card{background:#1f2937!important;border-color:#374151!important;box-shadow:0 6px 20px rgba(0,0,0,.22)!important}body.stats-dark .settings-title,body.stats-dark .app-info-grid .value,body.stats-dark .about-name{color:#f8fafc!important}body.stats-dark .settings-help,body.stats-dark .app-info-grid .label,body.stats-dark .about-sub,body.stats-dark .about-meta .label,body.stats-dark .about-meta .value,body.stats-dark .about-warning{color:#cbd5e1!important}body.stats-dark .backup-import,body.stats-dark .theme-choice{background:#273449;color:#f8fafc;border-color:#526079}body.stats-dark .theme-choice.active{background:#3b2a1d;color:#ff9b45;border-color:#ff7a00}
+@media(max-width:520px){.settings-actions,.theme-choices{grid-template-columns:1fr}.app-info-grid{margin-left:0;grid-template-columns:1fr 1fr}.settings-title{font-size:18px}}
 </style><style id="history-storage-v10">
 .history-delete-card{padding:13px 14px!important}
 #deleteHistoryMatchBtn{width:100%;min-height:42px;border:1px solid #d92d20;border-radius:9px;background:#fff;color:#b42318;font-weight:950}
@@ -1269,6 +1266,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         </div>
       </div>
       <div class="serve-status" id="serveStatus">🏐 Servei: —</div>
+      <button id="manualRotateBtn" type="button" style="margin-top:10px;border:0;border-radius:10px;background:#17283f;color:#fff;min-height:42px;padding:8px 15px;font-weight:900;cursor:pointer">🔄 ROTAR</button>
     </div>
 
     <div class="live-court-card card">
@@ -1434,27 +1432,46 @@ https://github.com/nodeca/pako/blob/main/LICENSE
   <section id="settings" class="screen">
     <div class="topbar"><button class="back" data-back>←</button><h1>Configuració</h1><span></span></div>
     <div class="settings-wrap">
-  <div class="card settings-card">
-    <h2>Dades</h2>
-    <p class="settings-help">Fes una còpia de seguretat de l’historial, partits pendents i dades locals de l’app.</p>
-    <div class="settings-actions">
-      <button id="backupExportBtn" type="button">⬇ Exportar còpia de seguretat</button>
-      <button id="backupImportBtn" type="button">⬆ Restaurar còpia</button>
-      <input id="backupImportFile" type="file" accept=".json,application/json" hidden>
+      <div class="card settings-card">
+        <div class="settings-section-head"><div class="settings-icon">▣</div><div><h2 class="settings-title">Informació de l’app</h2></div></div>
+        <div class="app-info-grid">
+          <div class="label">Nom</div><div class="value">Stats Castellar</div>
+          <div class="label">Versió</div><div class="value">v1.0.1</div>
+          <div class="label">Data de creació</div><div class="value">Setembre del 2026</div>
+          <div class="label">Última actualització</div><div class="value">24/09/2026</div>
+        </div>
+      </div>
+
+      <div class="card settings-card">
+        <div class="settings-section-head"><div class="settings-icon">▰</div><div><h2 class="settings-title">Gestió de dades</h2><p class="settings-help">Exporta o restaura una còpia de seguretat dels teus partits i estadístiques.</p></div></div>
+        <div class="settings-actions">
+          <button id="backupExportBtn" class="backup-export" type="button">⬆ Exportar còpia de seguretat</button>
+          <button id="backupImportBtn" class="backup-import" type="button">⬇ Restaurar còpia de seguretat</button>
+          <input id="backupImportFile" type="file" accept=".json,application/json" hidden>
+        </div>
+        <div id="backupStatus" class="settings-status"></div>
+      </div>
+
+      <div class="card settings-card">
+        <div class="settings-section-head"><div class="settings-icon danger">🗑</div><div><h2 class="settings-title">Eliminar totes les dades</h2><p class="settings-help">Aquesta acció elimina tots els partits, estadístiques i configuracions d’aquest dispositiu.</p></div></div>
+        <button id="deleteAllDataBtn" class="danger-action" type="button">🗑 Eliminar totes les dades</button>
+        <p class="danger-warning">⚠ Aquesta acció no es pot desfer. Abans d’eliminar res, l’app et demanarà diverses confirmacions.</p>
+      </div>
+
+      <div class="card settings-card">
+        <div class="settings-section-head"><div class="settings-icon">◉</div><div><h2 class="settings-title">Aparença</h2><p class="settings-help">Tria el tema visual de l’app.</p></div></div>
+        <div class="theme-choices">
+          <button id="themeLightBtn" class="theme-choice" type="button">☀️ &nbsp; Mode clar <span class="theme-mark"></span></button>
+          <button id="themeDarkBtn" class="theme-choice" type="button">🌙 &nbsp; Mode fosc <span class="theme-mark"></span></button>
+        </div>
+      </div>
+
+      <div class="card settings-card about-card">
+        <div class="settings-section-head"><div class="settings-icon info">ⓘ</div><div><div class="about-name">Sobre Stats Castellar</div><div class="about-sub">Aplicació d’estadístiques de voleibol</div></div></div>
+        <div class="about-meta"><div class="label">Creat per</div><div class="value">Curu</div><div class="label">Tots els drets reservats</div><div class="value">© 2026</div></div>
+        <p class="about-warning">Aquesta aplicació és d'ús privat. No se'n permet la còpia, modificació, redistribució ni publicació sense autorització expressa del <a class="creator-link" href="mailto:jcoromines@gmail.com?subject=Stats%20Castellar">creador</a></p>
+      </div>
     </div>
-    <div id="backupStatus" class="settings-status"></div>
-  </div>
-
-
-  <div class="card settings-card about-card">
-    <div class="about-name">STATS CASTELLAR</div>
-    <div class="about-sub">Aplicació d’estadístiques de voleibol</div>
-    <div class="about-version">Versió 1.0</div>
-    <div class="about-creator">Creat per <strong>Curu</strong></div>
-    <div class="about-copy">© 2026 Curu. Tots els drets reservats.</div>
-    <p class="about-warning">Aquesta aplicació és d’ús privat. No se’n permet la còpia, modificació, redistribució ni publicació sense autorització expressa del creador.</p>
-  </div>
-</div>
   </section>
 </main>
 <footer>Creat per Curu</footer>
@@ -2309,13 +2326,27 @@ document.addEventListener('DOMContentLoaded', () => {
    const n=names();
    const side=visualSide==='left'?n.lk:n.rk;
    history.push(snap());
-   match.scores[side]=Math.max(0,match.scores[side]+delta);
+   if(delta>0){
+     /* Un punt manual representa una jugada real: aplica també el canvi
+        de servei i, si Castellar recupera el servei, la rotació. */
+     award(side);
+   }else{
+     /* El botó − és només una correcció de marcador. No altera
+        ni el servei ni la rotació. */
+     match.scores[side]=Math.max(0,match.scores[side]+delta);
+   }
    save();renderAll();
  }
  $('leftMinus').onclick=()=>manualPoint('left',-1);
  $('leftPlus').onclick=()=>manualPoint('left',1);
  $('rightMinus').onclick=()=>manualPoint('right',-1);
  $('rightPlus').onclick=()=>manualPoint('right',1);
+ $('manualRotateBtn').onclick=()=>{
+   if(!match)return;
+   history.push(snap());
+   rotate();
+   save();renderAll();
+ };
 
  $('finishSetBtn').onclick=()=>{
    if(!match)return;
@@ -3239,7 +3270,6 @@ document.addEventListener('DOMContentLoaded', () => {
  const HISTORY_KEY='statsCastellarHistoryV2'; // clau antiga: només per migració
  const HISTORY_DB='StatsCastellarDB';
  const HISTORY_STORE='matches';
- const LEGACY_SEED=[{"id":"legacy-Sant_Celoni_13-09-2026","opponent":"Sant Celoni","date":"2026-09-13","venue":"away","legacyResult":"0-3","players":[{"number":3,"name":"Nora","parts":[100,null,100,null,null],"counts":{"Servei":[4,3,0,1],"Recepció":[2,2,6,5],"Col·locació":[0,2,2,2],"Atac":[3,3,5,6],"Bloqueig":[1,0,0]}},{"number":4,"name":"Aran","parts":[100,100,100,null,null],"counts":{"Servei":[2,7,0,4],"Recepció":[0,1,7,8],"Col·locació":[0,0,7,12],"Atac":[2,0,6,5],"Bloqueig":[0,2,0]}},{"number":6,"name":"Avril","parts":[null,null,null,null,null],"counts":{"Servei":[0,0,0,0],"Recepció":[0,0,0,0],"Col·locació":[0,0,0,0],"Atac":[0,0,0,0],"Bloqueig":[0,0,0]}},{"number":7,"name":"Emma","parts":[null,null,null,null,null],"counts":{"Servei":[0,0,0,0],"Recepció":[0,0,0,0],"Col·locació":[0,0,0,0],"Atac":[0,0,0,0],"Bloqueig":[0,0,0]}},{"number":8,"name":"Isona","parts":[null,100,100,null,null],"counts":{"Servei":[2,3,0,0],"Recepció":[3,1,0,2],"Col·locació":[2,1,1,4],"Atac":[0,2,5,0],"Bloqueig":[1,0,0]}},{"number":10,"name":"Thais","parts":[null,null,null,null,null],"counts":{"Servei":[0,0,0,0],"Recepció":[0,0,0,0],"Col·locació":[0,0,0,0],"Atac":[0,0,0,0],"Bloqueig":[0,0,0]}},{"number":11,"name":"Yveth","parts":[null,100,100,null,null],"counts":{"Servei":[2,4,0,1],"Recepció":[2,6,4,3],"Col·locació":[1,1,4,3],"Atac":[4,4,2,3],"Bloqueig":[0,1,0]}},{"number":13,"name":"Maria","parts":[100,100,null,null,null],"counts":{"Servei":[1,4,0,6],"Recepció":[1,2,3,6],"Col·locació":[0,0,6,7],"Atac":[0,2,0,1],"Bloqueig":[0,0,1]}},{"number":16,"name":"Ainhoa","parts":[null,null,null,null,null],"counts":{"Servei":[0,0,0,0],"Recepció":[0,0,0,0],"Col·locació":[0,0,0,0],"Atac":[0,0,0,0],"Bloqueig":[0,0,0]}},{"number":18,"name":"Ària","parts":[100,100,100,null,null],"counts":{"Servei":[1,10,0,11],"Recepció":[1,5,7,5],"Col·locació":[0,1,5,13],"Atac":[2,2,5,4],"Bloqueig":[1,1,0]}},{"number":28,"name":"Mariona","parts":[100,null,100,null,null],"counts":{"Servei":[2,1,0,3],"Recepció":[0,7,5,4],"Col·locació":[0,0,0,8],"Atac":[1,4,3,2],"Bloqueig":[1,0,0]}},{"number":66,"name":"Núria","parts":[100,100,null,null,null],"counts":{"Servei":[2,1,0,0],"Recepció":[3,1,6,6],"Col·locació":[1,1,2,4],"Atac":[3,5,4,2],"Bloqueig":[0,0,0]}}]},{"id":"legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)","opponent":"Sant Cugat Vermell","date":"2026-09-20","venue":"home","legacyResult":"2-3","players":[{"number":3,"name":"Nora","parts":[100.0,null,100.0,40.0,100.0],"counts":{"Servei":[3,8,0,4],"Recepció":[7,6,8,6],"Col·locació":[0,1,9,6],"Atac":[1,3,13,2],"Bloqueig":[0,2,6]}},{"number":4,"name":"Aran","parts":[100.0,null,null,100.0,null],"counts":{"Servei":[0,3,0,0],"Recepció":[1,2,5,11],"Col·locació":[0,1,2,5],"Atac":[1,0,7,3],"Bloqueig":[0,1,0]}},{"number":6,"name":"Avril","parts":[null,100.0,100.0,null,100.0],"counts":{"Servei":[2,4,0,2],"Recepció":[3,3,6,4],"Col·locació":[0,2,10,6],"Atac":[2,5,5,3],"Bloqueig":[1,1,0]}},{"number":7,"name":"Emma","parts":[null,100.0,null,60.0,null],"counts":{"Servei":[2,1,0,0],"Recepció":[1,1,4,1],"Col·locació":[0,3,5,3],"Atac":[2,0,1,1],"Bloqueig":[0,0,0]}},{"number":8,"name":"Isona","parts":[null,100.0,null,60.0,null],"counts":{"Servei":[0,6,0,1],"Recepció":[3,2,5,7],"Col·locació":[1,2,2,1],"Atac":[2,5,5,1],"Bloqueig":[0,0,0]}},{"number":10,"name":"Thais","parts":[null,100.0,100.0,null,100.0],"counts":{"Servei":[2,7,0,0],"Recepció":[7,3,7,2],"Col·locació":[1,4,2,3],"Atac":[2,7,5,1],"Bloqueig":[0,2,1]}},{"number":11,"name":"Yveth","parts":[null,100.0,null,60.0,null],"counts":{"Servei":[2,3,0,0],"Recepció":[7,8,4,3],"Col·locació":[1,1,5,2],"Atac":[1,1,3,1],"Bloqueig":[0,1,0]}},{"number":13,"name":"Maria","parts":[100.0,null,100.0,40.0,100.0],"counts":{"Servei":[2,8,0,3],"Recepció":[3,3,8,12],"Col·locació":[1,0,7,10],"Atac":[2,2,4,8],"Bloqueig":[1,1,0]}},{"number":16,"name":"Ainhoa","parts":[100.0,null,null,100.0,null],"counts":{"Servei":[1,5,0,0],"Recepció":[5,1,4,5],"Col·locació":[0,2,2,1],"Atac":[1,1,5,1],"Bloqueig":[0,2,1]}},{"number":18,"name":"Ària","parts":[100.0,null,100.0,40.0,100.0],"counts":{"Servei":[1,14,0,5],"Recepció":[4,4,6,5],"Col·locació":[4,1,9,9],"Atac":[2,1,5,2],"Bloqueig":[0,1,0]}},{"number":28,"name":"Mariona","parts":[100.0,null,100.0,40.0,100.0],"counts":{"Servei":[4,5,0,2],"Recepció":[4,8,6,9],"Col·locació":[1,5,7,9],"Atac":[2,0,13,5],"Bloqueig":[0,2,1]}},{"number":66,"name":"Núria","parts":[null,100.0,null,60.0,null],"counts":{"Servei":[2,1,0,2],"Recepció":[2,5,3,2],"Col·locació":[0,0,2,1],"Atac":[2,3,2,1],"Bloqueig":[0,0,0]}}]},{"id":"legacy-Stats_Castellar_Gadex_20-09-2026(1)","opponent":"Gadex","date":"2026-09-20","venue":"home","legacyResult":"3-0","players":[{"number":3,"name":"Nora","parts":[100.0,null,69.0,null,null],"counts":{"Servei":[0,4,0,4],"Recepció":[2,0,4,4],"Col·locació":[0,0,1,3],"Atac":[1,0,2,1],"Bloqueig":[0,0,0]}},{"number":4,"name":"Aran","parts":[null,100.0,38.0,null,null],"counts":{"Servei":[1,5,0,0],"Recepció":[3,1,3,9],"Col·locació":[0,0,2,2],"Atac":[1,0,10,2],"Bloqueig":[0,0,0]}},{"number":6,"name":"Avril","parts":[null,100.0,31.0,null,null],"counts":{"Servei":[1,2,0,0],"Recepció":[0,3,6,2],"Col·locació":[1,0,6,0],"Atac":[2,3,7,1],"Bloqueig":[0,0,0]}},{"number":7,"name":"Emma","parts":[null,100.0,null,null,null],"counts":{"Servei":[1,1,0,0],"Recepció":[3,4,2,2],"Col·locació":[0,0,4,3],"Atac":[0,0,2,3],"Bloqueig":[0,3,1]}},{"number":8,"name":"Isona","parts":[null,100.0,100.0,null,null],"counts":{"Servei":[1,5,0,0],"Recepció":[2,4,6,1],"Col·locació":[0,6,5,7],"Atac":[0,2,2,4],"Bloqueig":[0,0,2]}},{"number":10,"name":"Thais","parts":[null,100.0,45.0,null,null],"counts":{"Servei":[1,10,0,2],"Recepció":[2,1,3,1],"Col·locació":[0,4,3,2],"Atac":[0,2,2,2],"Bloqueig":[0,0,0]}},{"number":11,"name":"Yveth","parts":[100.0,null,null,null,null],"counts":{"Servei":[1,0,0,1],"Recepció":[0,1,1,2],"Col·locació":[0,0,0,0],"Atac":[0,0,4,0],"Bloqueig":[0,0,0]}},{"number":13,"name":"Maria","parts":[100.0,null,55.0,null,null],"counts":{"Servei":[0,5,0,3],"Recepció":[1,0,2,7],"Col·locació":[0,0,2,1],"Atac":[0,0,1,1],"Bloqueig":[0,0,1]}},{"number":16,"name":"Ainhoa","parts":[100.0,null,50.0,null,null],"counts":{"Servei":[2,6,0,2],"Recepció":[0,0,3,2],"Col·locació":[1,2,0,6],"Atac":[1,0,4,4],"Bloqueig":[0,1,0]}},{"number":18,"name":"Ària","parts":[100.0,null,62.0,null,null],"counts":{"Servei":[1,3,0,2],"Recepció":[1,1,1,3],"Col·locació":[0,0,2,3],"Atac":[1,0,2,2],"Bloqueig":[0,1,2]}},{"number":28,"name":"Mariona","parts":[100.0,null,50.0,null,null],"counts":{"Servei":[1,2,0,3],"Recepció":[1,0,1,3],"Col·locació":[1,0,0,1],"Atac":[1,0,1,3],"Bloqueig":[0,0,0]}},{"number":66,"name":"Núria","parts":[null,100.0,100.0,null,null],"counts":{"Servei":[2,2,0,0],"Recepció":[2,1,10,6],"Col·locació":[1,2,4,3],"Atac":[0,3,7,0],"Bloqueig":[0,2,1]}}]}];
  let viewingHistory=false;
  let historyCache=[];
  let historyVisibleCount=20;
@@ -3276,8 +3306,7 @@ document.addEventListener('DOMContentLoaded', () => {
      const old=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');
      for(const m of old||[])if(m&&m.id&&!ids.has(m.id)){await idbPut(m);ids.add(m.id)}
    }catch(_){}
-   for(const rec of LEGACY_SEED){if(!ids.has(rec.id)){const m=legacyToMatch(rec);await idbPut(m);ids.add(m.id)}}
-   // No esborrem immediatament l'antic localStorage: queda com a xarxa de seguretat
+    // No esborrem immediatament l'antic localStorage: queda com a xarxa de seguretat
    // durant aquesta versió de migració.
  }
  async function refreshHistoryCache(){
@@ -3486,12 +3515,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
  updateRecoverHome();
 
- // CONFIGURACIÓ — versió pública 1.0
+ // CONFIGURACIÓ — versió pública 1.0.1
  const SETTINGS_KEY='statsCastellarSettingsV1';
  function getSettings(){try{return JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}')}catch(_){return {}}}
  function saveSettingsObj(s){localStorage.setItem(SETTINGS_KEY,JSON.stringify(s))}
  async function exportStatsBackup(){
-   const data={format:'Stats Castellar Backup',version:'1.0',createdAt:new Date().toISOString(),localStorage:{}};
+   const data={format:'Stats Castellar Backup',version:'1.0.1',createdAt:new Date().toISOString(),localStorage:{}};
    for(let i=0;i<localStorage.length;i++){
      const k=localStorage.key(i);
      if(k && (k.startsWith('statsCastellar') || k.startsWith('stats_')))data.localStorage[k]=localStorage.getItem(k);
@@ -3523,6 +3552,37 @@ document.addEventListener('DOMContentLoaded', () => {
    backupImportBtn.onclick=()=>backupImportFile.click();
    backupImportFile.onchange=async()=>{try{if(backupImportFile.files[0])await importStatsBackup(backupImportFile.files[0])}catch(e){alert(e.message||'No s’ha pogut restaurar la còpia.')}finally{backupImportFile.value=''}};
  }
+
+ // APARENÇA — es desa al dispositiu.
+ function applyStatsTheme(theme){
+   const dark=theme==='dark';
+   document.body.classList.toggle('stats-dark',dark);
+   const l=document.getElementById('themeLightBtn'),d=document.getElementById('themeDarkBtn');
+   if(l){l.classList.toggle('active',!dark);const m=l.querySelector('.theme-mark');if(m)m.textContent=!dark?'✓':''}
+   if(d){d.classList.toggle('active',dark);const m=d.querySelector('.theme-mark');if(m)m.textContent=dark?'✓':''}
+ }
+ const initialSettings=getSettings();
+ applyStatsTheme(initialSettings.theme==='dark'?'dark':'light');
+ const themeLightBtn=document.getElementById('themeLightBtn'),themeDarkBtn=document.getElementById('themeDarkBtn');
+ if(themeLightBtn)themeLightBtn.onclick=()=>{const x=getSettings();x.theme='light';saveSettingsObj(x);applyStatsTheme('light')};
+ if(themeDarkBtn)themeDarkBtn.onclick=()=>{const x=getSettings();x.theme='dark';saveSettingsObj(x);applyStatsTheme('dark')};
+
+ // ELIMINAR TOTES LES DADES — triple barrera per evitar tocs accidentals.
+ async function deleteAllStatsData(){
+   if(!confirm('ATENCIÓ: s’eliminaran tots els partits, estadístiques, partits pendents i configuracions d’aquest dispositiu. Aquesta acció no es pot desfer. Vols continuar?'))return;
+   const typed=prompt('Segona confirmació. Escriu ELIMINAR en majúscules per continuar:','');
+   if(typed!=='ELIMINAR'){if(typed!==null)alert('No s’ha eliminat res.');return;}
+   if(!confirm('ÚLTIMA CONFIRMACIÓ: segur que vols eliminar definitivament TOTES les dades de Stats Castellar d’aquest dispositiu?'))return;
+   try{
+     Object.keys(localStorage).filter(k=>k.startsWith('statsCastellar')||k.startsWith('stats_')).forEach(k=>localStorage.removeItem(k));
+     const db=await openHistoryDB();
+     await new Promise((resolve,reject)=>{const tx=db.transaction(HISTORY_STORE,'readwrite');tx.objectStore(HISTORY_STORE).clear();tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)});
+     alert('S’han eliminat totes les dades locals de Stats Castellar.');
+     location.reload();
+   }catch(e){alert('No s’han pogut eliminar totes les dades. '+(e&&e.message?e.message:''));}
+ }
+ const deleteAllDataBtn=document.getElementById('deleteAllDataBtn');
+ if(deleteAllDataBtn)deleteAllDataBtn.onclick=deleteAllStatsData;
 })();
 </script>
 
