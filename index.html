@@ -185,7 +185,7 @@ body:has(#home.active) footer { display:none!important; }
 /* MÒBIL / TAULETA VERTICAL */
 @media (orientation:portrait) {
   #home {
-    /* Prova v1.0.2: una mica menys de zoom en vertical per mostrar més silueta.
+    /* Prova v1.0.3: una mica menys de zoom en vertical per mostrar més silueta.
        El color taronja del mateix #home omple qualsevol marge residual. */
     background-size:auto 92%!important;
     background-position:31% center!important;
@@ -1453,7 +1453,7 @@ body.stats-dark{background:#111827;color:#e5e7eb}body.stats-dark .screen{backgro
         <div class="settings-section-head"><div class="settings-icon">▣</div><div><h2 class="settings-title">Informació de l’app</h2></div></div>
         <div class="app-info-grid">
           <div class="label">Nom</div><div class="value">Stats Castellar</div>
-          <div class="label">Versió</div><div class="value">v1.0.2</div>
+          <div class="label">Versió</div><div class="value">v1.0.3</div>
           <div class="label">Data de creació</div><div class="value">Setembre del 2026</div>
           <div class="label">Última actualització</div><div class="value">24/09/2026</div>
         </div>
@@ -3642,12 +3642,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
  updateRecoverHome();
 
- // CONFIGURACIÓ — versió pública 1.0.2
+ // CONFIGURACIÓ — versió pública 1.0.3
  const SETTINGS_KEY='statsCastellarSettingsV1';
  function getSettings(){try{return JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}')}catch(_){return {}}}
  function saveSettingsObj(s){localStorage.setItem(SETTINGS_KEY,JSON.stringify(s))}
  async function exportStatsBackup(){
-   const data={format:'Stats Castellar Backup',version:'1.0.2',createdAt:new Date().toISOString(),localStorage:{}};
+   const data={format:'Stats Castellar Backup',version:'1.0.3',createdAt:new Date().toISOString(),localStorage:{}};
    for(let i=0;i<localStorage.length;i++){
      const k=localStorage.key(i);
      if(k && (k.startsWith('statsCastellar') || k.startsWith('stats_')))data.localStorage[k]=localStorage.getItem(k);
