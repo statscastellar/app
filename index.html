@@ -919,6 +919,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 .history-item{display:grid;grid-template-columns:70px 1fr auto;align-items:center;gap:12px;padding:13px 14px!important;cursor:pointer}
 .history-date{text-align:center;font-weight:950;color:#17283f}.history-date small{display:block;color:#667085}
 .history-rival{font-weight:950;color:#17283f}.history-rival small{display:block;color:#667085;margin-top:3px}.history-score{font-size:20px;font-weight:950}
+.history-score.win{color:#168a43}
+.history-score.loss{color:#d92d20}
 .history-correction{padding:13px 14px!important}.history-correction>button{width:100%;min-height:44px;border:0;border-radius:10px;background:#17283f;color:#fff;font-weight:950}
 .correction-warning{font-size:11px;color:#667085;margin:10px 0}.correction-grid{display:grid;grid-template-columns:2fr 1.5fr 1fr 1.4fr 1.4fr;gap:7px}
 .correction-grid select,.correction-grid button{min-height:40px;border:1px solid #d0d5dd;border-radius:8px;background:#fff;padding:6px;font-weight:800}
@@ -3464,12 +3466,23 @@ document.addEventListener('DOMContentLoaded', () => {
  }
  async function deleteArchivedMatch(id){await idbDelete(id);await refreshHistoryCache()}
  function historyScoreText(m){if(m.legacyResult)return m.legacyResult;const s=finalScore(m);return s[0]+'-'+s[1]}
+ function historyScoreClass(m){
+   let s;
+   if(m.legacyResult){
+     const nums=String(m.legacyResult).match(/\d+/g);
+     if(!nums||nums.length<2)return '';
+     s=[Number(nums[0]),Number(nums[1])];
+   }else s=finalScore(m);
+   const castellar=m.venue==='away'?s[1]:s[0];
+   const rival=m.venue==='away'?s[0]:s[1];
+   return castellar>rival?'win':rival>castellar?'loss':'';
+ }
  async function renderHistory(){
    const root=$('historyList'),empty=$('historyEmpty'),more=$('historyLoadMore');if(!root)return;
    const list=await refreshHistoryCache();root.innerHTML='';empty.hidden=!!list.length;
    list.slice(0,historyVisibleCount).forEach(m=>{
      const d=(m.date||'').split('-'),el=document.createElement('div');el.className='card history-item';
-     el.innerHTML='<div class="history-date">'+(d[2]||'')+'/'+(d[1]||'')+'<small>'+(d[0]||'')+'</small></div><div class="history-rival">'+(m.opponent||'Rival')+'<small>'+(m.venue==='home'?'Casa':'Fora')+(m.legacy?' · Importat':'')+'</small></div><div class="history-score">'+historyScoreText(m)+'</div>';
+     el.innerHTML='<div class="history-date">'+(d[2]||'')+'/'+(d[1]||'')+'<small>'+(d[0]||'')+'</small></div><div class="history-rival">'+(m.opponent||'Rival')+'<small>'+(m.venue==='home'?'Casa':'Fora')+(m.legacy?' · Importat':'')+'</small></div><div class="history-score '+historyScoreClass(m)+'">'+historyScoreText(m)+'</div>';
      el.onclick=()=>openHistoryMatch(m.id);root.appendChild(el);
    });
    if(more){more.hidden=list.length<=historyVisibleCount;more.onclick=()=>{historyVisibleCount+=20;renderHistory()}}
