@@ -1075,6 +1075,72 @@ body.stats-dark{background:#111827;color:#e5e7eb}body.stats-dark .screen{backgro
 #home .home-brand{position:relative;z-index:1}
 #home .home-credit{position:relative;z-index:2}
 </style>
+
+
+<!-- ===== REVISIÓ RESPONSIVE v1.0.4 · PROVA ===== -->
+<style id="responsive-v104-test">
+/* Base defensiva: cap fill d'una graella/flex no ha de forçar l'amplada del contenidor. */
+.screen, .card, .field, .match-step, .settings-wrap, .player-stats-wrap,
+.match-form-grid, .step-actions, .settings-actions { min-width:0; }
+img, svg, canvas { max-width:100%; }
+input, select, textarea, button { max-width:100%; }
+
+/* Nou partit · Pas 1: dues columnes REALMENT iguals quan hi ha espai. */
+.match-form-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  align-items:end;
+}
+.match-form-grid > .field{min-width:0!important;width:auto!important;}
+.match-form-grid .field input,
+.match-form-grid .field select,
+.match-form-grid .segmented{
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+}
+.match-form-grid .segmented button{min-width:0!important;}
+
+/* Pantalles estretes: el formulari passa a una columna abans que pugui solapar-se. */
+@media (max-width:620px) and (orientation:portrait){
+  .match-form-grid{grid-template-columns:minmax(0,1fr)!important;}
+}
+
+/* Horitzontal baix (mòbils): mantenim 2x2, reduïm només l'espai vertical. */
+@media (orientation:landscape) and (max-height:600px){
+  #new-match main{padding-top:10px;padding-bottom:10px;}
+  #matchStep1{padding-top:15px!important;padding-bottom:15px!important;}
+  #matchStep1 h2{margin-bottom:10px!important;}
+  .match-form-grid{gap:9px 12px!important;}
+  .match-form-grid .field input,
+  .match-form-grid .field select,
+  .match-form-grid .segmented button{min-height:44px!important;}
+  #matchStep1>.primary-action{margin-top:12px!important;min-height:46px!important;}
+}
+
+/* Portada vertical: la foto s'adapta a la FORMA de la pantalla.
+   En pantalles verticals més amples (proporció típica de tauleta), 'contain'
+   garanteix que la imatge completa —i per tant la silueta— no quedi retallada.
+   El taronja de #home omple l'espai residual. */
+@media (orientation:portrait) and (min-aspect-ratio:2/3){
+  #home{
+    background-size:contain!important;
+    background-position:center center!important;
+    background-repeat:no-repeat!important;
+  }
+}
+
+/* En vertical més estret (mòbil) conservem l'enquadrament actual de v1.0.3. */
+@media (orientation:portrait) and (max-aspect-ratio:2/3){
+  #home{
+    background-size:auto 92%!important;
+    background-position:31% center!important;
+    background-repeat:no-repeat!important;
+  }
+}
+
+/* Evita desbordaments de textos/controls en la resta de pantalles. */
+.card, .settings-card, .player-stats-card{overflow-wrap:anywhere;}
+</style>
 </head>
 <body>
 
