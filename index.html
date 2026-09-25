@@ -1075,40 +1075,6 @@ body.stats-dark{background:#111827;color:#e5e7eb}body.stats-dark .screen{backgro
 #home .home-brand{position:relative;z-index:1}
 #home .home-credit{position:relative;z-index:2}
 </style>
-
-<style id="responsive-fix-minimal-test">
-/* PROVA CONSERVADORA: només PAS 1 de Nou partit + portada iPad vertical. */
-
-/* Dades del partit: anul·la els marges genèrics de .field dins la graella.
-   Això evita que els 4 blocs sobrepassin les seves cel·les i força simetria 50/50. */
-#matchStep1 .match-form-grid{
-  grid-template-columns:repeat(2,minmax(0,1fr));
-}
-#matchStep1 .match-form-grid > .field{
-  min-width:0;
-  margin:0;
-}
-#matchStep1 .match-form-grid select,
-#matchStep1 .match-form-grid input,
-#matchStep1 .match-form-grid .segmented{
-  display:block;
-  width:100%;
-  min-width:0;
-  max-width:100%;
-}
-#matchStep1 .match-form-grid .segmented{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-}
-
-/* iPad/tauleta en vertical: conservem mida i resta de portada; només movem
-   la foto cap a l'esquerra perquè la jugadora no quedi tallada lateralment. */
-@media (orientation:portrait) and (min-width:600px){
-  #home{
-    background-position:left center!important;
-  }
-}
-</style>
 </head>
 <body>
 
