@@ -1475,9 +1475,9 @@ body.stats-dark{background:#111827;color:#e5e7eb}body.stats-dark .screen{backgro
         <div class="settings-section-head"><div class="settings-icon">▣</div><div><h2 class="settings-title">Informació de l’app</h2></div></div>
         <div class="app-info-grid">
           <div class="label">Nom</div><div class="value">Stats Castellar</div>
-          <div class="label">Versió</div><div class="value">v1.0.6</div>
+          <div class="label">Versió</div><div class="value">v1.0.7</div>
           <div class="label">Data de creació</div><div class="value">Setembre del 2026</div>
-          <div class="label">Última actualització</div><div class="value">24/09/2026</div>
+          <div class="label">Última actualització</div><div class="value">27/09/2026</div>
         </div>
       </div>
 
@@ -2999,25 +2999,32 @@ document.addEventListener('DOMContentLoaded', () => {
      return row;
    });
  }
+ const GLOBAL_PERFORMANCE_K=10;
+ function rawActionPerformance(actions,playerId,g){
+   const vals=actions.filter(a=>(playerId===null||a.playerId===playerId)&&a.action===g.name)
+                     .map(a=>Number(a.value)).filter(Number.isFinite);
+   const max=Math.max(...g.values);
+   return {count:vals.length,value:vals.length&&max>0?vals.reduce((a,b)=>a+b,0)/(vals.length*max):null};
+ }
  function globalPerformanceRows(m){
    const acts=allActions(m);
+   const teamMeans={};
+   actionGroups().forEach(g=>{teamMeans[g.name]=rawActionPerformance(acts,null,g).value;});
    return playersSorted(m).map(pl=>{
      const row=[pl.number,pl.name,totalSetsPlayed(m,pl.id)];
      actionGroups().forEach(g=>{
-       const vals=acts.filter(a=>a.playerId===pl.id&&a.action===g.name).map(a=>Number(a.value)).filter(Number.isFinite);
-       const max=Math.max(...g.values);
-       row.push(vals.length&&max>0 ? vals.reduce((a,b)=>a+b,0)/(vals.length*max) : null);
+       const own=rawActionPerformance(acts,pl.id,g);
+       const team=teamMeans[g.name];
+       row.push(own.count&&team!==null
+         ? ((own.value*own.count)+(team*GLOBAL_PERFORMANCE_K))/(own.count+GLOBAL_PERFORMANCE_K)
+         : null);
      });
      return row;
    });
  }
  function teamGlobalPerformanceRow(m){
    const acts=allActions(m),row=['','TOTAL EQUIP',exportSets(m).length];
-   actionGroups().forEach(g=>{
-     const vals=acts.filter(a=>a.action===g.name).map(a=>Number(a.value)).filter(Number.isFinite);
-     const max=Math.max(...g.values);
-     row.push(vals.length&&max>0 ? vals.reduce((a,b)=>a+b,0)/(vals.length*max) : null);
-   });
+   actionGroups().forEach(g=>row.push(rawActionPerformance(acts,null,g).value));
    return row;
  }
  function globalPerformanceHeaders(){return ['DORSAL','NOM','SETS',...actionGroups().map(g=>g.name.toUpperCase())]}
@@ -3035,7 +3042,8 @@ document.addEventListener('DOMContentLoaded', () => {
  }
  function performanceLegend(){
    return [
-     'Rendiment global = suma de les puntuacions obtingudes / puntuació màxima possible × 100.',
+     'Rendiment corregit = ((rendiment brut × accions) + (mitjana equip × K)) / (accions + K), amb K=10.',
+     'La mitjana de l’equip es calcula per separat per a cada tipus d’acció.',
      'Verd: 80–100% · Blau: 65–79% · Groc: 50–64% · Vermell: menys del 50%.',
      'Cel·la buida = la jugadora no ha registrat cap acció d’aquell tipus.'
    ];
@@ -3151,7 +3159,7 @@ document.addEventListener('DOMContentLoaded', () => {
    const gpRows=globalPerformanceRows(m),gpTeam=teamGlobalPerformanceRow(m);
    y+=3;
    if(y>115){doc.addPage();y=14;}
-   doc.setFontSize(11);doc.setFont(undefined,'bold');doc.text('RENDIMENT GLOBAL PER ACCIÓ',12,y);doc.setFont(undefined,'normal');y+=4;
+   doc.setFontSize(11);doc.setFont(undefined,'bold');doc.text('RENDIMENT CORREGIT PER ACCIÓ',12,y);doc.setFont(undefined,'normal');y+=4;
    doc.autoTable({
      startY:y,head:[gpHeaders],
      body:[...gpRows,gpTeam].map(r=>r.map((v,i)=>i>=3?(v===null?'':Math.round(v*100)+'%'):v)),
@@ -3261,7 +3269,7 @@ document.addEventListener('DOMContentLoaded', () => {
    legendLines().slice(0,3).forEach((line,i)=>{xml+=`<row r="${r}">${xlsxCell(i===0?'LECTURA DEL FULL':'',r,0,7)}${xlsxCell(line,r,1,0)}</row>`;r++});
 
    const gh=globalPerformanceHeaders(),gr=globalPerformanceRows(m),gt=teamGlobalPerformanceRow(m);
-   r+=2;xml+=`<row r="${r}">${xlsxCell('RENDIMENT GLOBAL PER ACCIÓ',r,0,1)}</row>`;r++;
+   r+=2;xml+=`<row r="${r}">${xlsxCell('RENDIMENT CORREGIT PER ACCIÓ',r,0,1)}</row>`;r++;
    xml+=`<row r="${r}">${gh.map((v,c)=>xlsxCell(v,r,c,1)).join('')}</row>`;r++;
    gr.forEach(row=>{
      xml+=`<row r="${r}">`+row.map((v,c)=>xlsxCell(c>=3&&v!==null?v:null,r,c,c>=3?xlsxPerformanceStyle(v):8)).join('')+`</row>`;r++;
@@ -3356,7 +3364,7 @@ document.addEventListener('DOMContentLoaded', () => {
    legendLines().slice(0,3).forEach((line,i)=>x+=odsRow([i===0?'LECTURA DEL FULL':'',line],[i===0?'Header':'Cell','Cell']));
 
    const gh=globalPerformanceHeaders(),gr=globalPerformanceRows(m),gt=teamGlobalPerformanceRow(m);
-   x+=odsRow([])+odsRow([])+odsRow(['RENDIMENT GLOBAL PER ACCIÓ'],['Header'])+odsRow(gh,gh.map(()=> 'Header'));
+   x+=odsRow([])+odsRow([])+odsRow(['RENDIMENT CORREGIT PER ACCIÓ'],['Header'])+odsRow(gh,gh.map(()=> 'Header'));
    gr.forEach(row=>{
      const styles=row.map((v,i)=>i>=3?odsPerformanceStyle(v):'Cell');
      const pcts=row.map((_,i)=>i>=3);
