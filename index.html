@@ -2340,6 +2340,7 @@ document.addEventListener('DOMContentLoaded', () => {
    try{saved=JSON.parse(localStorage.getItem(CURRENT_MATCH_KEY)||'null')}catch(_){}
    const continuing=Number(d.set)>1 && saved && !saved.finished;
    match={
+     id:continuing&&saved&&saved.id?saved.id:((window.crypto&&crypto.randomUUID)?crypto.randomUUID():('match-'+Date.now()+'-'+Math.random().toString(36).slice(2))),
      teamId:d.teamId,opponent:d.opponent,date:d.date,venue:d.venue,set:Number(d.set)||1,players:d.players,
      positions:{...d.positions},starting:[...d.starting],serving:d.serving,
      scores:{castellar:0,rival:0},actions:[],pinned:[],
@@ -2495,12 +2496,29 @@ document.addEventListener('DOMContentLoaded', () => {
    if(window.statsPrepareNextSet)window.statsPrepareNextSet(detail);
  };
 
- $('finishMatchBtn').onclick=()=>{
+ $('finishMatchBtn').onclick=async()=>{
    if(!match)return;
-   match.finished=true;match.finishedAt=Date.now();save();archiveMatch(match);localStorage.removeItem(CURRENT_MATCH_KEY);updateRecoverHome();$('finishSetModal').hidden=true;
-   renderFinalReport(match);
-   const bridge=document.createElement('button');bridge.type='button';bridge.dataset.go='final-report';bridge.style.display='none';
-   document.body.appendChild(bridge);bridge.click();bridge.remove();
+   match.finished=true;
+   match.finishedAt=Date.now();
+   save();
+   localStorage.setItem(LAST_COMPLETED_MATCH_KEY,JSON.stringify(match));
+   try{
+     await archiveMatch(match);
+     const stored=await idbAll();
+     if(!stored.some(m=>m&&m.id===match.id))throw new Error('No s’ha pogut verificar el partit a l’Historial.');
+     localStorage.removeItem(CURRENT_MATCH_KEY);
+     updateRecoverHome();
+     $('finishSetModal').hidden=true;
+     renderFinalReport(match);
+     const bridge=document.createElement('button');bridge.type='button';bridge.dataset.go='final-report';bridge.style.display='none';
+     document.body.appendChild(bridge);bridge.click();bridge.remove();
+   }catch(err){
+     match.finished=false;
+     delete match.finishedAt;
+     save();
+     updateRecoverHome();
+     alert('No s’ha pogut guardar el partit a l’Historial.\n\nNO s’ha perdut: continua desat com a partit recuperable. Torna-ho a provar.\n\nDetall: '+(err&&err.message?err.message:String(err)));
+   }
  };
 
  $('cancelSubstitution').onclick=()=>{$('substitutionModal').hidden=true};
@@ -3461,8 +3479,11 @@ document.addEventListener('DOMContentLoaded', () => {
    return historyCache;
  }
  async function archiveMatch(m){
-   if(!m||String(m.id||'').startsWith('TEST-'))return;
-   await idbPut(m);await refreshHistoryCache();
+   if(!m)return;
+   if(String(m.id||'').startsWith('TEST-'))return;
+   if(!m.id)throw new Error('El partit no té identificador únic.');
+   await idbPut(m);
+   await refreshHistoryCache();
  }
  async function deleteArchivedMatch(id){await idbDelete(id);await refreshHistoryCache()}
  function historyScoreText(m){if(m.legacyResult)return m.legacyResult;const s=finalScore(m);return s[0]+'-'+s[1]}
@@ -3513,6 +3534,7 @@ document.addEventListener('DOMContentLoaded', () => {
  document.addEventListener('click',e=>{if(e.target.closest('[data-go="history"]'))setTimeout(renderHistory,0)},true);
 
  const CURRENT_MATCH_KEY='statsCastellarCurrentMatchV1';
+ const LAST_COMPLETED_MATCH_KEY='statsCastellarLastCompletedMatchV1';
 
  function getRecoverableMatch(){
    try{
