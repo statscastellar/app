@@ -1475,7 +1475,7 @@ body.stats-dark{background:#111827;color:#e5e7eb}body.stats-dark .screen{backgro
         <div class="settings-section-head"><div class="settings-icon">▣</div><div><h2 class="settings-title">Informació de l’app</h2></div></div>
         <div class="app-info-grid">
           <div class="label">Nom</div><div class="value">Stats Castellar</div>
-          <div class="label">Versió</div><div class="value">v1.0.5</div>
+          <div class="label">Versió</div><div class="value">v1.0.6</div>
           <div class="label">Data de creació</div><div class="value">Setembre del 2026</div>
           <div class="label">Última actualització</div><div class="value">24/09/2026</div>
         </div>
@@ -2999,6 +2999,48 @@ document.addEventListener('DOMContentLoaded', () => {
      return row;
    });
  }
+ function globalPerformanceRows(m){
+   const acts=allActions(m);
+   return playersSorted(m).map(pl=>{
+     const row=[pl.number,pl.name,totalSetsPlayed(m,pl.id)];
+     actionGroups().forEach(g=>{
+       const vals=acts.filter(a=>a.playerId===pl.id&&a.action===g.name).map(a=>Number(a.value)).filter(Number.isFinite);
+       const max=Math.max(...g.values);
+       row.push(vals.length&&max>0 ? vals.reduce((a,b)=>a+b,0)/(vals.length*max) : null);
+     });
+     return row;
+   });
+ }
+ function teamGlobalPerformanceRow(m){
+   const acts=allActions(m),row=['','TOTAL EQUIP',exportSets(m).length];
+   actionGroups().forEach(g=>{
+     const vals=acts.filter(a=>a.action===g.name).map(a=>Number(a.value)).filter(Number.isFinite);
+     const max=Math.max(...g.values);
+     row.push(vals.length&&max>0 ? vals.reduce((a,b)=>a+b,0)/(vals.length*max) : null);
+   });
+   return row;
+ }
+ function globalPerformanceHeaders(){return ['DORSAL','NOM','SETS',...actionGroups().map(g=>g.name.toUpperCase())]}
+ function performanceBand(v){
+   if(v===null||v===undefined||!Number.isFinite(Number(v)))return null;
+   v=Number(v);
+   if(v>=0.80)return 'green';
+   if(v>=0.65)return 'blue';
+   if(v>=0.50)return 'yellow';
+   return 'red';
+ }
+ function performanceHex(v){
+   const b=performanceBand(v);
+   return b==='green'?EXPORT_COLORS.green:b==='blue'?EXPORT_COLORS.blue:b==='yellow'?EXPORT_COLORS.yellow:b==='red'?EXPORT_COLORS.red:null;
+ }
+ function performanceLegend(){
+   return [
+     'Rendiment global = suma de les puntuacions obtingudes / puntuació màxima possible × 100.',
+     'Verd: 80–100% · Blau: 65–79% · Groc: 50–64% · Vermell: menys del 50%.',
+     'Cel·la buida = la jugadora no ha registrat cap acció d’aquell tipus.'
+   ];
+ }
+
  function percentageHeaders(){
    const h=['DORSAL','NOM','SETS'];
    actionGroups().forEach(g=>g.values.forEach(v=>h.push(g.name+' '+v)));
@@ -3104,6 +3146,29 @@ document.addEventListener('DOMContentLoaded', () => {
    });
    y=doc.lastAutoTable.finalY+5;doc.setFontSize(7.2);
    legendLines().slice(0,3).forEach(line=>{doc.text(line,10,y);y+=4});
+
+   const gpHeaders=globalPerformanceHeaders();
+   const gpRows=globalPerformanceRows(m),gpTeam=teamGlobalPerformanceRow(m);
+   y+=3;
+   if(y>115){doc.addPage();y=14;}
+   doc.setFontSize(11);doc.setFont(undefined,'bold');doc.text('RENDIMENT GLOBAL PER ACCIÓ',12,y);doc.setFont(undefined,'normal');y+=4;
+   doc.autoTable({
+     startY:y,head:[gpHeaders],
+     body:[...gpRows,gpTeam].map(r=>r.map((v,i)=>i>=3?(v===null?'':Math.round(v*100)+'%'):v)),
+     styles:{fontSize:7,cellPadding:1.4,lineWidth:.08,lineColor:[166,166,166],halign:'center'},
+     headStyles:{fillColor:[31,78,120],textColor:[255,255,255],fontStyle:'bold'},
+     columnStyles:{0:{cellWidth:14},1:{cellWidth:30},2:{cellWidth:14}},
+     didParseCell:function(h){
+       if(h.section==='body' && h.column.index>=3){
+         const raw=(h.row.index<gpRows.length?gpRows[h.row.index]:gpTeam)[h.column.index];
+         const hex=performanceHex(raw);
+         if(hex)h.cell.styles.fillColor='#'+hex;
+       }
+     },
+     margin:{left:20,right:20}
+   });
+   y=doc.lastAutoTable.finalY+5;doc.setFontSize(7.2);
+   performanceLegend().forEach(line=>{doc.text(line,12,y);y+=4});
    const fileName=exportBaseName(m)+'.pdf';
    if(mode==='blob') return {blob:doc.output('blob'),fileName};
    doc.save(fileName);
@@ -3144,6 +3209,10 @@ document.addEventListener('DOMContentLoaded', () => {
      k-=g.values.length;
    }
    return 8;
+ }
+ function xlsxPerformanceStyle(v){
+   const b=performanceBand(v);
+   return b==='red'?2:b==='yellow'?3:b==='blue'?4:b==='green'?5:8;
  }
  function xlsxFullSheet(m){
    const score=finalScore(m),rival=m.opponent||'Rival',headers=fullHeaders(),rows=fullRows(m);
@@ -3190,6 +3259,16 @@ document.addEventListener('DOMContentLoaded', () => {
    r+=2;xml+=`<row r="${r}">${headers.map((v,c)=>xlsxCell(v,r,c,1)).join('')}</row>`;r++;
    xml+=`<row r="${r}">`+team.map((v,c)=>xlsxCell(v,r,c,c>=3?(v===null?8:styleForActionCol(c,3)):8)).join('')+`</row>`;r+=3;
    legendLines().slice(0,3).forEach((line,i)=>{xml+=`<row r="${r}">${xlsxCell(i===0?'LECTURA DEL FULL':'',r,0,7)}${xlsxCell(line,r,1,0)}</row>`;r++});
+
+   const gh=globalPerformanceHeaders(),gr=globalPerformanceRows(m),gt=teamGlobalPerformanceRow(m);
+   r+=2;xml+=`<row r="${r}">${xlsxCell('RENDIMENT GLOBAL PER ACCIÓ',r,0,1)}</row>`;r++;
+   xml+=`<row r="${r}">${gh.map((v,c)=>xlsxCell(v,r,c,1)).join('')}</row>`;r++;
+   gr.forEach(row=>{
+     xml+=`<row r="${r}">`+row.map((v,c)=>xlsxCell(c>=3&&v!==null?v:null,r,c,c>=3?xlsxPerformanceStyle(v):8)).join('')+`</row>`;r++;
+   });
+   r++;
+   xml+=`<row r="${r}">`+gt.map((v,c)=>xlsxCell(c>=3&&v!==null?v:null,r,c,c>=3?xlsxPerformanceStyle(v):8)).join('')+`</row>`;r+=2;
+   performanceLegend().forEach((line,i)=>{xml+=`<row r="${r}">${xlsxCell(i===0?'LECTURA RENDIMENT':'',r,0,7)}${xlsxCell(line,r,1,0)}</row>`;r++});
    const widths=headers.map((_,i)=>`<col min="${i+1}" max="${i+1}" width="${i===1?18:10}" customWidth="1"/>`).join('');
    return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><cols>${widths}</cols><sheetViews><sheetView workbookViewId="0"><pane xSplit="2" ySplit="3" topLeftCell="C4" activePane="bottomRight" state="frozen"/></sheetView></sheetViews><sheetData>${xml}</sheetData></worksheet>`;
  }
@@ -3225,6 +3304,10 @@ document.addEventListener('DOMContentLoaded', () => {
      if(k<g.values.length){const c=ratingColor(g.name,g.values[k]);return c===EXPORT_COLORS.red?'Red':c===EXPORT_COLORS.yellow?'Yellow':c===EXPORT_COLORS.blue?'Blue':'Green'}
      k-=g.values.length;
    }return 'Cell';
+ }
+ function odsPerformanceStyle(v){
+   const b=performanceBand(v);
+   return b==='red'?'Red':b==='yellow'?'Yellow':b==='blue'?'Blue':b==='green'?'Green':'Cell';
  }
  function odsCell(v,style='Cell',percentage=false){
    if(v===null||v===undefined||v==='')return `<table:table-cell table:style-name="${style}"/>`;
@@ -3271,6 +3354,17 @@ document.addEventListener('DOMContentLoaded', () => {
    x+=odsRow(team2,team2.map((_,i)=>i>=3?odsActionStyle(i,3):'Cell'),team2.map((_,i)=>i>=3));
    x+=odsRow([])+odsRow([]);
    legendLines().slice(0,3).forEach((line,i)=>x+=odsRow([i===0?'LECTURA DEL FULL':'',line],[i===0?'Header':'Cell','Cell']));
+
+   const gh=globalPerformanceHeaders(),gr=globalPerformanceRows(m),gt=teamGlobalPerformanceRow(m);
+   x+=odsRow([])+odsRow([])+odsRow(['RENDIMENT GLOBAL PER ACCIÓ'],['Header'])+odsRow(gh,gh.map(()=> 'Header'));
+   gr.forEach(row=>{
+     const styles=row.map((v,i)=>i>=3?odsPerformanceStyle(v):'Cell');
+     const pcts=row.map((_,i)=>i>=3);
+     x+=odsRow(row,styles,pcts);
+   });
+   x+=odsRow([])+odsRow(gt,gt.map((v,i)=>i>=3?odsPerformanceStyle(v):'Cell'),gt.map((_,i)=>i>=3));
+   x+=odsRow([])+odsRow([]);
+   performanceLegend().forEach((line,i)=>x+=odsRow([i===0?'LECTURA RENDIMENT':'',line],[i===0?'Header':'Cell','Cell']));
    return x+'</table:table>';
  }
  async function exportODS(m){
@@ -3819,7 +3913,7 @@ document.addEventListener('DOMContentLoaded', () => {
  function getSettings(){try{return JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}')}catch(_){return {}}}
  function saveSettingsObj(s){localStorage.setItem(SETTINGS_KEY,JSON.stringify(s))}
  async function exportStatsBackup(){
-   const data={format:'Stats Castellar Backup',version:'1.0.5',createdAt:new Date().toISOString(),localStorage:{}};
+   const data={format:'Stats Castellar Backup',version:'1.0.6',createdAt:new Date().toISOString(),localStorage:{}};
    for(let i=0;i<localStorage.length;i++){
      const k=localStorage.key(i);
      if(k && (k.startsWith('statsCastellar') || k.startsWith('stats_')))data.localStorage[k]=localStorage.getItem(k);
