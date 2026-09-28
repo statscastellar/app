@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ef6500">
-<title>Stats Castellar · PROVA · Nova interfície</title>
+<title>Stats Castellar PROVA v0.3.1 · · PROVA · Nova interfície</title>
 <style>
 :root{--orange:#f36b00;--navy:#17283f;--bg:#eef3f8;--card:#fff;--text:#182230;--muted:#667085;--line:#d9e0e8}
 *{box-sizing:border-box}
@@ -1086,6 +1086,9 @@ body:has(#scoring.active) main{width:100%!important;max-width:none!important;mar
 #scoring .prototype{display:grid!important}
 #scoring .footer{position:relative!important;left:auto!important;right:auto!important;bottom:auto!important;max-width:none!important;margin:0!important}
 #scoring .rating,#scoring .b,#scoring .undo-final,#scoring .rival-touch-zone,#scoring .rival-label,#scoring .foot{cursor:pointer}
+/* v0.3.3: Capa 5 era una maqueta i bloquejava tots els clics dels descendents. En la PROVA funcional la graella ha de rebre interacció. */
+#scoring .player-grid{pointer-events:auto!important}
+#scoring .player-slot,#scoring .rating-grid,#scoring .rating,#scoring .block-control,#scoring .block-control .b{pointer-events:auto!important;touch-action:manipulation}
 #scoring .foot.rescue.active{outline:2px solid #ffb54c}
 #scoring .action-final strong{white-space:nowrap}
 
@@ -2689,6 +2692,21 @@ document.addEventListener('DOMContentLoaded', () => {
    },{castellar:0,rival:0});
    if($('setsScore'))$('setsScore').textContent='Sets: Castellar '+won.castellar+' – '+won.rival+' '+(match.opponent||'Rival');
  }
+ window.__statsProvaEngine={
+   recordByPosition(pos,action,value){
+     if(!match)return false;
+     const id=match.positions&&match.positions[String(pos)];
+     const pl=id&&p(id); const rs=ratings[action];
+     const r=Array.isArray(rs)?rs.find(x=>Number(x.v)===Number(value)):null;
+     if(!pl||!r)return false;
+     record(pl,action,r); return true;
+   },
+   state(){
+     if(!match)return null;
+     return {scores:{...match.scores},serving:match.serving,set:match.set,opponent:match.opponent||'Rival',venue:match.venue,positions:{...match.positions}};
+   },
+   undo(){ if(!history.length||!match)return false; const st=history.pop();match.scores=st.scores;match.serving=st.serving;match.positions=st.positions;match.actions=st.actions;match.pinned=st.pinned||[];match.participation=st.participation||{};match.substitutions=st.substitutions||[];save();renderAll();return true; }
+ };
  document.addEventListener('stats-start-scoring',e=>{
    const d=e.detail;
    let saved=null;
@@ -4292,7 +4310,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- Stats Castellar Base 1.8.1: exportacions segons model ODS -->
 
-<script id="prova-capa7-bridge-v03">
+<script id="prova-capa7-bridge-v033">
 (()=>{
  const root=document.querySelector('#scoring .prototype'); if(!root)return;
  const slots=[...root.querySelectorAll('.player-slot')];
@@ -4306,15 +4324,21 @@ document.addEventListener('DOMContentLoaded', () => {
  function syncPlayers(){
    slots.forEach((slot,i)=>{const cell=legacyCell(i); if(!cell)return; const head=cell.querySelector('.live-player-head'); if(!head)return; const raw=head.textContent.replace(/^\s*\d+\s*/, '').trim(); const m=raw.match(/^(\d+)\s*·\s*(.+)$/); const st=slot.querySelector('.player-id strong'), sm=slot.querySelector('.player-id small'); if(m){txt(st,m[2].toUpperCase());txt(sm,'#'+m[1])}});
  }
- function scores(){const l=document.getElementById('leftScore'),r=document.getElementById('rightScore'),ln=document.getElementById('leftTeamName'); const castLeft=(ln&&ln.textContent.trim()==='Castellar'); return castLeft?[Number(l?.textContent)||0,Number(r?.textContent)||0]:[Number(r?.textContent)||0,Number(l?.textContent)||0]}
+ function scores(){const st=window.__statsProvaEngine?.state?.();if(st)return [Number(st.scores.castellar)||0,Number(st.scores.rival)||0];const l=document.getElementById('leftScore'),r=document.getElementById('rightScore'),ln=document.getElementById('leftTeamName'); const castLeft=(ln&&ln.textContent.trim()==='Castellar'); return castLeft?[Number(l?.textContent)||0,Number(r?.textContent)||0]:[Number(r?.textContent)||0,Number(l?.textContent)||0]}
  function sync(){
-   syncPlayers(); const sc=scores(); const boxes=root.querySelectorAll('.scorebox .score'); if(boxes[0])boxes[0].textContent=sc[0];if(boxes[1])boxes[1].textContent=sc[1];
-   const set=document.getElementById('liveSet'); const n=Number((set?.textContent||'1').replace(/\D/g,''))||1; const se=root.querySelector('.setbox strong');if(se)se.textContent=n;
+   syncPlayers(); const st=window.__statsProvaEngine?.state?.(); if(st){server=st.serving||server;}
+   const sc=scores(); const boxes=root.querySelectorAll('.scorebox .score'); if(boxes[0])boxes[0].textContent=sc[0];if(boxes[1])boxes[1].textContent=sc[1];
+   const rivalLabel=root.querySelector('.scorebox.rival .eyebrow'); if(rivalLabel)rivalLabel.textContent=(st&&st.opponent)?st.opponent:'RIVAL';
+   const set=document.getElementById('liveSet'); const n=(st&&Number(st.set))||Number((set?.textContent||'1').replace(/\D/g,''))||1; const se=root.querySelector('.setbox strong');if(se)se.textContent=n;
    txt(cur,rescueMode?'🆘 SALVADA':action.toUpperCase());
    rescue?.classList.toggle('active',rescueMode); rescue?.setAttribute('aria-pressed',String(rescueMode)); note?.classList.toggle('show',rescueMode);
    slots.forEach((s,i)=>{s.classList.toggle('serving',server==='castellar'&&action==='Servei'&&posOrder[i]==='1'); let b=s.querySelector('.server-ball');if(server==='castellar'&&action==='Servei'&&posOrder[i]==='1'){if(!b){b=document.createElement('div');b.className='server-ball';s.prepend(b)}}else if(b)b.remove()});
  }
- function clickLegacy(i,a,v){const cell=legacyCell(i);if(!cell)return false;let b=[...cell.querySelectorAll('.live-actions button')].find(x=>x.textContent.trim()===a);if(!b)return false;b.click();let rb=[...cell.querySelectorAll('.inline-ratings button')].find(x=>x.querySelector('strong')?.textContent.trim()===String(v));if(!rb)return false;rb.click();setTimeout(sync,0);return true}
+ function clickLegacy(i,a,v){
+   const eng=window.__statsProvaEngine;
+   if(!eng||typeof eng.recordByPosition!=='function')return false;
+   return !!eng.recordByPosition(posOrder[i],a,v);
+ }
  function next(a,v){
    if(a==='Servei'){if(v===0){server='rival';action='Recepció'}else if(v===3){server='castellar';action='Servei'}else action='Defensa'}
    else if(a==='Recepció'||a==='Defensa'){if(v===0){server='rival';action='Recepció'}else action='Col·locació'}
@@ -4323,10 +4347,10 @@ document.addEventListener('DOMContentLoaded', () => {
  }
  slots.forEach((slot,i)=>slot.querySelectorAll('.rating').forEach(r=>r.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();const v=Number(r.textContent.trim());if(rescueMode){clickLegacy(i,'Salvada',v);rescueMode=false;pendingZero=null;if(v===0){const leftCast=document.getElementById('leftTeamName')?.textContent.trim()==='Castellar';document.getElementById(leftCast?'rightPlus':'leftPlus')?.click();server='rival';action='Recepció';}else{action='Col·locació';}txt(last,'Salvada '+v+' registrada'+(v===0?' · punt rival':' · continua → Col·locació'));setTimeout(sync,10);return} const a=action;if(!clickLegacy(i,a,v))return; if((a==='Recepció'||a==='Defensa')&&v===0)pendingZero={i,a};else pendingZero=null;next(a,v);txt(last,a+' '+v);setTimeout(sync,10)})));
  slots.slice(0,3).forEach((slot,i)=>slot.querySelectorAll('.block-control .b').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();const v=Number(b.querySelector('strong')?.textContent);clickLegacy(i,'Bloqueig',v);action=v===1?'Defensa':(v===2?'Servei':'Recepció');server=v===2?'castellar':(v===0?'rival':server);txt(last,'Bloqueig '+v);setTimeout(sync,10)})));
- rescue?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(rescueMode){rescueMode=false;const leftCast=document.getElementById('leftTeamName')?.textContent.trim()==='Castellar';document.getElementById(leftCast?'rightPlus':'leftPlus')?.click();server='rival';action='Recepció';txt(last,'🆘 cancel·lat · punt rival restaurat');setTimeout(sync,10);return}if(!pendingZero){if(note){note.textContent='🆘 només disponible després d’una Recepció 0 o Defensa 0';note.classList.add('show');setTimeout(()=>{if(!rescueMode)note.classList.remove('show')},1300)}return}document.getElementById('undoAction')?.click();window.__statsProvaSuppressAward=true;clickLegacy(pendingZero.i,pendingZero.a,0);window.__statsProvaSuppressAward=false;rescueSnapshot={...pendingZero};rescueMode=true;txt(last,'🆘 actiu · 0 conservat i punt rival anul·lat · selecciona la salvadora');setTimeout(sync,10)});
+ rescue?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(rescueMode){rescueMode=false;const leftCast=document.getElementById('leftTeamName')?.textContent.trim()==='Castellar';document.getElementById(leftCast?'rightPlus':'leftPlus')?.click();server='rival';action='Recepció';txt(last,'🆘 cancel·lat · punt rival restaurat');setTimeout(sync,10);return}if(!pendingZero){if(note){note.textContent='🆘 només disponible després d’una Recepció 0 o Defensa 0';note.classList.add('show');setTimeout(()=>{if(!rescueMode)note.classList.remove('show')},1300)}return}window.__statsProvaEngine?.undo?.();window.__statsProvaSuppressAward=true;clickLegacy(pendingZero.i,pendingZero.a,0);window.__statsProvaSuppressAward=false;rescueSnapshot={...pendingZero};rescueMode=true;txt(last,'🆘 actiu · 0 conservat i punt rival anul·lat · selecciona la salvadora');setTimeout(sync,10)});
  root.querySelector('.rival-touch-zone')?.addEventListener('click',()=>{action='Defensa';pendingZero=null;rescueMode=false;txt(last,'CAMP RIVAL → Defensa');sync()});
  root.querySelector('.rival-label')?.addEventListener('click',()=>{action='Defensa';pendingZero=null;rescueMode=false;txt(last,'CAMP RIVAL → Defensa');sync()});
- root.querySelector('.undo-final')?.addEventListener('click',()=>{document.getElementById('undoAction')?.click();pendingZero=null;rescueMode=false;txt(last,'DESFER');setTimeout(sync,10)});
+ root.querySelector('.undo-final')?.addEventListener('click',()=>{window.__statsProvaEngine?.undo?.();pendingZero=null;rescueMode=false;txt(last,'DESFER');setTimeout(sync,10)});
  const visualScores=root.querySelectorAll('.scorebox');visualScores.forEach((box,idx)=>{box.querySelector('.plus')?.addEventListener('click',()=>{const leftCast=document.getElementById('leftTeamName')?.textContent.trim()==='Castellar'; const id=(idx===0)==leftCast?'leftPlus':'rightPlus';document.getElementById(id)?.click();setTimeout(sync,10)});box.querySelector('.minus')?.addEventListener('click',()=>{const leftCast=document.getElementById('leftTeamName')?.textContent.trim()==='Castellar'; const id=(idx===0)==leftCast?'leftMinus':'rightMinus';document.getElementById(id)?.click();setTimeout(sync,10)})});
  root.querySelector('.rotate')?.addEventListener('click',()=>{document.getElementById('manualRotateBtn')?.click();setTimeout(sync,10)});
  root.querySelector('.swap')?.addEventListener('click',()=>alert('CANVI JUG.: en aquesta primera integració, fes el canvi des de la versió de prova quan activem el selector nou.'));
@@ -4334,7 +4358,7 @@ document.addEventListener('DOMContentLoaded', () => {
  root.querySelector('.finish')?.addEventListener('click',()=>document.getElementById('finishSetBtn')?.click());
  root.querySelector('.footer .foot:first-child')?.addEventListener('click',()=>document.getElementById('liveBackBtn')?.click());
  document.addEventListener('stats-start-scoring',e=>{server=e.detail.serving||'castellar';action=server==='castellar'?'Servei':'Recepció';rescueMode=false;pendingZero=null;setTimeout(sync,30)});
- const obs=new MutationObserver(()=>{if(document.getElementById('scoring')?.classList.contains('active'))sync()});obs.observe(document.getElementById('scoring'),{subtree:true,childList:true,characterData:true});
+ /* v0.3.1: no MutationObserver here. sync() itself changes the scoring DOM; observing that subtree caused a feedback loop when entering a set. All scoring actions already call sync() explicitly. */
  setTimeout(sync,50);
 })();
 </script>
