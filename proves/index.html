@@ -1117,7 +1117,7 @@ body:has(#scoring.active) main{width:100%!important;max-width:none!important;mar
 .rival-touch-zone{position:absolute;left:0;right:0;top:0;height:20%;background:transparent}
 .footer{background:linear-gradient(#071522,#02080e);border-top:1px solid #263541;display:grid;grid-template-columns:9% 10% 1fr 10% 11% 12% 13%;gap:.45vw;padding:.65vh .7vw}
 .foot{border:1px solid #29485e;border-radius:.55vw;display:flex;align-items:center;justify-content:center;text-align:center;color:#688399;font-size:clamp(8px,.85vw,14px);font-weight:800}.reserve{border:1px dashed #42515c;color:#53616b}.info{border-color:transparent;color:#526b7e}.finish{border-color:#71333d;color:#a74c59}
-@media(orientation:portrait){#scoring.active .prototype{display:none!important}}
+
 
 /* CAPA 5: zones funcionals superposades */
 .rival-label{
@@ -1333,7 +1333,7 @@ body:has(#scoring.active) main{width:100%!important;max-width:none!important;mar
 </style>
 
 <style id="prova-v039-final-ui-fixes">
-/* v0.3.9 — orientació i fullscreen finals.
+/* v0.4.0 — orientació i fullscreen finals.
    Cap pantalla general queda bloquejada en vertical. Només l'anotació del partit exigeix horitzontal. */
 body::after{content:none!important;display:none!important}
 body.scoring-live{position:fixed!important;inset:0!important;width:100dvw!important;height:100dvh!important;margin:0!important;padding:0!important;overflow:hidden!important;overscroll-behavior:none!important;background:#02070c!important}
@@ -1366,6 +1366,16 @@ body.scoring-live #scoring.active .prototype{position:absolute!important;inset:0
   document.addEventListener('stats-start-scoring',()=>{document.body.classList.add('scoring-live');setTimeout(syncScoringMode,0)});
 })();
 </script>
+
+<style id="prova-v040-orientation-hard-reset">
+/* Pantalles generals: mai bloquejades per orientació. */
+html:not(:has(body.scoring-live)), body:not(.scoring-live){min-height:100%;overflow:auto!important}
+body:not(.scoring-live)::before, body:not(.scoring-live)::after{content:none!important;display:none!important}
+@media (orientation:portrait){
+  body:not(.scoring-live){position:static!important;width:auto!important;height:auto!important;min-height:100dvh!important;background:var(--bg,#f4f6f8)!important;overflow:auto!important}
+  body:not(.scoring-live) #scoring:not(.active){display:none!important}
+}
+</style>
 </head>
 <body>
 
@@ -1449,7 +1459,7 @@ body.scoring-live #scoring.active .prototype{position:absolute!important;inset:0
         <button class="home-btn teams" type="button" data-go="teams"><span class="ico">♟</span><span>EQUIPS</span><span class="chev">›</span></button>
         <button class="home-btn settings" type="button" data-go="settings"><span class="ico">⚙</span><span>CONFIGURACIÓ</span><span class="chev">›</span></button>
       </nav>
-      <div class="home-credit">Creat per Curu · <strong>PROVA v0.3.9</strong></div>
+      <div class="home-credit">Creat per Curu · <strong>PROVA v0.4.0</strong></div>
     </div>
   </section>
 
@@ -1826,7 +1836,7 @@ body.scoring-live #scoring.active .prototype{position:absolute!important;inset:0
         <div class="settings-section-head"><div class="settings-icon">▣</div><div><h2 class="settings-title">Informació de l’app</h2></div></div>
         <div class="app-info-grid">
           <div class="label">Nom</div><div class="value">Stats Castellar</div>
-          <div class="label">Versió</div><div class="value">PROVA v0.3.9</div>
+          <div class="label">Versió</div><div class="value">PROVA v0.4.0</div>
           <div class="label">Data de creació</div><div class="value">Setembre del 2026</div>
           <div class="label">Última actualització</div><div class="value">27/09/2026</div>
         </div>
@@ -4561,10 +4571,20 @@ const undoWhat=root.querySelector('#provaUndoWhat');
 })();
 </script>
 
-<script id="pwa-v1">
+<script id="prova-no-service-worker-v040">
+/* PROVES: no comparteix la cache PWA de producció. Elimina qualsevol SW que controli /app/proves/. */
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js').catch(err => console.warn('Service Worker:', err));
+  window.addEventListener('load', async () => {
+    try {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for (const reg of regs) {
+        if (reg.scope && reg.scope.includes('/app/')) await reg.unregister();
+      }
+      if ('caches' in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map(k => caches.delete(k)));
+      }
+    } catch (err) { console.warn('Neteja cache PROVA:', err); }
   });
 }
 </script>
