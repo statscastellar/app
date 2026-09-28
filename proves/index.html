@@ -1089,6 +1089,8 @@ body:has(#scoring.active) main{width:100%!important;max-width:none!important;mar
 /* v0.3.3: Capa 5 era una maqueta i bloquejava tots els clics dels descendents. En la PROVA funcional la graella ha de rebre interacció. */
 #scoring .player-grid{pointer-events:auto!important}
 #scoring .player-slot,#scoring .rating-grid,#scoring .rating,#scoring .block-control,#scoring .block-control .b{pointer-events:auto!important;touch-action:manipulation}
+#scoring .footer{z-index:60!important;pointer-events:auto!important}
+#scoring .footer .foot,#scoring .undo-final{position:relative;z-index:61;pointer-events:auto!important;touch-action:manipulation}
 #scoring .foot.rescue.active{outline:2px solid #ffb54c}
 #scoring .action-final strong{white-space:nowrap}
 
@@ -1550,13 +1552,13 @@ body:has(#scoring.active) main{width:100%!important;max-width:none!important;mar
 <div class="rescue-note" id="rescueNote">SALVADA ACTIVA · VALORA 0–3 SOBRE LA JUGADORA QUE INTENTA SALVAR-LA</div>
 </main>
 <footer class="footer">
-<div class="foot"><span class="ico">⌂</span><span class="lbl">INICI</span></div>
+<button class="foot" id="provaHomeBtn" type="button"><span class="ico">⌂</span><span class="lbl">INICI</span></button>
 <button class="foot rescue" id="rescueBtn" type="button" aria-pressed="false" aria-label="Salvada" title="Salvada"><span class="ico sos-ico">🆘</span></button>
 <div class="foot info-final"><strong>F.S. CASTELLAR VOLEI</strong><span>Infantil Femení A · Temporada 2026-27</span></div>
-<div class="foot rotate"><span class="ico">↻</span><span class="lbl">ROTACIÓ</span></div>
-<div class="foot swap"><span class="ico">⇄</span><span class="lbl">CANVI JUG.</span></div>
-<div class="foot endset"><span class="ico">⚑</span><span class="lbl">FINALITZAR SET</span></div>
-<div class="foot finish"><span class="ico">■</span><span class="lbl">FINALITZAR PARTIT</span></div>
+<button class="foot rotate" id="provaRotateBtn" type="button"><span class="ico">↻</span><span class="lbl">ROTACIÓ</span></button>
+<button class="foot swap" id="provaSwapBtn" type="button"><span class="ico">⇄</span><span class="lbl">CANVI JUG.</span></button>
+<button class="foot endset" id="provaEndSetBtn" type="button"><span class="ico">⚑</span><span class="lbl">FINALITZAR SET</span></button>
+<button class="foot finish" id="provaFinishBtn" type="button"><span class="ico">■</span><span class="lbl">FINALITZAR PARTIT</span></button>
 </footer>
 
 </div>
@@ -2691,6 +2693,59 @@ document.addEventListener('DOMContentLoaded', () => {
      return a;
    },{castellar:0,rival:0});
    if($('setsScore'))$('setsScore').textContent='Sets: Castellar '+won.castellar+' – '+won.rival+' '+(match.opponent||'Rival');
+   /* v0.3.7: la Capa 7 s'ha de repintar després de QUALSEVOL canvi del motor
+      (especialment substitucions, rotacions, punts manuals i DESFER). */
+   document.dispatchEvent(new CustomEvent('stats-prova-state-changed'));
+ }
+ function provaOpenHome(){
+   if(!match)return false;
+   save();
+   const modal=$('leaveMatchModal');
+   if(modal){modal.hidden=false;return true}
+   return false;
+ }
+ function provaOpenFinishSet(){
+   if(!match)return false;
+   const already=(match.completedSets||[]).some(s=>Number(s.set)===Number(match.set));
+   if(already)return false;
+   const n=names();
+   $('finishSetTitle').textContent='Finalitzar el Set '+match.set+'?';
+   $('finishSetScore').textContent=n.l+' '+match.scores[n.lk]+' – '+match.scores[n.rk]+' '+n.r;
+   $('finishSetConfirmActions').hidden=false;
+   $('finishSetConfirmActions').style.display='grid';
+   $('afterSetActions').hidden=true;
+   $('afterSetActions').style.display='none';
+   $('finishSetModal').hidden=false;
+   return true;
+ }
+ async function provaFinishMatch(){
+   if(!match)return false;
+   match.finished=true;
+   match.finishedAt=Date.now();
+   save();
+   localStorage.setItem(LAST_COMPLETED_MATCH_KEY,JSON.stringify(match));
+   try{
+     await archiveMatch(match);
+     const stored=await idbAll();
+     if(!stored.some(m=>m&&m.id===match.id))throw new Error('No s’ha pogut verificar el partit a l’Historial.');
+     localStorage.removeItem(CURRENT_MATCH_KEY);
+     updateRecoverHome();
+     $('finishSetModal').hidden=true;
+     renderFinalReport(match);
+     const screens=document.querySelectorAll('.screen');screens.forEach(x=>x.classList.remove('active'));
+     const report=document.getElementById('final-report');if(report)report.classList.add('active');
+     return true;
+   }catch(err){
+     match.finished=false;delete match.finishedAt;save();updateRecoverHome();
+     alert('No s’ha pogut guardar el partit a l’Historial.\n\nNO s’ha perdut: continua desat com a partit recuperable. Torna-ho a provar.\n\nDetall: '+(err&&err.message?err.message:String(err)));
+     return false;
+   }
+ }
+ function provaManualPoint(side,delta){
+   if(!match)return false;
+   history.push(snap());
+   if(delta>0)award(side);else match.scores[side]=Math.max(0,match.scores[side]+delta);
+   save();renderAll();return true;
  }
  window.__statsProvaEngine={
    recordByPosition(pos,action,value){
@@ -2703,9 +2758,15 @@ document.addEventListener('DOMContentLoaded', () => {
    },
    state(){
      if(!match)return null;
-     return {scores:{...match.scores},serving:match.serving,set:match.set,opponent:match.opponent||'Rival',venue:match.venue,positions:{...match.positions}};
+     return {scores:{...match.scores},serving:match.serving,set:match.set,opponent:match.opponent||'Rival',venue:match.venue,positions:{...match.positions},players:(match.players||[]).map(x=>({id:x.id,number:x.number,name:x.name}))};
    },
-   undo(){ if(!history.length||!match)return false; const st=history.pop();match.scores=st.scores;match.serving=st.serving;match.positions=st.positions;match.actions=st.actions;match.pinned=st.pinned||[];match.participation=st.participation||{};match.substitutions=st.substitutions||[];save();renderAll();return true; }
+   undo(){ if(!history.length||!match)return false; const st=history.pop();match.scores=st.scores;match.serving=st.serving;match.positions=st.positions;match.actions=st.actions;match.pinned=st.pinned||[];match.participation=st.participation||{};match.substitutions=st.substitutions||[];save();renderAll();return true; },
+   rotateManual(){ if(!match)return false; history.push(snap());rotate();save();renderAll();return true; },
+   manualPoint(side,delta){return provaManualPoint(side,delta);},
+   goHome(){return provaOpenHome();},
+   finishSet(){return provaOpenFinishSet();},
+   finishMatch(){return provaFinishMatch();},
+   substituteByPosition(pos){ if(!match)return false;const id=match.positions&&match.positions[String(pos)];if(!id)return false;openSubstitution(id);return true; }
  };
  document.addEventListener('stats-start-scoring',e=>{
    const d=e.detail;
@@ -2759,6 +2820,8 @@ document.addEventListener('DOMContentLoaded', () => {
  };
 
  $('finishSetBtn').onclick=()=>{
+   return provaOpenFinishSet();
+   /* legacy fallback disabled
    if(!match)return;
    const already=(match.completedSets||[]).some(s=>Number(s.set)===Number(match.set));
    if(already)return;
@@ -2770,6 +2833,7 @@ document.addEventListener('DOMContentLoaded', () => {
    $('afterSetActions').hidden=true;
    $('afterSetActions').style.display='none';
    $('finishSetModal').hidden=false;
+   */
  };
  $('cancelFinishSet').onclick=()=>{$('finishSetModal').hidden=true};
  $('finishSetModal').querySelector('.app-modal-backdrop').onclick=()=>{$('finishSetModal').hidden=true};
@@ -4310,19 +4374,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- Stats Castellar Base 1.8.1: exportacions segons model ODS -->
 
-<script id="prova-capa7-bridge-v033">
+<script id="prova-capa7-bridge-v037">
 (()=>{
  const root=document.querySelector('#scoring .prototype'); if(!root)return;
  const slots=[...root.querySelectorAll('.player-slot')];
  const cur=root.querySelector('#provaCurrentAction')||root.querySelector('.action-final strong');
  const last=root.querySelector('#provaLastAction');
  const rescue=root.querySelector('#rescueBtn'); const note=root.querySelector('#rescueNote');
- let action='Servei', server='castellar', rescueMode=false, pendingZero=null, rescueSnapshot=null;
+ let action='Servei', server='castellar', rescueMode=false, pendingZero=null, rescueSnapshot=null, swapMode=false;
+ const uiHistory=[]; const pushUI=()=>uiHistory.push({action,server,pendingZero:pendingZero?{...pendingZero}:null,rescueMode});
  const posOrder=['4','3','2','5','6','1'];
  const txt=(el,t)=>{if(el)el.textContent=t};
  function legacyCell(i){return document.querySelector('#liveCourt .live-player-cell[data-pos="'+posOrder[i]+'"]')}
  function syncPlayers(){
-   slots.forEach((slot,i)=>{const cell=legacyCell(i); if(!cell)return; const head=cell.querySelector('.live-player-head'); if(!head)return; const raw=head.textContent.replace(/^\s*\d+\s*/, '').trim(); const m=raw.match(/^(\d+)\s*·\s*(.+)$/); const st=slot.querySelector('.player-id strong'), sm=slot.querySelector('.player-id small'); if(m){txt(st,m[2].toUpperCase());txt(sm,'#'+m[1])}});
+   const st=window.__statsProvaEngine?.state?.();
+   if(!st)return;
+   const byId=new Map((st.players||[]).map(pl=>[String(pl.id),pl]));
+   slots.forEach((slot,i)=>{
+     const id=st.positions&&st.positions[posOrder[i]], pl=byId.get(String(id));
+     if(!pl)return;
+     const strong=slot.querySelector('.player-id strong'), small=slot.querySelector('.player-id small');
+     txt(strong,String(pl.name||'').toUpperCase()); txt(small,'#'+String(pl.number??''));
+   });
  }
  function scores(){const st=window.__statsProvaEngine?.state?.();if(st)return [Number(st.scores.castellar)||0,Number(st.scores.rival)||0];const l=document.getElementById('leftScore'),r=document.getElementById('rightScore'),ln=document.getElementById('leftTeamName'); const castLeft=(ln&&ln.textContent.trim()==='Castellar'); return castLeft?[Number(l?.textContent)||0,Number(r?.textContent)||0]:[Number(r?.textContent)||0,Number(l?.textContent)||0]}
  function sync(){
@@ -4345,19 +4418,92 @@ document.addEventListener('DOMContentLoaded', () => {
    else if(a==='Col·locació'){action=v===0?'Recepció':'Atac';if(v===0)server='rival'}
    else if(a==='Atac'){if(v===0){server='rival';action='Recepció'}else if(v===3){server='castellar';action='Servei'}else action='Defensa'}
  }
- slots.forEach((slot,i)=>slot.querySelectorAll('.rating').forEach(r=>r.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();const v=Number(r.textContent.trim());if(rescueMode){clickLegacy(i,'Salvada',v);rescueMode=false;pendingZero=null;if(v===0){const leftCast=document.getElementById('leftTeamName')?.textContent.trim()==='Castellar';document.getElementById(leftCast?'rightPlus':'leftPlus')?.click();server='rival';action='Recepció';}else{action='Col·locació';}txt(last,'Salvada '+v+' registrada'+(v===0?' · punt rival':' · continua → Col·locació'));setTimeout(sync,10);return} const a=action;if(!clickLegacy(i,a,v))return; if((a==='Recepció'||a==='Defensa')&&v===0)pendingZero={i,a};else pendingZero=null;next(a,v);txt(last,a+' '+v);setTimeout(sync,10)})));
- slots.slice(0,3).forEach((slot,i)=>slot.querySelectorAll('.block-control .b').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();const v=Number(b.querySelector('strong')?.textContent);clickLegacy(i,'Bloqueig',v);action=v===1?'Defensa':(v===2?'Servei':'Recepció');server=v===2?'castellar':(v===0?'rival':server);txt(last,'Bloqueig '+v);setTimeout(sync,10)})));
+ slots.forEach((slot,i)=>slot.querySelectorAll('.rating').forEach(r=>r.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();const v=Number(r.textContent.trim());if(rescueMode){clickLegacy(i,'Salvada',v);rescueMode=false;pendingZero=null;if(v===0){const leftCast=document.getElementById('leftTeamName')?.textContent.trim()==='Castellar';document.getElementById(leftCast?'rightPlus':'leftPlus')?.click();server='rival';action='Recepció';}else{action='Col·locació';}txt(last,'Salvada '+v+' registrada'+(v===0?' · punt rival':' · continua → Col·locació'));setTimeout(sync,10);return} const a=action;pushUI();if(!clickLegacy(i,a,v)){uiHistory.pop();return;} if((a==='Recepció'||a==='Defensa')&&v===0)pendingZero={i,a};else pendingZero=null;next(a,v);txt(last,a+' '+v);setTimeout(sync,10)})));
+ slots.slice(0,3).forEach((slot,i)=>slot.querySelectorAll('.block-control .b').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();const v=Number(b.querySelector('strong')?.textContent);pushUI();clickLegacy(i,'Bloqueig',v);action=v===1?'Defensa':(v===2?'Servei':'Recepció');server=v===2?'castellar':(v===0?'rival':server);txt(last,'Bloqueig '+v);setTimeout(sync,10)})));
  rescue?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(rescueMode){rescueMode=false;const leftCast=document.getElementById('leftTeamName')?.textContent.trim()==='Castellar';document.getElementById(leftCast?'rightPlus':'leftPlus')?.click();server='rival';action='Recepció';txt(last,'🆘 cancel·lat · punt rival restaurat');setTimeout(sync,10);return}if(!pendingZero){if(note){note.textContent='🆘 només disponible després d’una Recepció 0 o Defensa 0';note.classList.add('show');setTimeout(()=>{if(!rescueMode)note.classList.remove('show')},1300)}return}window.__statsProvaEngine?.undo?.();window.__statsProvaSuppressAward=true;clickLegacy(pendingZero.i,pendingZero.a,0);window.__statsProvaSuppressAward=false;rescueSnapshot={...pendingZero};rescueMode=true;txt(last,'🆘 actiu · 0 conservat i punt rival anul·lat · selecciona la salvadora');setTimeout(sync,10)});
  root.querySelector('.rival-touch-zone')?.addEventListener('click',()=>{action='Defensa';pendingZero=null;rescueMode=false;txt(last,'CAMP RIVAL → Defensa');sync()});
  root.querySelector('.rival-label')?.addEventListener('click',()=>{action='Defensa';pendingZero=null;rescueMode=false;txt(last,'CAMP RIVAL → Defensa');sync()});
- root.querySelector('.undo-final')?.addEventListener('click',()=>{window.__statsProvaEngine?.undo?.();pendingZero=null;rescueMode=false;txt(last,'DESFER');setTimeout(sync,10)});
- const visualScores=root.querySelectorAll('.scorebox');visualScores.forEach((box,idx)=>{box.querySelector('.plus')?.addEventListener('click',()=>{const leftCast=document.getElementById('leftTeamName')?.textContent.trim()==='Castellar'; const id=(idx===0)==leftCast?'leftPlus':'rightPlus';document.getElementById(id)?.click();setTimeout(sync,10)});box.querySelector('.minus')?.addEventListener('click',()=>{const leftCast=document.getElementById('leftTeamName')?.textContent.trim()==='Castellar'; const id=(idx===0)==leftCast?'leftMinus':'rightMinus';document.getElementById(id)?.click();setTimeout(sync,10)})});
- root.querySelector('.rotate')?.addEventListener('click',()=>{document.getElementById('manualRotateBtn')?.click();setTimeout(sync,10)});
- root.querySelector('.swap')?.addEventListener('click',()=>alert('CANVI JUG.: en aquesta primera integració, fes el canvi des de la versió de prova quan activem el selector nou.'));
- root.querySelector('.endset')?.addEventListener('click',()=>document.getElementById('finishSetBtn')?.click());
- root.querySelector('.finish')?.addEventListener('click',()=>document.getElementById('finishSetBtn')?.click());
- root.querySelector('.footer .foot:first-child')?.addEventListener('click',()=>document.getElementById('liveBackBtn')?.click());
- document.addEventListener('stats-start-scoring',e=>{server=e.detail.serving||'castellar';action=server==='castellar'?'Servei':'Recepció';rescueMode=false;pendingZero=null;setTimeout(sync,30)});
+
+ const visualScores=root.querySelectorAll('.scorebox');visualScores.forEach((box,idx)=>{
+   box.querySelector('.plus')?.addEventListener('click',e=>{
+     e.preventDefault();e.stopPropagation();
+     pushUI();
+     const side=idx===0?'castellar':'rival';
+     const ok=window.__statsProvaEngine?.manualPoint?.(side,1);
+     if(!ok){uiHistory.pop();return;}
+     /* Un + és el final real del rally. El motor decide servei/rotació;
+        la Capa 7 només deriva la següent acció del servei resultant. */
+     const st=window.__statsProvaEngine?.state?.();
+     if(st){server=st.serving;action=server==='castellar'?'Servei':'Recepció';}
+     pendingZero=null;rescueMode=false;
+     txt(last,'PUNT MANUAL '+(side==='castellar'?'CASTELLAR':'RIVAL')+' · '+(server==='castellar'?'servei Castellar':'servei rival'));
+     setTimeout(sync,10);
+   });
+   box.querySelector('.minus')?.addEventListener('click',e=>{
+     e.preventDefault();e.stopPropagation();pushUI();
+     const ok=window.__statsProvaEngine?.manualPoint?.(idx===0?'castellar':'rival',-1);
+     if(!ok)uiHistory.pop();
+     setTimeout(sync,10);
+   });
+ });
+
+
+ slots.forEach((slot,i)=>slot.querySelector('.player-id')?.addEventListener('click',e=>{if(!swapMode)return;e.preventDefault();e.stopPropagation();swapMode=false;root.querySelector('.swap')?.classList.remove('active');window.__statsProvaEngine?.substituteByPosition?.(posOrder[i]);}));
+ /* v0.3.7: els diàlegs funcionals no poden quedar dins .legacy-scoring-engine,
+    perquè aquesta capa està amagada. Els traiem al body mantenint els mateixos IDs
+    i els handlers originals del motor. */
+ ['substitutionModal','leaveMatchModal','finishSetModal'].forEach(id=>{
+   const m=document.getElementById(id); if(m && m.parentElement!==document.body) document.body.appendChild(m);
+ });
+
+ /* v0.3.7: qualsevol canvi del motor (inclosa una substitució confirmada al modal)
+    obliga a rellegir positions/players i repintar nom+dorsal a la pista nova. */
+ document.addEventListener('stats-prova-state-changed',()=>setTimeout(sync,0));
+
+ function confirmFinishMatch(){
+   let modal=document.getElementById('provaFinishMatchConfirm');
+   if(!modal){
+     modal=document.createElement('div');modal.id='provaFinishMatchConfirm';
+     modal.style.cssText='position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,.58);display:grid;place-items:center;padding:20px';
+     modal.innerHTML='<div style="width:min(430px,92vw);background:#fff;border-radius:18px;padding:22px;box-shadow:0 20px 70px rgba(0,0,0,.35);font-family:system-ui;color:#111"><h2 style="margin:0 0 10px;font-size:22px">Finalitzar partit?</h2><p style="margin:0 0 18px;line-height:1.4;color:#475467">Estàs segur que vols finalitzar el partit? Es tancarà i es guardarà a l’historial.</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><button type="button" data-cancel style="padding:13px;border-radius:12px;border:1px solid #d0d5dd;background:#fff;font-weight:800">CANCEL·LAR</button><button type="button" data-confirm style="padding:13px;border-radius:12px;border:0;background:#111;color:#fff;font-weight:900">FINALITZAR PARTIT</button></div></div>';
+     document.body.appendChild(modal);
+     modal.querySelector('[data-cancel]').onclick=()=>modal.remove();
+     modal.addEventListener('click',e=>{if(e.target===modal)modal.remove()});
+     modal.querySelector('[data-confirm]').onclick=async()=>{
+       const b=modal.querySelector('[data-confirm]');b.disabled=true;b.textContent='GUARDANT…';
+       const ok=await window.__statsProvaEngine?.finishMatch?.();
+       if(ok)modal.remove();else{b.disabled=false;b.textContent='FINALITZAR PARTIT';}
+     };
+   }
+ }
+
+ /* v0.3.7: controls visibles connectats directament al motor. Capture evita que
+    cap capa visual/interfície antiga intercepti el toc abans d'arribar aquí. */
+ root.addEventListener('click',e=>{
+   const t=e.target;
+   const undo=t.closest('.undo-final');
+   const home=t.closest('#provaHomeBtn');
+   const rot=t.closest('#provaRotateBtn');
+   const sw=t.closest('#provaSwapBtn');
+   const end=t.closest('#provaEndSetBtn');
+   const fin=t.closest('#provaFinishBtn');
+   if(!(undo||home||rot||sw||end||fin))return;
+   e.preventDefault();e.stopPropagation();
+   if(undo){
+     const ok=window.__statsProvaEngine?.undo?.();
+     if(ok){const u=uiHistory.pop();if(u){action=u.action;server=u.server;pendingZero=u.pendingZero;rescueMode=u.rescueMode}else{pendingZero=null;rescueMode=false}txt(last,'DESFER · última acció anul·lada');}
+     setTimeout(sync,10);return;
+   }
+   if(home){window.__statsProvaEngine?.goHome?.();return;}
+   if(rot){pushUI();const ok=window.__statsProvaEngine?.rotateManual?.();if(!ok)uiHistory.pop();else txt(last,'ROTACIÓ manual');setTimeout(sync,10);return;}
+   if(sw){swapMode=!swapMode;txt(last,swapMode?'CANVI JUG. · toca el nom de la jugadora que surt':'CANVI JUG. cancel·lat');sw.classList.toggle('active',swapMode);return;}
+   if(end){window.__statsProvaEngine?.finishSet?.();return;}
+   if(fin){confirmFinishMatch();return;}
+ },true);
+
+
+
+ document.addEventListener('stats-start-scoring',e=>{server=e.detail.serving||'castellar';action=server==='castellar'?'Servei':'Recepció';rescueMode=false;pendingZero=null;swapMode=false;uiHistory.length=0;setTimeout(sync,30)});
  /* v0.3.1: no MutationObserver here. sync() itself changes the scoring DOM; observing that subtree caused a feedback loop when entering a set. All scoring actions already call sync() explicitly. */
  setTimeout(sync,50);
 })();
