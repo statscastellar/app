@@ -1079,6 +1079,14 @@ body.stats-dark{background:#111827;color:#e5e7eb}body.stats-dark .screen{backgro
 </style>
 
 <style id="prova-capa7-integration">
+/* v0.3.8 · la pantalla de partit ocupa exclusivament tot el viewport */
+html:has(#scoring.active),body:has(#scoring.active){width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;overflow:hidden!important;overscroll-behavior:none!important}
+body:has(#scoring.active){position:fixed!important;inset:0!important;padding:0!important;margin:0!important}
+body:has(#scoring.active)>footer,body:has(#scoring.active)>.home-credit{display:none!important}
+#scoring.active{position:fixed!important;inset:0!important;width:100dvw!important;height:100dvh!important;min-height:0!important;max-width:none!important;max-height:none!important;overflow:hidden!important;z-index:90000!important;margin:0!important;padding:0!important;overscroll-behavior:none!important;touch-action:manipulation}
+#scoring.active .prototype{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-height:0!important;max-height:none!important;overflow:hidden!important}
+#scoring.active .header,#scoring.active .arena,#scoring.active .footer{min-height:0!important;overflow:hidden!important}
+#scoring.active~footer{display:none!important}
 body:has(#scoring.active){padding:0!important;margin:0!important;overflow:hidden!important;background:#02070c!important}
 body:has(#scoring.active) main{width:100%!important;max-width:none!important;margin:0!important;padding:0!important}
 #scoring.active{display:block!important;padding:0!important;min-height:100dvh!important;background:#02070c!important}
@@ -1093,6 +1101,11 @@ body:has(#scoring.active) main{width:100%!important;max-width:none!important;mar
 #scoring .footer .foot,#scoring .undo-final{position:relative;z-index:61;pointer-events:auto!important;touch-action:manipulation}
 #scoring .foot.rescue.active{outline:2px solid #ffb54c}
 #scoring .action-final strong{white-space:nowrap}
+#scoring .undo-final{flex-direction:column;gap:.08rem;line-height:1.02}
+#scoring .undo-final .ico{font-family:Arial,sans-serif;font-size:clamp(18px,2vw,31px);line-height:.8;transform:none!important}
+#scoring .undo-final strong{font-size:clamp(9px,.85vw,14px)}
+#scoring .undo-final small{display:block;max-width:96%;font-size:clamp(7px,.68vw,11px);font-weight:700;color:#c9d7e1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#scoring .undo-final.no-undo{opacity:.48}
 
 
 .prototype{width:100vw;height:100dvh;display:grid;grid-template-rows:16% 74% 10%;background:#03080d}
@@ -1508,7 +1521,7 @@ body:has(#scoring.active) main{width:100%!important;max-width:none!important;mar
 <div class="zone scorebox castellar"><span class="eyebrow">F.S. CASTELLAR</span><button class="minus" type="button">−</button><span class="score">14</span><button class="plus" type="button">+</button></div>
 <div class="zone setbox"><span class="eyebrow">SET</span><strong>2</strong><div class="set-dots"><i class="on"></i><i></i><i></i><i></i><i></i></div></div>
 <div class="zone scorebox rival"><span class="eyebrow">RIVAL</span><button class="minus" type="button">−</button><span class="score">12</span><button class="plus" type="button">+</button></div>
-<div class="zone undo-final"><span class="ico">↶</span><strong>DESFER</strong><small>última acció</small></div>
+<div class="zone undo-final" title="Desfer l'última operació"><span class="ico">↶</span><strong>DESFER</strong><small id="provaUndoWhat">res per desfer</small></div>
 </header>
 <main class="arena">
 <div class="scene"></div>
@@ -1778,7 +1791,7 @@ body:has(#scoring.active) main{width:100%!important;max-width:none!important;mar
         <div class="settings-section-head"><div class="settings-icon">▣</div><div><h2 class="settings-title">Informació de l’app</h2></div></div>
         <div class="app-info-grid">
           <div class="label">Nom</div><div class="value">Stats Castellar</div>
-          <div class="label">Versió</div><div class="value">v1.0.7</div>
+          <div class="label">Versió</div><div class="value">PROVA v0.3.8</div>
           <div class="label">Data de creació</div><div class="value">Setembre del 2026</div>
           <div class="label">Última actualització</div><div class="value">27/09/2026</div>
         </div>
@@ -4374,7 +4387,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- Stats Castellar Base 1.8.1: exportacions segons model ODS -->
 
-<script id="prova-capa7-bridge-v037">
+<script id="prova-capa7-bridge-v038">
 (()=>{
  const root=document.querySelector('#scoring .prototype'); if(!root)return;
  const slots=[...root.querySelectorAll('.player-slot')];
@@ -4382,9 +4395,12 @@ document.addEventListener('DOMContentLoaded', () => {
  const last=root.querySelector('#provaLastAction');
  const rescue=root.querySelector('#rescueBtn'); const note=root.querySelector('#rescueNote');
  let action='Servei', server='castellar', rescueMode=false, pendingZero=null, rescueSnapshot=null, swapMode=false;
- const uiHistory=[]; const pushUI=()=>uiHistory.push({action,server,pendingZero:pendingZero?{...pendingZero}:null,rescueMode});
+ const uiHistory=[]; const pushUI=(description='Última operació')=>{uiHistory.push({action,server,pendingZero:pendingZero?{...pendingZero}:null,rescueMode,description});updateUndoLabel();};
  const posOrder=['4','3','2','5','6','1'];
  const txt=(el,t)=>{if(el)el.textContent=t};
+const undoWhat=root.querySelector('#provaUndoWhat');
+ function updateUndoLabel(){const item=uiHistory[uiHistory.length-1];txt(undoWhat,item?.description||'res per desfer');root.querySelector('.undo-final')?.classList.toggle('no-undo',!item);}
+ function playerLabel(i){const id=slots[i]?.querySelector('.player-id');const n=id?.querySelector('strong')?.textContent?.trim()||'jugadora';return n;}
  function legacyCell(i){return document.querySelector('#liveCourt .live-player-cell[data-pos="'+posOrder[i]+'"]')}
  function syncPlayers(){
    const st=window.__statsProvaEngine?.state?.();
@@ -4418,8 +4434,8 @@ document.addEventListener('DOMContentLoaded', () => {
    else if(a==='Col·locació'){action=v===0?'Recepció':'Atac';if(v===0)server='rival'}
    else if(a==='Atac'){if(v===0){server='rival';action='Recepció'}else if(v===3){server='castellar';action='Servei'}else action='Defensa'}
  }
- slots.forEach((slot,i)=>slot.querySelectorAll('.rating').forEach(r=>r.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();const v=Number(r.textContent.trim());if(rescueMode){clickLegacy(i,'Salvada',v);rescueMode=false;pendingZero=null;if(v===0){const leftCast=document.getElementById('leftTeamName')?.textContent.trim()==='Castellar';document.getElementById(leftCast?'rightPlus':'leftPlus')?.click();server='rival';action='Recepció';}else{action='Col·locació';}txt(last,'Salvada '+v+' registrada'+(v===0?' · punt rival':' · continua → Col·locació'));setTimeout(sync,10);return} const a=action;pushUI();if(!clickLegacy(i,a,v)){uiHistory.pop();return;} if((a==='Recepció'||a==='Defensa')&&v===0)pendingZero={i,a};else pendingZero=null;next(a,v);txt(last,a+' '+v);setTimeout(sync,10)})));
- slots.slice(0,3).forEach((slot,i)=>slot.querySelectorAll('.block-control .b').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();const v=Number(b.querySelector('strong')?.textContent);pushUI();clickLegacy(i,'Bloqueig',v);action=v===1?'Defensa':(v===2?'Servei':'Recepció');server=v===2?'castellar':(v===0?'rival':server);txt(last,'Bloqueig '+v);setTimeout(sync,10)})));
+ slots.forEach((slot,i)=>slot.querySelectorAll('.rating').forEach(r=>r.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();const v=Number(r.textContent.trim());if(rescueMode){clickLegacy(i,'Salvada',v);rescueMode=false;pendingZero=null;if(v===0){const leftCast=document.getElementById('leftTeamName')?.textContent.trim()==='Castellar';document.getElementById(leftCast?'rightPlus':'leftPlus')?.click();server='rival';action='Recepció';}else{action='Col·locació';}txt(last,'Salvada '+v+' registrada'+(v===0?' · punt rival':' · continua → Col·locació'));setTimeout(sync,10);return} const a=action;pushUI(a+' · '+playerLabel(i)+' · '+v);if(!clickLegacy(i,a,v)){uiHistory.pop();updateUndoLabel();return;} if((a==='Recepció'||a==='Defensa')&&v===0)pendingZero={i,a};else pendingZero=null;next(a,v);txt(last,a+' '+v);setTimeout(sync,10)})));
+ slots.slice(0,3).forEach((slot,i)=>slot.querySelectorAll('.block-control .b').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();const v=Number(b.querySelector('strong')?.textContent);pushUI('Bloqueig · '+playerLabel(i)+' · '+v);clickLegacy(i,'Bloqueig',v);action=v===1?'Defensa':(v===2?'Servei':'Recepció');server=v===2?'castellar':(v===0?'rival':server);txt(last,'Bloqueig '+v);setTimeout(sync,10)})));
  rescue?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(rescueMode){rescueMode=false;const leftCast=document.getElementById('leftTeamName')?.textContent.trim()==='Castellar';document.getElementById(leftCast?'rightPlus':'leftPlus')?.click();server='rival';action='Recepció';txt(last,'🆘 cancel·lat · punt rival restaurat');setTimeout(sync,10);return}if(!pendingZero){if(note){note.textContent='🆘 només disponible després d’una Recepció 0 o Defensa 0';note.classList.add('show');setTimeout(()=>{if(!rescueMode)note.classList.remove('show')},1300)}return}window.__statsProvaEngine?.undo?.();window.__statsProvaSuppressAward=true;clickLegacy(pendingZero.i,pendingZero.a,0);window.__statsProvaSuppressAward=false;rescueSnapshot={...pendingZero};rescueMode=true;txt(last,'🆘 actiu · 0 conservat i punt rival anul·lat · selecciona la salvadora');setTimeout(sync,10)});
  root.querySelector('.rival-touch-zone')?.addEventListener('click',()=>{action='Defensa';pendingZero=null;rescueMode=false;txt(last,'CAMP RIVAL → Defensa');sync()});
  root.querySelector('.rival-label')?.addEventListener('click',()=>{action='Defensa';pendingZero=null;rescueMode=false;txt(last,'CAMP RIVAL → Defensa');sync()});
@@ -4427,10 +4443,10 @@ document.addEventListener('DOMContentLoaded', () => {
  const visualScores=root.querySelectorAll('.scorebox');visualScores.forEach((box,idx)=>{
    box.querySelector('.plus')?.addEventListener('click',e=>{
      e.preventDefault();e.stopPropagation();
-     pushUI();
      const side=idx===0?'castellar':'rival';
+     pushUI('Punt '+(side==='castellar'?'Castellar':'rival'));
      const ok=window.__statsProvaEngine?.manualPoint?.(side,1);
-     if(!ok){uiHistory.pop();return;}
+     if(!ok){uiHistory.pop();updateUndoLabel();return;}
      /* Un + és el final real del rally. El motor decide servei/rotació;
         la Capa 7 només deriva la següent acció del servei resultant. */
      const st=window.__statsProvaEngine?.state?.();
@@ -4440,15 +4456,15 @@ document.addEventListener('DOMContentLoaded', () => {
      setTimeout(sync,10);
    });
    box.querySelector('.minus')?.addEventListener('click',e=>{
-     e.preventDefault();e.stopPropagation();pushUI();
-     const ok=window.__statsProvaEngine?.manualPoint?.(idx===0?'castellar':'rival',-1);
-     if(!ok)uiHistory.pop();
+     e.preventDefault();e.stopPropagation();const side=idx===0?'castellar':'rival';pushUI('Correcció marcador · −1 '+(side==='castellar'?'Castellar':'rival'));
+     const ok=window.__statsProvaEngine?.manualPoint?.(side,-1);
+     if(!ok){uiHistory.pop();updateUndoLabel();}
      setTimeout(sync,10);
    });
  });
 
 
- slots.forEach((slot,i)=>slot.querySelector('.player-id')?.addEventListener('click',e=>{if(!swapMode)return;e.preventDefault();e.stopPropagation();swapMode=false;root.querySelector('.swap')?.classList.remove('active');window.__statsProvaEngine?.substituteByPosition?.(posOrder[i]);}));
+ slots.forEach((slot,i)=>slot.querySelector('.player-id')?.addEventListener('click',e=>{if(!swapMode)return;e.preventDefault();e.stopPropagation();swapMode=false;root.querySelector('.swap')?.classList.remove('active');pushUI('Canvi · surt '+playerLabel(i));const ok=window.__statsProvaEngine?.substituteByPosition?.(posOrder[i]);if(!ok){uiHistory.pop();updateUndoLabel();}}));
  /* v0.3.7: els diàlegs funcionals no poden quedar dins .legacy-scoring-engine,
     perquè aquesta capa està amagada. Els traiem al body mantenint els mateixos IDs
     i els handlers originals del motor. */
@@ -4491,11 +4507,11 @@ document.addEventListener('DOMContentLoaded', () => {
    e.preventDefault();e.stopPropagation();
    if(undo){
      const ok=window.__statsProvaEngine?.undo?.();
-     if(ok){const u=uiHistory.pop();if(u){action=u.action;server=u.server;pendingZero=u.pendingZero;rescueMode=u.rescueMode}else{pendingZero=null;rescueMode=false}txt(last,'DESFER · última acció anul·lada');}
+     if(ok){const u=uiHistory.pop();if(u){action=u.action;server=u.server;pendingZero=u.pendingZero;rescueMode=u.rescueMode}else{pendingZero=null;rescueMode=false}txt(last,'DESFET · '+(u?.description||'última operació'));updateUndoLabel();}
      setTimeout(sync,10);return;
    }
    if(home){window.__statsProvaEngine?.goHome?.();return;}
-   if(rot){pushUI();const ok=window.__statsProvaEngine?.rotateManual?.();if(!ok)uiHistory.pop();else txt(last,'ROTACIÓ manual');setTimeout(sync,10);return;}
+   if(rot){pushUI('Rotació manual');const ok=window.__statsProvaEngine?.rotateManual?.();if(!ok){uiHistory.pop();updateUndoLabel();}else txt(last,'ROTACIÓ manual');setTimeout(sync,10);return;}
    if(sw){swapMode=!swapMode;txt(last,swapMode?'CANVI JUG. · toca el nom de la jugadora que surt':'CANVI JUG. cancel·lat');sw.classList.toggle('active',swapMode);return;}
    if(end){window.__statsProvaEngine?.finishSet?.();return;}
    if(fin){confirmFinishMatch();return;}
@@ -4503,8 +4519,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
- document.addEventListener('stats-start-scoring',e=>{server=e.detail.serving||'castellar';action=server==='castellar'?'Servei':'Recepció';rescueMode=false;pendingZero=null;swapMode=false;uiHistory.length=0;setTimeout(sync,30)});
+ document.addEventListener('stats-start-scoring',e=>{server=e.detail.serving||'castellar';action=server==='castellar'?'Servei':'Recepció';rescueMode=false;pendingZero=null;swapMode=false;uiHistory.length=0;updateUndoLabel();setTimeout(sync,30)});
  /* v0.3.1: no MutationObserver here. sync() itself changes the scoring DOM; observing that subtree caused a feedback loop when entering a set. All scoring actions already call sync() explicitly. */
+ updateUndoLabel();
  setTimeout(sync,50);
 })();
 </script>
