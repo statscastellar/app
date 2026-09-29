@@ -1121,7 +1121,7 @@ body:has(#scoring.active) main{width:100%!important;max-width:none!important;mar
 
 /* CAPA 5: zones funcionals superposades */
 .rival-label{
- position:absolute;left:50%;top:8.2%;transform:translateX(-50%);
+ position:absolute;left:50%;top:5.4%;transform:translateX(-50%);
  text-align:center;z-index:4;pointer-events:none;
  text-shadow:0 2px 5px rgba(0,0,0,.75);
 }
@@ -1178,7 +1178,7 @@ body:has(#scoring.active) main{width:100%!important;max-width:none!important;mar
 /* CAPA 6b: bloqueig de les tres davanteres + indicador de sacadora */
 .player-slot.front{overflow:visible}
 .block-control{
- position:absolute;z-index:7;left:1.5%;right:1.5%;top:-18%;
+ position:absolute;z-index:7;left:1.5%;right:1.5%;top:-23%;
  height:15%;min-height:25px;
  display:grid;grid-template-columns:1fr 1.35fr 1fr;
  gap:3px;padding:3px;
@@ -1254,7 +1254,7 @@ body:has(#scoring.active) main{width:100%!important;max-width:none!important;mar
 }
 
 /* CAPA 7b — capçalera i barra de partit definitives */
-.header{grid-template-columns:18% 25% 14% 25% 18%;padding:.7vh .6vw;gap:.45vw}
+.header{grid-template-columns:minmax(0,18fr) minmax(0,25fr) minmax(0,14fr) minmax(0,25fr) minmax(0,18fr);padding:.7vh .6vw;gap:.45vw}
 .zone{position:relative;overflow:hidden}
 .action-final{flex-direction:column;border-color:rgba(243,154,45,.65);background:linear-gradient(180deg,rgba(32,23,13,.95),rgba(11,18,25,.96))}
 .action-final .eyebrow,.scorebox .eyebrow,.setbox .eyebrow,.undo-final small{font-size:clamp(7px,.62vw,10px);letter-spacing:.11em;color:#8da4b5;font-weight:900}
@@ -1333,7 +1333,7 @@ body:has(#scoring.active) main{width:100%!important;max-width:none!important;mar
 </style>
 
 <style id="prova-v039-final-ui-fixes">
-/* v0.4.0 — orientació i fullscreen finals.
+/* v0.4.2 — orientació i fullscreen finals.
    Cap pantalla general queda bloquejada en vertical. Només l'anotació del partit exigeix horitzontal. */
 body::after{content:none!important;display:none!important}
 body.scoring-live{position:fixed!important;inset:0!important;width:100dvw!important;height:100dvh!important;margin:0!important;padding:0!important;overflow:hidden!important;overscroll-behavior:none!important;background:#02070c!important}
@@ -1459,7 +1459,7 @@ body:not(.scoring-live)::before, body:not(.scoring-live)::after{content:none!imp
         <button class="home-btn teams" type="button" data-go="teams"><span class="ico">♟</span><span>EQUIPS</span><span class="chev">›</span></button>
         <button class="home-btn settings" type="button" data-go="settings"><span class="ico">⚙</span><span>CONFIGURACIÓ</span><span class="chev">›</span></button>
       </nav>
-      <div class="home-credit">Creat per Curu · <strong>PROVA v0.4.0</strong></div>
+      <div class="home-credit">Creat per Curu · <strong>PROVA v0.4.2</strong></div>
     </div>
   </section>
 
@@ -1836,7 +1836,7 @@ body:not(.scoring-live)::before, body:not(.scoring-live)::after{content:none!imp
         <div class="settings-section-head"><div class="settings-icon">▣</div><div><h2 class="settings-title">Informació de l’app</h2></div></div>
         <div class="app-info-grid">
           <div class="label">Nom</div><div class="value">Stats Castellar</div>
-          <div class="label">Versió</div><div class="value">PROVA v0.4.0</div>
+          <div class="label">Versió</div><div class="value">PROVA v0.4.2</div>
           <div class="label">Data de creació</div><div class="value">Setembre del 2026</div>
           <div class="label">Última actualització</div><div class="value">27/09/2026</div>
         </div>
@@ -4298,9 +4298,7 @@ document.addEventListener('DOMContentLoaded', () => {
    if(match)save();
    match=null;history.length=0;swapSource=null;
    $('leaveMatchModal').hidden=true;
-   const bridge=document.createElement('button');
-   bridge.type='button';bridge.dataset.go='home';bridge.style.display='none';
-   document.body.appendChild(bridge);bridge.click();bridge.remove();
+   if(typeof window.statsNavigate==='function') window.statsNavigate('home',false);
  };
 
  /* Botó de portada Recuperar partit:
