@@ -1344,7 +1344,7 @@ body:has(#scoring.active) main{width:100%!important;max-width:none!important;mar
 </style>
 
 <style id="prova-v039-final-ui-fixes">
-/* v0.5.2 — orientació i fullscreen finals.
+/* v0.5.3 — orientació i fullscreen finals.
    Cap pantalla general queda bloquejada en vertical. Només l'anotació del partit exigeix horitzontal. */
 body::after{content:none!important;display:none!important}
 body.scoring-live{position:fixed!important;inset:0!important;width:100dvw!important;height:100dvh!important;margin:0!important;padding:0!important;overflow:hidden!important;overscroll-behavior:none!important;background:#02070c!important}
@@ -1395,11 +1395,15 @@ body:not(.scoring-live)::before, body:not(.scoring-live)::after{content:none!imp
   body:not(.scoring-live) #scoring:not(.active){display:none!important}
 }
 </style>
-<style id="match-layout-v052">
+<style id="match-layout-v053">
 #scoring.active,#scoring.active *{box-sizing:border-box}
 #scoring.active .header>*{min-width:0}
 #scoring.active .footer>*{min-width:0}
 #scoring.active .prototype{max-width:100%;max-height:100%}
+</style>
+<style id="home-modal-fix-v053">
+#leaveMatchModal[hidden]{display:none!important}
+#leaveMatchModal:not([hidden]){display:grid!important;z-index:2147483647!important}
 </style>
 </head>
 <body>
@@ -1484,7 +1488,7 @@ body:not(.scoring-live)::before, body:not(.scoring-live)::after{content:none!imp
         <button class="home-btn teams" type="button" data-go="teams"><span class="ico">♟</span><span>EQUIPS</span><span class="chev">›</span></button>
         <button class="home-btn settings" type="button" data-go="settings"><span class="ico">⚙</span><span>CONFIGURACIÓ</span><span class="chev">›</span></button>
       </nav>
-      <div class="home-credit">Creat per Curu · <strong>PROVA v0.5.2</strong></div>
+      <div class="home-credit">Creat per Curu · <strong>PROVA v0.5.3</strong></div>
     </div>
   </section>
 
@@ -1861,7 +1865,7 @@ body:not(.scoring-live)::before, body:not(.scoring-live)::after{content:none!imp
         <div class="settings-section-head"><div class="settings-icon">▣</div><div><h2 class="settings-title">Informació de l’app</h2></div></div>
         <div class="app-info-grid">
           <div class="label">Nom</div><div class="value">Stats Castellar</div>
-          <div class="label">Versió</div><div class="value">PROVA v0.5.2</div>
+          <div class="label">Versió</div><div class="value">PROVA v0.5.3</div>
           <div class="label">Data de creació</div><div class="value">Setembre del 2026</div>
           <div class="label">Última actualització</div><div class="value">27/09/2026</div>
         </div>
@@ -4322,7 +4326,7 @@ document.addEventListener('DOMContentLoaded', () => {
  $('leaveMatch').onclick=()=>{
    if(match)save();
    history.length=0;swapSource=null;
-   $('leaveMatchModal').hidden=true;
+   const leaveModal=$('leaveMatchModal');leaveModal.hidden=true;leaveModal.style.display='';leaveModal.setAttribute('aria-hidden','true');
    const screens=document.querySelectorAll('.screen');
    screens.forEach(x=>x.classList.remove('active'));
    const home=document.getElementById('home');
@@ -4461,7 +4465,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- Stats Castellar Base 1.8.1: exportacions segons model ODS -->
 
-<script id="match-controller-v052">
+<script id="match-controller-v053">
 (()=>{
  const root=document.querySelector('#scoring .prototype'); if(!root)return;
  const slots=[...root.querySelectorAll('.player-slot')];
@@ -4570,10 +4574,9 @@ const undoWhat=root.querySelector('#provaUndoWhat');
     cap capa visual/interfície antiga intercepti el toc abans d'arribar aquí. */
  const directHome=root.querySelector('#provaHomeBtn');
  directHome?.addEventListener('click',e=>{
-   e.preventDefault();e.stopPropagation();
-   if(window.__statsProvaEngine?.goHome?.()) return;
+   e.preventDefault();e.stopImmediatePropagation();
    const modal=document.getElementById('leaveMatchModal');
-   if(modal) modal.hidden=false;
+   if(modal){modal.hidden=false;modal.style.display='grid';modal.setAttribute('aria-hidden','false');}
  });
  root.addEventListener('click',e=>{
    const t=e.target;
