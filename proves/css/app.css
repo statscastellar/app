@@ -1,0 +1,88 @@
+
+:root{--orange:#f36b00;--navy:#17283f;--bg:#eef3f8;--card:#fff;--text:#182230;--muted:#667085;--line:#d9e0e8}
+*{box-sizing:border-box}
+html,body{margin:0;min-width:100%;min-height:100%;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:var(--bg)}
+button{font:inherit}
+body{min-height:100dvh;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+#app{min-height:100dvh;display:flex;flex-direction:column}
+main{width:min(100%,960px);margin:0 auto;flex:1;padding:16px}
+.screen{display:none;min-height:calc(100dvh - 76px)}
+.screen.active{display:flex;flex-direction:column}
+.topbar{display:grid;grid-template-columns:48px 1fr 48px;align-items:center;min-height:52px;gap:8px;margin-bottom:16px}
+.topbar h1{font-size:22px;text-align:center;margin:0}
+.back{width:44px;height:44px;border:0;border-radius:12px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.10);font-size:25px;font-weight:800;cursor:pointer}
+.card{width:100%;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 4px 14px rgba(23,40,63,.07)}
+.placeholder{color:var(--muted);line-height:1.5}
+footer{flex:0 0 auto;text-align:center;padding:12px 16px max(12px,env(safe-area-inset-bottom));color:#667085;font-size:11px;font-weight:700;letter-spacing:.15em}
+
+/* ===== PORTADA DEFINITIVA · PUNT 2 ===== */
+body:has(#home.active){padding:0;background:#ef6500;overflow:auto}
+body:has(#home.active) main{width:100%;max-width:none;margin:0;padding:0}
+body:has(#home.active) footer{display:none}
+#home{
+  position:relative;isolation:isolate;overflow:hidden;
+  min-height:100dvh;
+  padding:max(20px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right))
+          max(18px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));
+  background:
+    radial-gradient(circle at 47% 24%,rgba(255,192,67,.55) 0 8%,rgba(255,144,18,.16) 31%,transparent 48%),
+    linear-gradient(145deg,#ff8610 0%,#f36a00 50%,#e44d00 100%);
+}
+#home::before{
+  content:"";position:absolute;z-index:-2;inset:-15%;
+  background:
+    linear-gradient(164deg,transparent 0 28%,rgba(117,46,0,.14) 28.3% 30.2%,transparent 30.5% 34%,rgba(255,174,62,.17) 34.2% 36%,transparent 36.3% 100%),
+    repeating-linear-gradient(166deg,transparent 0 34px,rgba(126,48,0,.035) 35px 37px,transparent 38px 67px);
+  transform:rotate(-2deg);
+}
+#home::after{
+  content:"";position:absolute;z-index:-1;right:-2%;top:13%;width:42%;height:72%;opacity:.18;
+  background:
+    radial-gradient(circle at 67% 6%,#672500 0 5.2%,transparent 5.5%),
+    radial-gradient(ellipse at 78% 59%,#672500 0 10%,transparent 10.5%);
+  clip-path:polygon(58% 0,79% 0,80% 23%,100% 34%,94% 39%,76% 29%,68% 48%,84% 60%,75% 100%,49% 100%,56% 63%,42% 45%,31% 32%,39% 26%,54% 37%);
+}
+.home-shell{width:min(100%,680px);margin:auto;min-height:calc(100dvh - 38px);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.home-brand{width:100%;text-align:center;display:flex;flex-direction:column;align-items:center}
+.home-title{margin:0;color:#fff;font-size:clamp(38px,9.4vw,66px);line-height:.95;font-weight:950;letter-spacing:-.035em;text-shadow:0 2px 3px rgba(74,27,0,.20)}
+.home-club{margin-top:8px;font-size:clamp(17px,4.1vw,28px);font-weight:900;letter-spacing:.10em;color:#111}
+.home-season{margin-top:7px;color:#fff;font-size:clamp(13px,3.4vw,21px);font-weight:400;letter-spacing:.27em}
+.crest{width:clamp(178px,45vw,300px);height:auto;margin:12px 0 2px;filter:drop-shadow(0 5px 5px rgba(75,29,0,.20))}
+.home-script{position:relative;margin:2px 0 0;font-family:"Segoe Script","Brush Script MT","Snell Roundhand","URW Chancery L",cursive;font-size:clamp(33px,8.5vw,60px);font-weight:700;font-style:italic;line-height:1;color:#101010;transform:rotate(-2deg)}
+.home-script::after{content:"";position:absolute;left:7%;right:1%;bottom:-7px;height:3px;background:#111;transform:rotate(-2deg);border-radius:50%}
+.home-since{margin:13px 0 17px;font-size:clamp(12px,3vw,18px);font-weight:900;letter-spacing:.30em;color:#111}
+.home-menu{width:100%;display:flex;flex-direction:column;gap:10px}
+.home-btn{width:100%;min-height:clamp(58px,7.1vh,70px);border:0;border-radius:17px;padding:0 18px;display:grid;grid-template-columns:48px 1fr 30px;align-items:center;color:#fff;text-align:left;font-size:clamp(15px,3.7vw,20px);font-weight:850;box-shadow:0 6px 13px rgba(96,36,0,.20);cursor:pointer}
+.home-btn .ico{font-size:30px;text-align:center;line-height:1}
+.home-btn .chev{font-size:39px;font-weight:300;text-align:right;line-height:1}
+.home-btn.new{background:linear-gradient(90deg,#064978,#08659d)}
+.home-btn.recover{background:linear-gradient(90deg,#e6a800,#ffc51c)}
+.home-btn.history{background:linear-gradient(90deg,#158c3d,#32a65b)}
+.home-btn.teams{background:linear-gradient(90deg,#ce1e23,#e32c31)}
+.home-btn.settings{background:linear-gradient(90deg,#5728c8,#7852e0)}
+.home-credit{margin-top:16px;color:#17110c;font-size:11px;font-weight:700;letter-spacing:.18em}
+
+/* Horitzontal: aprofitem amplada, sense estirar la portada */
+@media (orientation:landscape) and (min-width:700px){
+  #home{align-items:center;justify-content:center}
+  .home-shell{width:min(94vw,1120px);min-height:calc(100dvh - 30px);display:grid;grid-template-columns:minmax(300px,.85fr) minmax(420px,1.15fr);grid-template-areas:"brand menu" "credit credit";gap:10px clamp(34px,6vw,80px)}
+  .home-brand{grid-area:brand}
+  .home-menu{grid-area:menu;gap:12px}
+  .home-credit{grid-area:credit;text-align:center;margin-top:0}
+  .home-title{font-size:clamp(40px,5.4vw,64px)}
+  .home-club{font-size:clamp(17px,2.25vw,25px)}
+  .home-season{font-size:clamp(12px,1.65vw,18px)}
+  .crest{width:clamp(145px,19vh,225px);margin:7px 0 0}
+  .home-script{font-size:clamp(30px,4.1vw,50px)}
+  .home-since{margin:10px 0 0;font-size:clamp(11px,1.4vw,16px)}
+  .home-btn{min-height:58px;font-size:17px}
+}
+@media(max-width:420px){
+  main{padding:12px}.card{padding:16px}.topbar h1{font-size:19px}
+  .home-shell{justify-content:flex-start;padding-top:6px}
+  .home-title{font-size:clamp(34px,10vw,44px)}
+  .crest{width:clamp(150px,42vw,190px);margin-top:9px}
+  .home-script{font-size:clamp(29px,8.5vw,38px)}
+  .home-since{margin-bottom:13px}
+  .home-btn{min-height:56px}
+}
