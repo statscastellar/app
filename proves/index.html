@@ -1333,13 +1333,13 @@ body:has(#scoring.active) main{width:100%!important;max-width:none!important;mar
 </style>
 
 <style id="prova-v039-final-ui-fixes">
-/* v0.4.2 — orientació i fullscreen finals.
+/* v0.4.4 — orientació i fullscreen finals.
    Cap pantalla general queda bloquejada en vertical. Només l'anotació del partit exigeix horitzontal. */
 body::after{content:none!important;display:none!important}
 body.scoring-live{position:fixed!important;inset:0!important;width:100dvw!important;height:100dvh!important;margin:0!important;padding:0!important;overflow:hidden!important;overscroll-behavior:none!important;background:#02070c!important}
 body.scoring-live>footer{display:none!important}
-body.scoring-live #scoring.active{position:fixed!important;inset:0!important;width:100dvw!important;height:100dvh!important;min-height:100dvh!important;margin:0!important;padding:0!important;overflow:hidden!important;z-index:90000!important}
-body.scoring-live #scoring.active .prototype{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;margin:0!important;padding:0!important;overflow:hidden!important}
+body.scoring-live #scoring.active{position:fixed!important;top:max(4px,env(safe-area-inset-top))!important;right:max(6px,env(safe-area-inset-right))!important;bottom:max(4px,env(safe-area-inset-bottom))!important;left:max(6px,env(safe-area-inset-left))!important;width:auto!important;height:auto!important;min-height:0!important;margin:0!important;padding:0!important;overflow:hidden!important;z-index:90000!important}
+body.scoring-live #scoring.active .prototype{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;margin:0!important;padding:0!important;overflow:hidden!important}
 @media (orientation:portrait){
   body:not(.scoring-live)::after{content:none!important;display:none!important}
   body.scoring-live #scoring.active .prototype{display:none!important}
@@ -1459,7 +1459,7 @@ body:not(.scoring-live)::before, body:not(.scoring-live)::after{content:none!imp
         <button class="home-btn teams" type="button" data-go="teams"><span class="ico">♟</span><span>EQUIPS</span><span class="chev">›</span></button>
         <button class="home-btn settings" type="button" data-go="settings"><span class="ico">⚙</span><span>CONFIGURACIÓ</span><span class="chev">›</span></button>
       </nav>
-      <div class="home-credit">Creat per Curu · <strong>PROVA v0.4.2</strong></div>
+      <div class="home-credit">Creat per Curu · <strong>PROVA v0.4.4</strong></div>
     </div>
   </section>
 
@@ -1836,7 +1836,7 @@ body:not(.scoring-live)::before, body:not(.scoring-live)::after{content:none!imp
         <div class="settings-section-head"><div class="settings-icon">▣</div><div><h2 class="settings-title">Informació de l’app</h2></div></div>
         <div class="app-info-grid">
           <div class="label">Nom</div><div class="value">Stats Castellar</div>
-          <div class="label">Versió</div><div class="value">PROVA v0.4.2</div>
+          <div class="label">Versió</div><div class="value">PROVA v0.4.4</div>
           <div class="label">Data de creació</div><div class="value">Setembre del 2026</div>
           <div class="label">Última actualització</div><div class="value">27/09/2026</div>
         </div>
@@ -4298,7 +4298,13 @@ document.addEventListener('DOMContentLoaded', () => {
    if(match)save();
    match=null;history.length=0;swapSource=null;
    $('leaveMatchModal').hidden=true;
-   if(typeof window.statsNavigate==='function') window.statsNavigate('home',false);
+   /* v0.4.4: sortida directa i neta de la vista de partit. */
+   document.body.classList.remove('scoring-live');
+   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+   const homeScreen=document.getElementById('home');
+   if(homeScreen) homeScreen.classList.add('active');
+   window.scrollTo(0,0);
+   updateRecoverHome();
  };
 
  /* Botó de portada Recuperar partit:
