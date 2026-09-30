@@ -199,3 +199,42 @@ body{min-height:100dvh}
     width:clamp(58px,6vw,82px);
   }
 }
+
+/* Capa 6 · correcció Safari iPhone real
+   Manté la geometria aprovada: només assegura la llegibilitat interna
+   dels bloqueigs i redimensiona la pilota en pantalles baixes. */
+@media (orientation:landscape) and (max-height:450px){
+  .block-slot span{
+    display:grid;
+    grid-template-rows:52% 48%;
+    align-items:stretch;
+    justify-items:center;
+    gap:0;
+    padding:0 1px;
+    overflow:hidden;
+  }
+  .block-slot b{
+    align-self:end;
+    font-size:clamp(10px,1.15vw,14px);
+    line-height:.95;
+  }
+  .block-slot small{
+    display:block !important;
+    align-self:start;
+    width:100%;
+    margin:0;
+    padding:1px 1px 0;
+    font-size:clamp(5px,.60vw,7px);
+    line-height:1;
+    font-weight:900;
+    letter-spacing:-.03em;
+    text-align:center;
+    white-space:nowrap;
+    overflow:visible;
+  }
+  .server-ball{
+    width:clamp(40px,4.35vw,52px);
+    right:-.8%;
+    top:-6%;
+  }
+}
