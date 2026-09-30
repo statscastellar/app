@@ -35,3 +35,27 @@ body{min-height:100dvh}
  .info{font-size:clamp(5px,1.35vw,9px)}
 }
 @media(max-height:430px) and (orientation:landscape){.header{padding:.55vh .7vw}.footer{padding:.4vh .7vw}.player-grid{top:25.2%;bottom:1.5%}.block-grid{top:19.4%;height:4.6%}.rival-label{top:2.5%}.rival-label span{font-size:clamp(7px,.72vw,11px)}}
+
+/* Capa 5 — correcció definitiva de geometria en horitzontal.
+   Les barres de bloqueig i la fila d'atacants ocupen franges independents. */
+@media (orientation:landscape){
+  .block-grid{
+    left:2.2%;
+    right:2.2%;
+    top:19.0%;
+    height:5.0%;
+    column-gap:1.15%;
+  }
+  .player-grid{
+    left:2.2%;
+    right:2.2%;
+    top:27.0%;
+    bottom:1.8%;
+    column-gap:1.15%;
+    row-gap:2.2%;
+  }
+}
+@media (max-height:430px) and (orientation:landscape){
+  .block-grid{top:18.8%;height:5.0%}
+  .player-grid{top:27.0%;bottom:1.5%}
+}
