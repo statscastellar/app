@@ -479,3 +479,17 @@ button{font:inherit;color:inherit}
 .player-slot.position-mode{touch-action:none;-webkit-user-select:none;user-select:none}
 .player-slot.position-mode.drop-target{outline:3px solid rgba(255,255,255,.92);box-shadow:0 0 18px rgba(255,255,255,.48)}
 body.position-dragging{overflow:hidden;touch-action:none}
+
+/* =========================================================
+   CAPA 7 v7.0.2 — CORRECCIONS QUIRÚRGIQUES
+   - BLOQUEIG: recupera interacció tàctil sense alterar geometria.
+   ========================================================= */
+.block-grid{pointer-events:auto}
+.block-slot{pointer-events:auto}
+.block-slot>button{
+  pointer-events:auto;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;
+  z-index:1;
+}

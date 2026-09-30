@@ -10,10 +10,10 @@ const byNum = n => ROSTER.find(p=>p.n===Number(n));
 const deep = x => JSON.parse(JSON.stringify(x));
 
 const initial = {
- version:'7.0.1', rival:'SANT CUGAT', score:{home:0,away:0}, set:1,
+ version:'7.0.2', rival:'SANT CUGAT', score:{home:0,away:0}, set:1,
  setResults:[null,null,null,null,null], serving:'away', phase:'RECEPCIÓ', temp:null,
  court:[3,4,6,28,13,18], // zones visuals 4,3,2 / 5,6,1
- history:[], actions:[], sos:null, rivalTransit:false, rivalCourtAvailable:false, finished:false
+ history:[], actions:[], sos:null, rivalTransit:false, rivalCourtAvailable:false, scoreCorrection:{home:0,away:0}, finished:false
 };
 let S = loadRecovery() || deep(initial);
 let positionsStart = null;
@@ -43,7 +43,8 @@ function persist(){
 function loadRecovery(){
  try{
   const x=JSON.parse(localStorage.getItem('statsCastellarC7Recovery')||'null');
-  return x && ['7.0.0','7.0.1'].includes(x.version) && !x.finished ? {...x,version:'7.0.1',rivalCourtAvailable:false} : null;
+  if(!x || !['7.0.0','7.0.1','7.0.2'].includes(x.version) || x.finished) return null;
+  return {...x,version:'7.0.2',rivalCourtAvailable:false,scoreCorrection:x.scoreCorrection||{home:0,away:0}};
  }catch(_){ return null; }
 }
 function toast(msg){
@@ -72,6 +73,21 @@ function award(team, source, manual=false){
  phaseAfterPoint();
 }
 function manualPlus(team){
+ const key=team==='home'?'home':'away';
+ S.scoreCorrection=S.scoreCorrection||{home:0,away:0};
+
+ // Si abans s'ha tret manualment un punt d'aquest equip, el + és una
+ // correcció del marcador: recupera només el número i NO altera servei,
+ // rotació, posicions ni fase de joc.
+ if(S.scoreCorrection[key]>0){
+   snapshot(`CORRECCIÓ + ${team==='home'?'CASTELLAR':'RIVAL'}`);
+   S.score[key]++;
+   S.scoreCorrection[key]--;
+   pushAction('CORRECCIÓ_MARCADOR',{team,delta:+1});
+   persist(); render(); return;
+ }
+
+ // Sense una correcció pendent, + continua significat "punt de rally".
  snapshot(`PUNT + ${team==='home'?'CASTELLAR':'RIVAL'}`);
  award(team,'MARCADOR',true); persist(); render();
 }
@@ -88,7 +104,11 @@ function manualMinus(team){
    S.history.pop(); restore(last.state); return;
  }
  snapshot(`CORRECCIÓ − ${team==='home'?'CASTELLAR':'RIVAL'}`);
- S.score[key]--; pushAction('CORRECCIÓ_MARCADOR',{team,delta:-1}); persist(); render();
+ S.scoreCorrection=S.scoreCorrection||{home:0,away:0};
+ S.score[key]--;
+ S.scoreCorrection[key]++;
+ pushAction('CORRECCIÓ_MARCADOR',{team,delta:-1});
+ persist(); render();
 }
 function actionNameForPhase(){
  if(S.sos?.active) return 'SALVADA';
