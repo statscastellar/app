@@ -10,10 +10,10 @@ const byNum = n => ROSTER.find(p=>p.n===Number(n));
 const deep = x => JSON.parse(JSON.stringify(x));
 
 const initial = {
- version:'7.0.0', rival:'SANT CUGAT', score:{home:0,away:0}, set:1,
+ version:'7.0.1', rival:'SANT CUGAT', score:{home:0,away:0}, set:1,
  setResults:[null,null,null,null,null], serving:'away', phase:'RECEPCIÓ', temp:null,
  court:[3,4,6,28,13,18], // zones visuals 4,3,2 / 5,6,1
- history:[], actions:[], sos:null, rivalTransit:false, finished:false
+ history:[], actions:[], sos:null, rivalTransit:false, rivalCourtAvailable:false, finished:false
 };
 let S = loadRecovery() || deep(initial);
 let positionsStart = null;
@@ -43,7 +43,7 @@ function persist(){
 function loadRecovery(){
  try{
   const x=JSON.parse(localStorage.getItem('statsCastellarC7Recovery')||'null');
-  return x && x.version==='7.0.0' && !x.finished ? x : null;
+  return x && ['7.0.0','7.0.1'].includes(x.version) && !x.finished ? {...x,version:'7.0.1',rivalCourtAvailable:false} : null;
  }catch(_){ return null; }
 }
 function toast(msg){
@@ -51,7 +51,7 @@ function toast(msg){
  t.textContent=msg;t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,1500);
 }
 function phaseAfterPoint(){
- S.rivalTransit=false; S.sos=null;
+ S.rivalTransit=false; S.rivalCourtAvailable=false; S.sos=null;
  S.phase = S.serving==='home' ? 'SERVEI' : 'RECEPCIÓ';
 }
 function rotateHome(){
@@ -77,10 +77,14 @@ function manualPlus(team){
 }
 function manualMinus(team){
  const key=team==='home'?'home':'away';
+ const other=team==='home'?'away':'home';
  if(S.score[key]<=0) return;
- // If the immediately previous registered action is a point, undo the whole unit.
+ // Només desfem el paquet complet si l'últim estat reversible correspon
+ // inequívocament a l'últim punt d'aquest mateix equip i no hi ha cap acció posterior.
  const last=S.history[S.history.length-1];
- if(last && /^PUNT|SERVEI|ATAC|BLOQUEIG|COL·LOCACIÓ|RECEPCIÓ|DEFENSA/.test(last.label)){
+ if(last && last.state &&
+    S.score[key]===last.state.score[key]+1 &&
+    S.score[other]===last.state.score[other]){
    S.history.pop(); restore(last.state); return;
  }
  snapshot(`CORRECCIÓ − ${team==='home'?'CASTELLAR':'RIVAL'}`);
@@ -101,6 +105,7 @@ function ratePlayer(index, value){
    persist(); render(); return;
  }
  const ph=S.phase;
+ S.rivalCourtAvailable=false;
  if(!['SERVEI','RECEPCIÓ','DEFENSA','COL·LOCACIÓ','ATAC'].includes(ph)) return;
  if(ph==='SERVEI' && index!==5) return; // zone 1 only
  snapshot(`${ph} · ${p.name} · ${value}`);
@@ -116,10 +121,10 @@ function ratePlayer(index, value){
      const beforePoint=deep(S); delete beforePoint.history;
      award('away',`${ph} 0`);
      S.sos={available:true,active:false,origin:{phase:ph,player:p.n},beforePoint};
-   } else S.phase='COL·LOCACIÓ';
+   } else { S.phase='COL·LOCACIÓ'; S.rivalCourtAvailable=true; }
  } else if(ph==='COL·LOCACIÓ'){
    if(value===0) award('away','COL·LOCACIÓ 0');
-   else S.phase='ATAC';
+   else { S.phase='ATAC'; S.rivalCourtAvailable=true; }
  } else if(ph==='ATAC'){
    if(value===0) award('away','ATAC 0');
    else if(value===3) award('home','ATAC 3');
@@ -128,9 +133,12 @@ function ratePlayer(index, value){
  persist(); render();
 }
 function rivalCourt(){
- if(S.temp || !['RECEPCIÓ','DEFENSA','COL·LOCACIÓ','BLOQUEIG'].includes(S.phase)) return;
- snapshot(`CAMP RIVAL · ${S.phase}`);
- pushAction('CAMP_RIVAL',{from:S.phase});
+ if(S.temp || !S.rivalCourtAvailable) return;
+ const last=S.actions[S.actions.length-1];
+ const from=last?.type || 'ACCIÓ';
+ snapshot(`CAMP RIVAL · ${from}`);
+ pushAction('CAMP_RIVAL',{from});
+ S.rivalCourtAvailable=false;
  S.rivalTransit=true;
  S.phase='DEFENSA';
  persist(); render();
@@ -140,10 +148,10 @@ function block(index, value){
  const p=byNum(S.court[index]); if(!p) return;
  snapshot(`BLOQUEIG · ${p.name} · ${value}`);
  pushAction('BLOQUEIG',{player:p.n,value});
- S.phase='BLOQUEIG'; S.rivalTransit=false;
+ S.phase='BLOQUEIG'; S.rivalTransit=false; S.rivalCourtAvailable=false;
  if(value===0) award('away','BLOQUEIG FORA');
  else if(value===2) award('home','BLOQUEIG + PUNT');
- else S.phase='DEFENSA';
+ else { S.phase='DEFENSA'; S.rivalCourtAvailable=true; }
  persist(); render();
 }
 function toggleSOS(){
@@ -301,12 +309,40 @@ function renderPlayers(){
   if(i===5){const ball=document.createElement('div');ball.className='server-ball';ball.hidden=!(S.serving==='home'&&S.phase==='SERVEI'&&!S.temp);slot.appendChild(ball);}
   const id=document.createElement('div');id.className='player-id';id.innerHTML=`<strong>${p.name}</strong><small>#${p.n}</small>`;slot.appendChild(id);
   slot.onclick=()=>chooseCourtForChange(i);
-  slot.ondragstart=e=>{if(S.temp!=='POSICIONS')return;dragIndex=i;slot.classList.add('dragging');e.dataTransfer.effectAllowed='move';};
-  slot.ondragend=()=>{slot.classList.remove('dragging');dragIndex=null};
-  slot.ondragover=e=>{if(S.temp==='POSICIONS')e.preventDefault()};
-  slot.ondrop=e=>{e.preventDefault();swapPositions(dragIndex,i)};
-  // touch swap: tap first, tap destination
-  if(S.temp==='POSICIONS') slot.onclick=()=>{if(dragIndex==null){dragIndex=i;slot.classList.add('change-selected')}else{swapPositions(dragIndex,i);dragIndex=null}};
+  if(S.temp==='POSICIONS'){
+    slot.onclick=null;
+    slot.onpointerdown=e=>{
+      e.preventDefault();
+      dragIndex=i;
+      slot.setPointerCapture?.(e.pointerId);
+      slot.classList.add('dragging');
+      document.body.classList.add('position-dragging');
+    };
+    slot.onpointermove=e=>{
+      if(dragIndex!==i) return;
+      e.preventDefault();
+      $$('.player-slot').forEach(x=>x.classList.remove('drop-target'));
+      const el=document.elementFromPoint(e.clientX,e.clientY)?.closest('.player-slot');
+      if(el && Number(el.dataset.index)!==i) el.classList.add('drop-target');
+    };
+    const finishDrag=e=>{
+      if(dragIndex!==i) return;
+      e.preventDefault();
+      const el=document.elementFromPoint(e.clientX,e.clientY)?.closest('.player-slot');
+      const target=el?Number(el.dataset.index):i;
+      $$('.player-slot').forEach(x=>x.classList.remove('dragging','drop-target'));
+      document.body.classList.remove('position-dragging');
+      dragIndex=null;
+      if(Number.isInteger(target) && target!==i) swapPositions(i,target);
+    };
+    slot.onpointerup=finishDrag;
+    slot.onpointercancel=e=>{
+      slot.classList.remove('dragging');
+      $$('.player-slot').forEach(x=>x.classList.remove('drop-target'));
+      document.body.classList.remove('position-dragging');
+      dragIndex=null;
+    };
+  }
   g.appendChild(slot);
  });
 }
@@ -326,7 +362,7 @@ function render(){
  const dots=$('#setDots');dots.innerHTML='';
  for(let i=0;i<5;i++){const d=document.createElement('i');if(S.setResults[i]==='home')d.className='won';else if(S.setResults[i]==='away')d.className='lost';else if(i===S.set-1)d.className='active';dots.appendChild(d);}
  const u=$('#undoBtn');u.disabled=!S.history.length;$('#undoLabel').textContent=S.history.length?S.history[S.history.length-1].label:'';
- const camp=$('#rivalCourtBtn');camp.disabled=!!S.temp||!['RECEPCIÓ','DEFENSA','COL·LOCACIÓ','BLOQUEIG'].includes(S.phase);camp.classList.toggle('enabled',!camp.disabled);
+ const camp=$('#rivalCourtBtn');camp.disabled=!!S.temp||!S.rivalCourtAvailable;camp.classList.toggle('enabled',!camp.disabled);
  $('#sosBtn').disabled=!(S.sos?.available||S.sos?.active)||!!S.temp;$('#sosBtn').classList.toggle('active-mode',!!S.sos?.active);
  $('#positionsBtn').classList.toggle('active-mode',S.temp==='POSICIONS');
  $('#changeBtn').classList.toggle('active-mode',S.temp==='CANVI DE JUGADORA');

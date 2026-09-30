@@ -472,3 +472,10 @@ button{font:inherit;color:inherit}
 
 .set-dots i.won{background:#35a06f;border-color:#55c28d;box-shadow:0 0 6px rgba(53,160,111,.65)}
 .set-dots i.lost{background:#bd3b48;border-color:#dc6670;box-shadow:0 0 6px rgba(189,59,72,.55)}
+
+
+/* C7 7.0.1 — correccions de validació iPhone */
+#finishMatchBtn.finish{border-color:#ff5a64;background:linear-gradient(180deg,#c92d39,#8d1721);color:#fff;box-shadow:0 0 0 1px rgba(255,90,100,.25),inset 0 1px rgba(255,255,255,.16)}
+.player-slot.position-mode{touch-action:none;-webkit-user-select:none;user-select:none}
+.player-slot.position-mode.drop-target{outline:3px solid rgba(255,255,255,.92);box-shadow:0 0 18px rgba(255,255,255,.48)}
+body.position-dragging{overflow:hidden;touch-action:none}
