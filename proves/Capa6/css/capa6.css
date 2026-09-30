@@ -294,3 +294,39 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
     top:-5px;
   }
 }
+
+
+/* C6 6.0.6 — bloqueig en una sola línia, robust a Safari */
+.block-slot span{
+  position:relative;
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  justify-content:center;
+  height:100%;
+  padding:0 2px;
+  font-size:clamp(6px,.58vw,10px);
+  line-height:1;
+  font-weight:900;
+  letter-spacing:-.02em;
+  text-align:center;
+  white-space:nowrap;
+  overflow:hidden;
+}
+@media (orientation:landscape) and (max-height:450px){
+  .block-slot span{
+    position:relative;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content:center;
+    height:100%;
+    padding:0 1px;
+    font-size:clamp(5.5px,.58vw,7px);
+    line-height:1;
+    font-weight:900;
+    letter-spacing:-.04em;
+    white-space:nowrap;
+    overflow:hidden;
+  }
+}
