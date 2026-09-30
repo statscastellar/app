@@ -42,7 +42,7 @@ body{min-height:100dvh}
   .block-grid{
     left:2.2%;
     right:2.2%;
-    top:19.0%;
+    top:17.0%;
     height:5.0%;
     column-gap:1.15%;
   }
@@ -56,6 +56,23 @@ body{min-height:100dvh}
   }
 }
 @media (max-height:430px) and (orientation:landscape){
-  .block-grid{top:18.8%;height:5.0%}
+  .block-grid{top:16.8%;height:5.0%}
   .player-grid{top:27.0%;bottom:1.5%}
+}
+
+
+/* Ajust final Capa 5: marges segurs en landscape i bloqueig una mica més alt.
+   max() conserva la safe area real quan el dispositiu en declara una i aporta
+   un marge mínim només quan el navegador la retorna a 0. */
+@media (orientation:landscape){
+  .safe-shell{
+    padding-top:var(--sat);
+    padding-bottom:var(--sab);
+    padding-left:max(var(--sal), 12px);
+    padding-right:max(var(--sar), 12px);
+  }
+  .block-grid{top:17.0%;}
+}
+@media (max-height:430px) and (orientation:landscape){
+  .block-grid{top:16.8%;}
 }
