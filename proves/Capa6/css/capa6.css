@@ -330,3 +330,28 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
     overflow:hidden;
   }
 }
+
+
+/* Capa 6 · v6.0.7 — SET en tres nivells: títol / número / punts */
+.set-zone{
+  gap:0;
+  justify-content:center;
+}
+.set-zone>.header-title{
+  display:block;
+  line-height:1;
+  margin:0 0 .18vh;
+}
+.set-number{
+  display:block;
+  color:#fff;
+  font-size:clamp(16px,1.6vw,27px);
+  line-height:.95;
+  margin:0 0 .32vh;
+}
+.set-dots{
+  line-height:1;
+}
+@media(orientation:portrait){
+  .set-number{font-size:clamp(10px,2.8vw,17px)}
+}
