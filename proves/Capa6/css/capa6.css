@@ -238,3 +238,59 @@ body{min-height:100dvh}
     top:-6%;
   }
 }
+
+/* C6 6.0.5 — correcció iPhone Safari + identificació de versió */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+
+@media (orientation:landscape) and (max-height:450px){
+  /* Posicionament absolut intern: Safari no pot col·lapsar la línia del text. */
+  .block-slot span{
+    position:relative;
+    display:block;
+    min-width:0;
+    height:100%;
+    padding:0;
+    overflow:hidden;
+  }
+  .block-slot b{
+    position:absolute;
+    z-index:2;
+    left:0;
+    right:0;
+    top:8%;
+    display:block;
+    margin:0;
+    font-size:clamp(9px,1.05vw,12px);
+    line-height:1;
+    text-align:center;
+  }
+  .block-slot small{
+    position:absolute;
+    z-index:2;
+    left:1px;
+    right:1px;
+    bottom:5%;
+    display:block !important;
+    visibility:visible !important;
+    opacity:1 !important;
+    height:auto !important;
+    min-height:1px;
+    margin:0;
+    padding:0;
+    font-size:5px !important;
+    line-height:1 !important;
+    font-weight:900;
+    letter-spacing:-.12px;
+    text-align:center;
+    white-space:nowrap;
+    overflow:visible;
+    transform:none !important;
+  }
+  /* Mida física més continguda per a l'iPhone en horitzontal. */
+  .server-ball{
+    width:44px;
+    max-width:44px;
+    right:-6px;
+    top:-5px;
+  }
+}
