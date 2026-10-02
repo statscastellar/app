@@ -130,4 +130,27 @@ html,body{position:fixed;inset:0;width:100%;height:100%;height:100dvh;overflow:h
 if(matchMedia('(orientation:landscape)').matches) document.body.appendChild(document.getElementById('calendar-pop'));
 const dateInput=document.getElementById('match-date'),dateLabel=document.getElementById('date-label'),calPop=document.getElementById('calendar-pop'),dateTrigger=document.getElementById('date-trigger');const today=new Date();let shownYear=today.getFullYear(),shownMonth=today.getMonth();const months=['gener','febrer','març','abril','maig','juny','juliol','agost','setembre','octubre','novembre','desembre'];const pad=n=>String(n).padStart(2,'0');function chooseDate(y,m,d){dateInput.value=`${y}-${pad(m+1)}-${pad(d)}`;dateLabel.textContent=`${pad(d)}/${pad(m+1)}/${y}`;shownYear=y;shownMonth=m;calPop.hidden=true;dateTrigger.setAttribute('aria-expanded','false');renderCalendar();}function renderCalendar(){document.getElementById('cal-month').textContent=`${months[shownMonth].toUpperCase()} ${shownYear}`;let grid=document.getElementById('cal-days');grid.replaceChildren();let offset=(new Date(shownYear,shownMonth,1).getDay()+6)%7;for(let i=0;i<offset;i++){let blank=document.createElement('span');grid.append(blank)}let count=new Date(shownYear,shownMonth+1,0).getDate();for(let d=1;d<=count;d++){let b=document.createElement('button');b.type='button';b.textContent=d;let iso=`${shownYear}-${pad(shownMonth+1)}-${pad(d)}`;if(iso===dateInput.value)b.classList.add('chosen');if(shownYear===today.getFullYear()&&shownMonth===today.getMonth()&&d===today.getDate())b.classList.add('today');b.onclick=()=>chooseDate(shownYear,shownMonth,d);grid.append(b)}}dateTrigger.onclick=()=>{if(calPop.parentElement!==document.body)document.body.appendChild(calPop);calPop.hidden=!calPop.hidden;dateTrigger.setAttribute('aria-expanded',String(!calPop.hidden));if(!calPop.hidden)renderCalendar()};function shiftMonth(n){let t=new Date(shownYear,shownMonth+n,1);shownYear=t.getFullYear();shownMonth=t.getMonth();renderCalendar()}document.getElementById('cal-prev').onclick=()=>shiftMonth(-1);document.getElementById('cal-next').onclick=()=>shiftMonth(1);document.getElementById('cal-today').onclick=()=>chooseDate(today.getFullYear(),today.getMonth(),today.getDate());document.addEventListener('pointerdown',e=>{if(!e.target.closest('.date-wrap') && !calPop.contains(e.target)){calPop.hidden=true;dateTrigger.setAttribute('aria-expanded','false')}});chooseDate(today.getFullYear(),today.getMonth(),today.getDate());
 function setVenue(button){document.querySelectorAll('.venue button').forEach(b=>{let active=b===button;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',String(active));});}
+</script><style id="step1-next-style">
+.c9-next-wrap{position:fixed;z-index:80;bottom:max(14px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(480px,calc(100% - 28px));display:flex;flex-direction:column;gap:6px}
+#c9-next{width:100%;border:1px solid #ffb46b;border-radius:12px;padding:12px 18px;background:#ef7b22;color:#151515;font-weight:900;box-shadow:0 5px 24px #0009}
+#c9-error{font-size:13px;text-align:center;background:#151515e8;border-radius:6px;color:#fff;padding:5px}#c9-error:empty{display:none}
+body{padding-bottom:75px}
+@media(orientation:landscape){.c9-next-wrap{left:auto;right:max(12px,env(safe-area-inset-right));transform:none;width:min(240px,26vw)}#c9-next{padding:9px 12px}}
+</style><script id="step1-next-script">
+(function(){
+ const wrap=document.createElement('div');wrap.className='c9-next-wrap';
+ const err=document.createElement('div');err.id='c9-error';err.setAttribute('role','alert');
+ const next=document.createElement('button');next.id='c9-next';next.type='button';next.textContent='Desa i continua ›';
+ wrap.append(err,next);document.body.append(wrap);
+ next.onclick=function(){
+  const opponent=document.getElementById('opponent').value.trim();
+  const date=document.getElementById('match-date').value;
+  const venue=document.querySelector('.venue button.selected');
+  if(!opponent){err.textContent='Introdueix el nom de l’equip rival.';document.getElementById('opponent').focus();return}
+  if(!date||!venue){err.textContent='Selecciona la data i on es juga.';return}
+  const details={schemaVersion:2,team:'Infantil Femení A',opponent,date,venue:venue.textContent.trim(),savedAt:new Date().toISOString()};
+  localStorage.setItem('statsCastellar_c9_1_partit_demo',JSON.stringify(details));
+  location.href='../Capa9-2/index.html';
+ };
+})();
 </script></body></html>
