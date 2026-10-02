@@ -43,7 +43,7 @@ function render(){
    if(!p.fixed){const remove=document.createElement('button');remove.type='button';remove.className='remove-guest';remove.textContent='×';remove.title='Elimina '+p.name+' de la convocatòria';remove.setAttribute('aria-label',remove.title);remove.onclick=()=>{guests=guests.filter(g=>g.id!==p.id);selected.delete(p.id);render()};slot.append(remove)}
    list.append(slot);
  });
- for(let i=guests.length;i<6;i++){const slot=document.createElement('div');slot.className='slot empty';slot.setAttribute('aria-hidden','true');list.append(slot)}
+ /* Empty additional-player slots are intentionally not rendered. */
  $('counter').textContent=selected.size+' de '+all().length+' convocades';
  $('all').textContent=selected.size===all().length?'Desmarca totes':'Marca totes';
  $('add').disabled=guests.length>=6;$('add').title=guests.length>=6?'Les sis places addicionals estan ocupades':'Afegeix jugadora';
