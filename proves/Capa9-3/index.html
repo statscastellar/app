@@ -114,6 +114,22 @@
 .scene #photo-overlay .hit,.scene #photo-overlay .hit:hover,.scene #photo-overlay .hit:focus,.scene #photo-overlay .hit:active{fill:transparent!important;stroke:none!important;stroke-width:0!important;outline:none!important;box-shadow:none!important;filter:none!important;-webkit-tap-highlight-color:transparent!important;pointer-events:all!important;}
 .scene #photo-overlay .halo:not(.on){fill:none!important;stroke:none!important;opacity:0!important;}
 .scene #photo-overlay .halo.on{stroke:#ff8b28!important;fill:rgba(244,119,33,.045)!important;opacity:1!important;pointer-events:none!important;}
+
+
+/* Revisió: títol i instrucció agrupats visualment; capçalera comuna. */
+.header{height:calc(51px + env(safe-area-inset-top,0px))!important;min-height:0!important;padding-top:env(safe-area-inset-top,0px)!important;box-sizing:border-box!important}.header .brand{font-size:clamp(16px,2.2vw,26px)!important}.header .club img{height:clamp(29px,5.5vh,45px)!important}
+.main{height:calc(100dvh - 51px - env(safe-area-inset-top,0px))!important;min-height:0!important}.stage-title{font-size:clamp(24px,3.5vw,44px)!important;line-height:1!important}.heading-row{flex:0 0 auto!important}.instruction{position:relative!important;align-self:flex-start!important;margin:0!important;flex:0 0 auto!important;max-width:min(46vw,430px)!important}
+@media(orientation:landscape){
+ .header{padding-left:max(14px,calc(env(safe-area-inset-left,0px) + 12px))!important;padding-right:max(14px,calc(env(safe-area-inset-right,0px) + 12px))!important}
+ .main{padding-left:max(14px,calc(env(safe-area-inset-left,0px) + 12px))!important;padding-right:max(14px,calc(env(safe-area-inset-right,0px) + 12px))!important;gap:4px!important}
+ .stage-panel{padding:6px 12px!important}.stage-title{font-size:clamp(26px,3.5vw,44px)!important}.stage-subtitle{margin-top:2px!important}
+ .instruction{margin-top:0!important;padding:5px 10px!important;line-height:1.1!important}.instruction strong{display:block!important}.instruction small{margin-top:1px!important}
+ /* La fotografia i el mapa tàctil són una sola peça; s'escala el contenidor, no només la imatge. */
+ .photo-wrap{min-height:0!important;overflow:hidden!important;padding-left:0!important;padding-right:0!important}.photo-stage{max-width:100%!important;max-height:100%!important;aspect-ratio:1672/941!important}
+}
+@media(orientation:landscape) and (max-height:500px){.header{height:calc(42px + env(safe-area-inset-top,0px))!important}.main{height:calc(100dvh - 42px - env(safe-area-inset-top,0px))!important}.stage-title{font-size:clamp(24px,5.6vh,32px)!important}.stage-panel{padding:4px 10px!important}.instruction{padding:3px 8px!important}.instruction svg{width:19px!important;height:19px!important}}
+@media(orientation:portrait){.instruction{max-width:100%!important}}
+
 </style><style id="c9-common-match-info">.info,.match-summary{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:0!important;line-height:1.14!important;min-width:0!important}.info .match-info-label,.match-summary .match-info-label{display:block!important;color:#ff963e!important;font-weight:800!important;font-size:clamp(10px,.8vw,12px)!important;margin-top:5px!important}.info .match-info-label:first-child,.match-summary .match-info-label:first-child{margin-top:0!important}.info .match-info-value,.match-summary .match-info-value{display:block!important;color:#fff!important;font-weight:800!important;font-size:clamp(11px,.95vw,14px)!important;overflow-wrap:anywhere!important;line-height:1.16!important}@media(orientation:landscape) and (max-height:500px){.info .match-info-label,.match-summary .match-info-label{font-size:10px!important;margin-top:3px!important}.info .match-info-value,.match-summary .match-info-value{font-size:11px!important}}@media(orientation:portrait){.info .match-info-label,.match-summary .match-info-label{font-size:10px!important}.info .match-info-value,.match-summary .match-info-value{font-size:11px!important}}
 /* Capa 9.3: títol coherent i instrucció just sota el títol en horitzontal. */
 .stage-title{font-size:clamp(34px,5vw,58px)!important}
