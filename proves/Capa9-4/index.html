@@ -61,6 +61,11 @@ html,body{height:100%;overflow:hidden}body{position:relative;display:block;paddi
  .zone .tag strong{font-size:clamp(18px,4.6dvh,27px)!important}.zone .tag em{font-size:clamp(10px,2.5dvh,13px)!important}
 }
 @media (orientation:portrait){.match-summary{top:calc(72px + env(safe-area-inset-top,0px))!important;right:calc(max(10px,env(safe-area-inset-right,0px)))!important}}
+
+
+/* Revisió de les fitxes laterals: la capa transparent no intercepta els tocs de pista. */
+@media(orientation:landscape){.pool{pointer-events:none!important}.pool .players,.pool .player,.pool h2,.pool p{pointer-events:auto!important}.pool .players{overflow:visible!important}.pool .player{min-width:0!important;max-width:100%!important}}
+
 </style><style id="c9-common-match-info">.info,.match-summary{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:0!important;line-height:1.14!important;min-width:0!important}.info .match-info-label,.match-summary .match-info-label{display:block!important;color:#ff963e!important;font-weight:800!important;font-size:clamp(10px,.8vw,12px)!important;margin-top:5px!important}.info .match-info-label:first-child,.match-summary .match-info-label:first-child{margin-top:0!important}.info .match-info-value,.match-summary .match-info-value{display:block!important;color:#fff!important;font-weight:800!important;font-size:clamp(11px,.95vw,14px)!important;overflow-wrap:anywhere!important;line-height:1.16!important}@media(orientation:landscape) and (max-height:500px){.info .match-info-label,.match-summary .match-info-label{font-size:10px!important;margin-top:3px!important}.info .match-info-value,.match-summary .match-info-value{font-size:11px!important}}@media(orientation:portrait){.info .match-info-label,.match-summary .match-info-label{font-size:10px!important}.info .match-info-value,.match-summary .match-info-value{font-size:11px!important}}
 /* Pas 4: sis fitxes als laterals (3 + 3) NOMÉS en horitzontal. */
 @media (orientation:landscape){
