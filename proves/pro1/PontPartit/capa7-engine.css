@@ -1,0 +1,266 @@
+/* Capa 7 original: adaptació del DOM del motor existent. No modifica el motor.
+   Geometria: capçalera 16%, pista 74%, peu 10%; escut i pista originals. */
+@media (orientation:landscape) {
+body:has(#scoring.active) #scoring{height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom));overflow:hidden!important;}
+#scoring .topbar{display:none!important}
+#scoring .live-wrap{height:100%!important;flex:1!important;min-height:0!important;display:grid!important;grid-template-columns:100%!important;grid-template-rows:16% 74% 10%!important;overflow:hidden!important}
+body:has(#scoring.active) #scoring .live-score{grid-column:1!important;grid-row:1!important;display:grid!important;grid-template-columns:20% 23% 14% 22% 21%!important;grid-template-rows:1fr!important;gap:.5vw!important;padding:.7vh .7vw!important;border-bottom:1px solid #263541!important;background:linear-gradient(#07131e,#030910)!important}
+#scoring .set-badge{grid-column:3!important;grid-row:1!important;align-self:center;justify-self:center;font-size:clamp(14px,1.6vw,25px)!important;border:1px solid #29485e;border-radius:6px;padding:8px!important;color:#f5cb84!important}
+#scoring .sets-score{display:none!important}
+#scoring .scoreboard{display:contents!important}
+#scoring .score-team{grid-row:1!important;display:flex!important;flex-direction:column;justify-content:center;align-items:center;min-width:0;background:#071622;border:1px solid #29485e;border-radius:6px;padding:2px!important}
+#scoring .score-team:first-child{grid-column:2!important}
+#scoring .score-team:last-child{grid-column:4!important}
+#scoring .score-sep{display:none!important}
+#scoring .score-team>strong{font-size:clamp(18px,2.5vw,33px)!important}
+#scoring .score-team>div:first-child{font-size:clamp(9px,1vw,14px)!important;max-width:100%!important}
+#scoring .team-score-controls{margin:0!important;gap:6px!important}
+#scoring .team-score-controls button{width:clamp(22px,2vw,32px)!important;min-height:clamp(20px,3vh,30px)!important;padding:0!important}
+#scoring .serve-status{grid-column:1!important;grid-row:1!important;display:flex;align-items:center;justify-content:center;text-align:center;background:#071622;border:1px solid #9c6429;border-radius:6px;padding:4px!important;font-size:clamp(10px,1vw,15px)!important}
+#scoring #manualRotateBtn{grid-column:5!important;grid-row:1!important;align-self:stretch!important;max-height:none!important;margin:0!important;background:#071622!important;border:1px solid #96722e!important;font-size:clamp(11px,1.05vw,16px)!important}
+body:has(#scoring.active) #scoring .live-court-card{grid-row:2!important;grid-column:1!important;min-height:0!important;max-height:none!important;background:url('../Capa7/assets/pista-capa6.png') center/100% 100% no-repeat!important;overflow:hidden!important}
+#scoring .court-label{top:3%!important;z-index:4!important}
+#scoring .phase-toolbar{top:9%!important;left:26%!important;right:26%!important;min-height:24px!important;z-index:7!important;overflow:visible!important}
+#scoring .live-court-grid{top:27%!important;bottom:1.8%!important;left:2.2%!important;right:2.2%!important;gap:1.15% 1%!important}
+#scoring .live-player-cell{overflow:hidden!important;display:flex!important;flex-direction:column!important;justify-content:space-around!important;border:2px solid rgba(255,255,255,.58)!important;border-radius:12px!important;background:rgba(4,17,27,.20)!important}
+#scoring .live-player-head{background:rgba(3,13,23,.58)!important;color:white!important;text-shadow:0 2px 3px #000!important}
+#scoring .quick-ratings:not([hidden]){display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:3px!important}
+#scoring .quick-ratings .quick-grade{min-height:clamp(23px,5vh,37px)!important;font-size:clamp(13px,1.3vw,19px)!important;font-weight:950!important;padding:0!important}
+#scoring .player-tools{display:none!important}
+#scoring .live-actions button:not(.current-action):not(.block-alternative){display:none!important}
+#scoring .last-action{grid-column:1!important;grid-row:3!important;min-height:0!important;padding:3px 14vw 3px 1vw!important}
+#scoring #finishSetBtn{grid-column:1!important;grid-row:3!important;z-index:9!important;width:16%!important;justify-self:end!important;min-height:0!important;border-radius:5px!important}
+#scoring .pro1-c7-blocks{position:absolute;left:2.2%;right:2.2%;top:20%;height:6%;z-index:6;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.15%;pointer-events:none}
+#scoring .c7-block-group{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;min-width:0;pointer-events:auto}
+#scoring .c7-block-group button{pointer-events:auto;min-width:0;padding:0 1px;border:1px solid rgba(229,242,250,.75);border-radius:4px;color:white;font-weight:900;font-size:clamp(8px,.83vw,13px);cursor:pointer}
+#scoring .c7-block-out{background:#9e263b}
+#scoring .c7-block-touch{background:#17617a}
+#scoring .c7-block-point{background:#176d4c}
+#scoring .c7-block-group button:disabled{opacity:.4;cursor:not-allowed}
+#scoring .pro1-c7-footer{position:absolute;bottom:0;left:0;right:0;z-index:10;pointer-events:none;height:10%;display:grid;grid-template-columns:9% 10% 1fr 10% 11% 12% 13%;gap:.45vw;padding:.65vh .7vw}
+#scoring .pro1-c7-footer button{pointer-events:auto;background:#071522;border:1px solid #29485e;border-radius:5px;color:#e1ecf6;font-size:clamp(9px,.9vw,14px);font-weight:900}
+#scoring .pro1-c7-footer .pro1-footer-label{align-self:center;text-align:center;color:#526b7e;font-weight:900;font-size:clamp(8px,.9vw,13px)}
+#scoring .pro1-c7-footer .c7-end{grid-column:7;border-color:#71333d;color:#ffa3a9}
+#scoring .pro1-c7-footer .c7-set{grid-column:6}
+#scoring .pro1-c7-footer .c7-undo{grid-column:2;border-color:#96722e}
+#scoring .last-action{padding-left:20%!important;padding-right:28%!important}
+#scoring #finishSetBtn{visibility:hidden!important}
+}
+
+/* C7 footer: functional position/substitution choice above the unchanged motor. */
+#scoring .c7-picker[hidden]{display:none!important}
+#scoring .c7-picker{position:fixed;inset:0;z-index:9999;background:rgba(0,5,12,.88);display:grid;place-items:center;padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
+#scoring .c7-picker-card{background:#071725;color:white;border:1px solid #65809c;border-radius:12px;width:min(95vw,560px);max-height:92dvh;overflow:auto;padding:14px;display:grid;gap:12px}
+#scoring .c7-picker-card h2{font-size:clamp(14px,2vw,19px);margin:0}
+#scoring .c7-picker-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#scoring .c7-picker-card button{font:inherit;font-weight:800;color:white;background:#12324a;border:1px solid #6087a4;border-radius:7px;min-height:42px;padding:7px;cursor:pointer}
+#scoring .c7-picker-card .c7-picker-close{background:#49212c}
+
+/* 0.2.8 — Capa 7 authentic four-quadrant player cells. Keeps the original
+   motor's quick-grade buttons and their click handlers; presentation only. */
+@media (orientation:landscape) {
+ #scoring .live-court-grid .live-player-cell {position:relative!important;display:block!important;min-height:0!important;padding:0!important;isolation:isolate!important;}
+ #scoring .live-court-grid .live-player-cell .quick-ratings:not([hidden]) {position:absolute!important;inset:0!important;z-index:1!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:repeat(2,minmax(0,1fr))!important;gap:3px!important;padding:3px!important;margin:0!important;}
+ #scoring .live-court-grid .live-player-cell .quick-ratings .quick-grade {height:100%!important;min-height:0!important;min-width:0!important;border-radius:2px!important;font-size:clamp(20px,3vw,48px)!important;line-height:1!important;border:1px solid rgba(255,255,255,.16)!important;}
+ #scoring .live-court-grid .live-player-cell .live-player-head {position:absolute!important;top:50%!important;left:50%!important;transform:translate(-50%,-50%)!important;z-index:3!important;width:max-content!important;max-width:83%!important;margin:0!important;padding:clamp(3px,.55vh,7px) clamp(7px,.8vw,12px)!important;border:1px solid rgba(255,255,255,.3)!important;border-radius:7px!important;background:linear-gradient(180deg,rgba(4,15,24,.97),rgba(2,9,15,.95))!important;box-shadow:0 4px 12px rgba(0,0,0,.5)!important;text-align:center!important;white-space:nowrap!important;pointer-events:none!important;font-size:clamp(10px,1.05vw,17px)!important;}
+ #scoring .live-court-grid .live-player-cell .live-player-head .live-pos {position:static!important;margin-right:.4em!important;color:#efa13e!important;opacity:1!important;font-size:.8em!important;}
+ #scoring .live-court-grid .live-player-cell .live-actions {position:absolute!important;inset:auto 0 0!important;z-index:4!important;margin:0!important;pointer-events:none!important;}
+ #scoring .live-court-grid .live-player-cell .live-actions button {pointer-events:auto!important;}
+ #scoring .live-court-grid .live-player-cell .inline-ratings:not([hidden]) {position:absolute!important;inset:0!important;z-index:5!important;margin:0!important;padding:3px!important;background:#061522!important;align-content:stretch!important;}
+ #scoring .live-court-grid .live-player-cell .inline-ratings button {min-height:0!important;}
+ #scoring .live-court-grid .live-player-cell .quick-grade.rating-0 {background:linear-gradient(145deg,#8f2431,#bd3b48)!important}
+ #scoring .live-court-grid .live-player-cell .quick-grade.rating-1 {background:linear-gradient(145deg,#a66d18,#d59a2c)!important}
+ #scoring .live-court-grid .live-player-cell .quick-grade.rating-2 {background:linear-gradient(145deg,#12536b,#247e99)!important}
+ #scoring .live-court-grid .live-player-cell .quick-grade.rating-3 {background:linear-gradient(145deg,#1d6b4c,#35a06f)!important}
+}
+
+/* 0.2.9 — five-part original Capa 7 header, existing engine score controls retained. */
+@media (orientation:landscape) {
+ body:has(#scoring.active) #scoring .live-score{grid-template-columns:20% 23% 14% 22% 21%!important;position:relative!important;}
+ #scoring .c7-header-action{grid-column:1;grid-row:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#071622;border:1px solid #29485e;border-radius:6px;color:#dae8f5;gap:2px;overflow:hidden;text-align:center}
+ #scoring .c7-header-action span,#scoring .c7-header-undo span{font-size:clamp(8px,.85vw,13px);font-weight:900;letter-spacing:.04em}
+ #scoring .c7-header-action strong{font-size:clamp(11px,1.45vw,21px);color:#f5cb84;overflow:hidden;text-overflow:ellipsis;max-width:100%;white-space:nowrap}
+ #scoring .c7-header-action small,#scoring .c7-header-undo small{font-size:clamp(7px,.7vw,11px);overflow:hidden;text-overflow:ellipsis;max-width:95%;white-space:nowrap}
+ #scoring .c7-header-undo{grid-column:5;grid-row:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#071622;border:1px solid #96722e;border-radius:6px;color:#e3eef8;gap:2px;cursor:pointer;padding:2px}
+ #scoring .c7-header-undo strong{font-size:clamp(15px,2vw,26px);line-height:1;color:#f5cb84}
+ #scoring .c7-header-undo:disabled{opacity:.45;cursor:not-allowed}
+ #scoring .serve-status{display:none!important}
+ #scoring .set-badge{display:flex!important;flex-direction:column;justify-content:center;align-items:center;gap:3px;padding:2px!important;min-width:0}
+ #scoring .c7-set-dots{display:flex;justify-content:center;gap:3px}
+ #scoring .c7-set-dots span{width:clamp(5px,.65vw,10px);height:clamp(5px,.65vw,10px);border-radius:50%;border:1px solid #a0b1bd;background:#253443}
+ #scoring .c7-set-dots span.home{background:#24a06c;border-color:#76dbaa}
+ #scoring .c7-set-dots span.away{background:#bc3a45;border-color:#ec8b90}
+ #scoring #phaseToolbar #manualRotateBtn{display:inline-flex!important;position:static!important;align-items:center;justify-content:center;min-height:23px!important;max-height:100%;margin:0!important;padding:2px 6px!important;font-size:clamp(8px,.78vw,12px)!important;grid-column:auto!important;grid-row:auto!important}
+}
+
+@media (orientation:landscape){#scoring .live-score>.c7-set-dots{grid-column:3;grid-row:1;align-self:end;justify-self:center;z-index:3;margin-bottom:2px;pointer-events:none}#scoring .live-score>.set-badge{padding-bottom:11px!important}}
+
+/* 0.3.0: original rival field and zone-1 service ball, presentation only. */
+@media(orientation:landscape){
+ #scoring .live-court-card .c7-rival-target{position:absolute;top:0;left:2.2%;right:2.2%;height:9%;z-index:5;display:flex;align-items:center;justify-content:center;gap:.7em;border:0;background:transparent;color:#e6f2fa;text-shadow:0 2px 5px #000;font-weight:900;cursor:pointer;padding:0;white-space:nowrap}
+ #scoring .c7-rival-target strong{font-size:clamp(12px,1.7vw,25px);letter-spacing:.06em}
+ #scoring .c7-rival-target small{font-size:clamp(7px,.75vw,12px);font-weight:800;opacity:.83}
+ #scoring .c7-rival-target:disabled{opacity:.53;cursor:not-allowed}
+ #scoring .live-player-cell[data-pos="1"].serving-now:after{content:"";position:absolute;z-index:6;right:-2%;top:1%;width:clamp(31px,4vw,62px);aspect-ratio:1;background:url('../Capa7/assets/pilota-fcvb.png') center/contain no-repeat;filter:drop-shadow(0 3px 5px #000);pointer-events:none}
+}
+@media(orientation:landscape) and (max-height:430px){#scoring .live-court-card .c7-rival-target small{display:none}}
+
+/* 0.3.1 — restore measured court coordinates from the approved Capa 7.
+   Keep existing engine-owned buttons and state, change presentation only. */
+@media (orientation:landscape) {
+ #scoring .live-court-grid {top:25.2%!important;bottom:1.8%!important;left:2.2%!important;right:2.2%!important;column-gap:1.15%!important;row-gap:2.2%!important;}
+ #scoring .pro1-c7-blocks {top:19.4%!important;height:4.6%!important;left:2.2%!important;right:2.2%!important;gap:1.15%!important;}
+ #scoring .live-court-card .c7-rival-target {top:0!important;height:19%!important;}
+ #scoring .c7-rival-target strong {font-size:clamp(15px,1.8vw,29px)!important;color:rgba(210,236,255,.82)!important;}
+ #scoring .c7-rival-target small {font-size:clamp(8px,.78vw,13px)!important;color:rgba(224,241,255,.7)!important;}
+ #scoring .pro1-c7-footer {background:linear-gradient(#071522,#02080e);border-top:1px solid #263541;}
+}
+@media (orientation:landscape) and (max-height:430px) {
+ #scoring .live-court-grid {top:25.2%!important;bottom:1.5%!important;row-gap:1.6%!important;}
+ #scoring .pro1-c7-blocks {top:19.4%!important;height:4.6%!important;}
+}
+
+/* 0.3.2 — show all six authentic four-quadrant silhouettes during own service.
+   Non-server quadrants remain disabled (only zone 1 can be graded).
+   Action/current phase is already in the original five-part header. */
+@media (orientation:landscape){
+ #scoring .phase-toolbar{display:none!important}
+ #scoring .c7-header-action .c7-header-rotate{display:block!important;position:static!important;width:auto!important;max-height:24px!important;min-height:20px!important;margin:0!important;padding:1px 9px!important;font-size:clamp(9px,.8vw,12px)!important;color:#e9f2fa!important;grid-column:auto!important;grid-row:auto!important}
+ #scoring .live-court-grid .quick-grade:disabled{opacity:.55!important;cursor:not-allowed!important}
+}
+
+/* 0.3.3: original approved Capa 7 has SEVEN footer cells. Undo is in the header,
+   not a duplicate footer cell which pushes finalization into a second clipped row. */
+@media (orientation:landscape){
+ #scoring .pro1-c7-footer{grid-template-columns:9% 10% minmax(0,1fr) 10% 11% 12% 13%!important;grid-template-rows:minmax(0,1fr)!important;align-items:stretch!important;}
+ #scoring .pro1-c7-footer > *{min-width:0;min-height:0;grid-row:1!important;overflow:hidden;}
+ #scoring .pro1-c7-footer .c7-home{grid-column:1!important;}
+ #scoring .pro1-c7-footer .c7-sos{grid-column:2!important;}
+ #scoring .pro1-c7-footer .pro1-footer-label{grid-column:3!important;}
+ #scoring .pro1-c7-footer .c7-positions{grid-column:4!important;}
+ #scoring .pro1-c7-footer .c7-change{grid-column:5!important;}
+ #scoring .pro1-c7-footer .c7-set{grid-column:6!important;}
+ #scoring .pro1-c7-footer .c7-end{grid-column:7!important;}
+}
+
+/* 0.3.4 — Restore original Capa 7 central SET panel and visible five markers.
+   Dots remain in the motor-owned header sibling so updating set score cannot remove them. */
+@media (orientation:landscape) {
+ #scoring .live-score > .set-badge {
+  grid-column:3!important;grid-row:1!important;align-self:stretch!important;justify-self:stretch!important;
+  width:100%!important;height:100%!important;min-height:0!important;box-sizing:border-box!important;
+  background:#071622!important;border:1px solid #29485e!important;border-radius:6px!important;
+  padding:2px 2px 12px!important;display:flex!important;flex-direction:column!important;
+  justify-content:center!important;align-items:center!important;gap:1px!important;
+  font-size:clamp(11px,1.2vw,17px)!important;color:#e8eff5!important;text-align:center!important;
+ }
+ #scoring .live-score > .c7-set-dots {
+  grid-column:3!important;grid-row:1!important;align-self:end!important;justify-self:center!important;
+  display:flex!important;gap:clamp(3px,.32vw,6px)!important;margin:0 0 5px!important;
+  z-index:4!important;pointer-events:none!important;
+ }
+ #scoring .live-score > .c7-set-dots span {
+  display:block!important;width:clamp(5px,.52vw,8px)!important;height:clamp(5px,.52vw,8px)!important;
+  background:transparent;border:1px solid #7990a0;border-radius:50%;box-sizing:border-box;
+ }
+ #scoring .live-score > .c7-set-dots span.home {background:#35a06f!important;border-color:#55c28d!important;}
+ #scoring .live-score > .c7-set-dots span.away {background:#bd3b48!important;border-color:#dc6670!important;}
+ #scoring .live-score > .c7-set-dots span.active:not(.home):not(.away) {background:#e58a22!important;border-color:#f0a448!important;box-shadow:0 0 5px #e58a22;}
+}
+
+/* 0.3.5 — match the approved original: no duplicate XARXA label over CAMP RIVAL. */
+@media (orientation: landscape) {
+ #scoring .live-court-card > .court-label,
+ #scoring .live-court-card > .court-front {display:none!important;}
+ #scoring .pro1-c7-blocks .c7-block-group button {
+  font-size:clamp(6px,.60vw,10px)!important;
+  line-height:1!important;letter-spacing:-.025em!important;
+  white-space:nowrap!important;
+  border-radius:4px!important;
+ }
+ #scoring .pro1-c7-footer .c7-sos {
+  background:linear-gradient(180deg,#e94336,#c51f19 65%,#920d0b)!important;
+  border:2px solid #e56e51!important;
+  box-shadow:inset 0 1px 2px rgba(255,255,255,.4),0 0 7px rgba(215,48,37,.3)!important;
+  color:white!important;
+  font-size:clamp(13px,1.35vw,20px)!important;
+  text-shadow:0 1px 2px #420906!important;
+ }
+ #scoring .pro1-c7-footer .c7-end:not(:disabled) {
+  background:linear-gradient(180deg,#c92d39,#8d1721)!important;
+  color:#fff!important;
+  border-color:#ff5a64!important;
+ }
+}
+
+/* 0.3.6 — preserve the original Capa 7 saturated four-colour court even when
+   a player cannot be scored in the current phase. Native disabled semantics
+   remain in place; only the visual dimming is removed. */
+@media (orientation:landscape) {
+ #scoring .live-court-grid .quick-grade:disabled {opacity:1!important;filter:none!important;cursor:not-allowed!important;}
+ #scoring .live-court-grid .live-player-cell .quick-ratings:not([hidden]) {gap:1px!important;padding:1px!important;}
+ #scoring .live-court-grid .live-player-cell .quick-ratings .quick-grade {border-radius:1px!important;}
+}
+
+/* 0.4.3 — visual alignment grounded in approved Capa 7 original.
+   Engine buttons, disabled states, score calculation and undo are unchanged. */
+@media (orientation:landscape) {
+ #scoring .live-score .score-team{background:linear-gradient(180deg,rgba(8,27,41,.97),rgba(4,16,25,.97))!important;border:1px solid #35586e!important;border-radius:.8vw!important;gap:.18vh!important;}
+ #scoring .live-score .score-team .c7-team-identity{display:flex!important;flex-direction:column!important;gap:1px!important;align-items:center!important;justify-content:center!important;max-height:35%!important;}
+ #scoring .c7-team-identity .c7-team-crest{display:block;width:clamp(13px,1.35vw,24px);height:clamp(13px,1.35vw,24px);object-fit:contain;}
+ #scoring .live-score .score-team>strong{font-size:clamp(16px,1.6vw,27px)!important;margin:0!important;line-height:1!important;}
+ #scoring .live-score .score-team .team-score-controls{gap:clamp(10px,1.05vw,18px)!important;}
+ #scoring .live-score .team-score-controls button{width:clamp(22px,2.55vw,38px)!important;height:clamp(22px,2.55vw,38px)!important;border-radius:50%!important;border:1px solid #35586e!important;color:#e7a049!important;background:#071622!important;}
+ #scoring .live-score .c7-header-action,#scoring .live-score .c7-header-undo{background:linear-gradient(180deg,rgba(8,27,41,.97),rgba(4,16,25,.97))!important;border-radius:.8vw!important;}
+ #scoring .c7-header-action .c7-header-rotate{width:100%!important;border:1px solid #a56c2e!important;border-radius:5px!important;}
+ #scoring .live-court-grid .live-player-cell{border:1px solid rgba(214,229,239,.35)!important;border-radius:9px!important;background:rgba(3,12,19,.20)!important;}
+ #scoring .live-court-grid .live-player-cell .quick-ratings:not([hidden]){gap:3px!important;padding:3px!important;}
+ #scoring .live-court-grid .live-player-cell .quick-grade{border:1px solid rgba(255,255,255,.13)!important;border-radius:1px!important;color:rgba(255,255,255,.94)!important;text-shadow:0 2px 7px rgba(0,0,0,.72)!important;box-shadow:inset 0 0 26px rgba(0,0,0,.18)!important;font-size:clamp(25px,3.2vw,54px)!important;}
+ #scoring .live-court-grid .live-player-cell .quick-grade.rating-0{background:linear-gradient(145deg,rgba(143,36,49,.94),rgba(189,59,72,.83))!important;}
+ #scoring .live-court-grid .live-player-cell .quick-grade.rating-1{background:linear-gradient(145deg,rgba(166,109,24,.93),rgba(213,154,44,.82))!important;color:#fff6dc!important;}
+ #scoring .live-court-grid .live-player-cell .quick-grade.rating-2{background:linear-gradient(145deg,rgba(18,83,107,.95),rgba(36,126,153,.84))!important;}
+ #scoring .live-court-grid .live-player-cell .quick-grade.rating-3{background:linear-gradient(145deg,rgba(29,107,76,.95),rgba(53,160,111,.84))!important;}
+ #scoring .live-court-grid .live-player-cell .live-player-head{font-size:clamp(11px,1.08vw,18px)!important;letter-spacing:.045em!important;min-width:35%!important;max-width:76%!important;padding:.45vh .75vw!important;border-radius:8px!important;}
+ #scoring .live-court-grid .live-player-cell .live-player-head .live-pos{color:#f0a13e!important;}
+ #scoring .pro1-c7-footer{grid-template-columns:9% 10% minmax(0,1fr) 10% 11% 12% 13%!important;gap:.45vw!important;padding:.65vh .7vw!important;}
+ #scoring .pro1-c7-footer button{border-radius:.55vw!important;border-color:#35586e!important;color:#8ca3b3!important;}
+ #scoring .pro1-c7-footer .c7-sos{border:1px solid #a66d18!important;background:rgba(166,109,24,.12)!important;color:#f0b14d!important;box-shadow:none!important;text-shadow:none!important;}
+ #scoring .pro1-c7-footer .c7-end:not(:disabled){border-color:#c74850!important;background:linear-gradient(180deg,#a62831,#741a23)!important;color:#fff!important;}
+ #scoring .live-court-card .c7-rival-target{display:flex!important;flex-direction:column!important;gap:.15vh!important;}
+ #scoring .c7-rival-target strong{color:rgba(230,242,250,.9)!important;}
+}
+@media (orientation:landscape) and (max-height:450px){
+ #scoring .live-court-grid .live-player-cell .quick-grade{font-size:clamp(16px,2.7vw,34px)!important;}
+ #scoring .live-court-grid .live-player-cell .live-player-head{font-size:clamp(9px,1vw,14px)!important;}
+}
+
+@media(orientation:landscape){#scoring #leftTeamName{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:1px!important;}#scoring #leftTeamName::before{content:"";display:block;width:clamp(13px,1.35vw,24px);height:clamp(13px,1.35vw,24px);background:url('../Capa7/assets/escut-club.png') center/contain no-repeat;flex:0 0 auto;}}
+/* The approved C7 SOS is a compact red inset control, not a full red footer tile. */
+@media(orientation:landscape){
+ #scoring .pro1-c7-footer .c7-sos{position:relative!important;background:#071522!important;color:white!important;border:1px solid #35586e!important;isolation:isolate!important;font-size:clamp(11px,1vw,17px)!important;}
+ #scoring .pro1-c7-footer .c7-sos::before{content:"";position:absolute;z-index:-1;left:35%;right:35%;top:17%;bottom:17%;border-radius:7px;border:1px solid #ad4843;background:linear-gradient(180deg,#a62831,#741a23);box-shadow:0 2px 6px rgba(0,0,0,.35)}
+}
+
+/* 0.4.6 — contain the five original header panels in compact landscape.
+   Grid min-content previously expanded 66px row to 73px and clipped the crest/dots. */
+@media (orientation:landscape) and (max-height:450px) {
+ body:has(#scoring.active) #scoring .live-score {
+   grid-template-rows:minmax(0,1fr)!important;
+   min-height:0!important;
+   overflow:hidden!important;
+ }
+ #scoring .live-score > .c7-header-action,
+ #scoring .live-score > .c7-header-undo,
+ #scoring .live-score > .score-team,
+ #scoring .live-score > .set-badge {
+   min-height:0!important;height:100%!important;max-height:100%!important;
+   box-sizing:border-box!important;overflow:hidden!important;
+ }
+ #scoring .live-score .score-team {gap:0!important;padding:1px!important;}
+ #scoring .live-score .score-team .team-score-controls button {width:20px!important;height:20px!important;min-height:20px!important;}
+ #scoring .live-score .score-team .team-score-controls {gap:8px!important;}
+ #scoring .live-score > .set-badge {padding:1px 2px 11px!important;}
+ #scoring .live-score > .c7-set-dots {margin-bottom:3px!important;}
+ #scoring .c7-header-action {gap:0!important;padding:1px!important;}
+ #scoring .c7-header-action .c7-header-rotate {min-height:17px!important;max-height:18px!important;padding:0 6px!important;}
+}
