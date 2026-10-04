@@ -1,0 +1,130 @@
+/* Pro.1 — adaptació visual, conserva el motor i els seus botons originals.
+   Referència visual: Capa 7; no modifica la pantalla congelada Capa 9.4.5. */
+body:has(#scoring.active){background:#03080d!important;color:#fff!important;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)!important}
+body:has(#scoring.active) #app{background:#03080d!important}
+body:has(#scoring.active) main{width:100%;max-width:none;margin:0;padding:0;min-width:0}
+body:has(#scoring.active) footer{display:none}
+#scoring.active{min-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom));height:auto;color:#fff;background:#03080d;display:flex;flex-direction:column;padding:0;overflow:auto}
+#scoring .topbar{height:29px;min-height:29px;margin:0;background:#03080d;color:#d2dfeb;grid-template-columns:50px 1fr 50px;flex-shrink:0}
+#scoring .topbar h1{font-size:clamp(10px,1.4vw,15px);letter-spacing:.13em;text-transform:uppercase}
+#scoring .topbar .back{height:26px;min-height:26px;width:45px;background:#101f2b;color:#fff;box-shadow:none;font-size:19px;border-radius:4px}
+#scoring .live-wrap{width:100%;max-width:none;flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(140px,24%);grid-template-rows:minmax(75px,15vh) minmax(330px,1fr) minmax(60px,11vh);gap:0;min-height:0}
+body:has(#scoring.active) #scoring .live-score{display:grid;grid-column:1/-1;grid-row:1;grid-template-columns:19% 1fr 22%;grid-template-rows:50% 50%;gap:0;padding:.6vh .7vw!important;background:linear-gradient(#07131e,#030910)!important;border:0!important;border-radius:0!important;color:#fff;box-shadow:none!important}
+#scoring .set-badge{grid-column:1;grid-row:1;align-self:center;justify-self:stretch;color:#efab52;font-weight:950;letter-spacing:.09em;font-size:clamp(14px,2.15vw,27px)}
+#scoring .sets-score{grid-column:1;grid-row:2;color:#b1c1cd;font-size:clamp(9px,1vw,13px);align-self:center;text-align:left}
+#scoring .scoreboard{grid-column:2;grid-row:1 / 3;margin:0;display:flex;align-items:center;justify-content:space-evenly;min-height:0;gap:0}
+#scoring .score-team{min-width:0;display:grid;grid-template-columns:1fr;justify-items:center;gap:0;color:#fff}
+#scoring .score-team>div:first-child{font-size:clamp(10px,1.2vw,15px);font-weight:900;text-transform:uppercase;max-width:24vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#scoring .score-team>strong{font-size:clamp(19px,3.3vw,43px);line-height:.95;color:#fff}
+#scoring .team-score-controls{display:flex;gap:7px}.team-score-controls button{border:1px solid #436077;background:#092133;color:#fff;width:clamp(23px,2vw,33px);height:clamp(21px,2.5vh,29px);font-weight:900;border-radius:50%;padding:0}
+#scoring .score-sep{font-size:20px;color:#9db1bf}
+#scoring .serve-status{grid-column:3;grid-row:1;align-self:center;font-size:clamp(10px,1.05vw,15px);color:#ffb75b;font-weight:900}
+#scoring #manualRotateBtn{grid-column:3;grid-row:2;margin:0!important;min-height:28px!important;max-width:100%;padding:4px!important;background:#0a293d!important;color:#fff!important;border:1px solid #3d667d!important;border-radius:6px!important}
+body:has(#scoring.active) #scoring .live-court-card{grid-column:1/-1;grid-row:2;position:relative;min-height:330px;max-height:none;margin:0!important;padding:0!important;overflow:hidden;background-color:#090d11!important;background-image:url('../Capa7/assets/pista-capa6.png')!important;background-position:center!important;background-size:100% 100%!important;background-repeat:no-repeat!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+#scoring .court-label{position:absolute;z-index:2;top:2%;left:50%;transform:translateX(-50%);font-weight:950;color:#f4f7ff;text-shadow:0 2px 5px #000;letter-spacing:.15em;font-size:clamp(11px,1.4vw,19px)}
+#scoring .live-court-grid{position:absolute;z-index:3;top:26%;bottom:2%;left:2.4%;right:2.4%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:1%;padding:0!important;margin:0!important;background:none!important;border:0!important}
+#scoring .live-player-cell{min-width:0;min-height:0;height:100%;padding:3px!important;overflow:auto;background:rgba(3,13,23,.28)!important;border:1px solid rgba(228,238,246,.53)!important;border-radius:8px!important;color:#fff!important;box-shadow:0 4px 13px rgba(0,0,0,.22)!important}
+#scoring .live-player-head{color:#fff!important;background:rgba(1,12,22,.79)!important;border-radius:4px;padding:2px!important;margin:0!important;font-weight:950!important;font-size:clamp(10px,1.1vw,16px)!important;line-height:1.12!important;text-shadow:0 2px 3px #000!important}
+#scoring .live-pos{color:#ffad4c!important}
+#scoring .live-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px!important;margin-top:3px!important}
+#scoring .live-actions button{min-height:24px!important;padding:2px!important;border:1px solid #54748a!important;background:rgba(3,19,32,.92)!important;color:#f9f9ff!important;font-size:clamp(8px,.76vw,12px)!important;border-radius:4px!important;white-space:normal!important}
+#scoring .inline-ratings{gap:3px!important;margin-top:3px!important}.inline-ratings button{min-height:30px!important;padding:2px 0!important}.inline-ratings strong{font-size:clamp(12px,1.4vw,19px)!important}.inline-ratings small{font-size:clamp(6px,.65vw,10px)!important}
+#scoring .player-tools{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:2px!important;margin-top:3px!important}.player-tools button{padding:2px 1px!important;min-height:22px!important;border:1px solid #6c8294!important;border-radius:4px!important;background:rgba(2,14,25,.92)!important;color:#fff!important;font-size:clamp(7px,.7vw,11px)!important}
+body:has(#scoring.active) #scoring .last-action{grid-column:1;grid-row:3;display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0!important;padding:6px 1vw!important;border-radius:0!important;border:0!important;border-top:1px solid #345165!important;background:linear-gradient(#071522,#02080e)!important;box-shadow:none!important;color:#fff!important;min-height:0}
+#scoring .last-action>div{min-width:0;overflow:hidden;font-size:clamp(9px,1vw,14px)}#scoring .last-label{font-size:clamp(8px,.8vw,12px);color:#e9b064;font-weight:950}#scoring #lastActionText{color:white;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#scoring #undoAction{flex-shrink:0;min-height:38px;background:#183147;color:#fff;border:1px solid #de9635;border-radius:6px;font-weight:900}#scoring #undoAction:disabled{opacity:.35}
+#scoring #finishSetBtn{grid-column:2;grid-row:3;align-self:stretch;justify-self:stretch;margin:0!important;min-height:40px!important;max-width:none;position:static;z-index:8;padding:6px 10px!important;border:1px solid #b65949!important;border-radius:7px!important;background:#93232b!important;color:white!important;font-size:clamp(9px,1vw,14px)!important;font-weight:950}
+#scoring .app-modal{z-index:50}
+@media (orientation:landscape) and (max-height:470px){#scoring .live-wrap{grid-template-rows:minmax(58px,17vh) minmax(230px,1fr) minmax(42px,10vh)}body:has(#scoring.active) #scoring .live-court-card{min-height:230px}#scoring .live-court-grid{top:26%;bottom:1%}#scoring .live-player-cell{padding:2px!important}#scoring .live-actions button{min-height:18px!important;font-size:7px!important}#scoring .player-tools button{min-height:16px!important;font-size:7px!important}#scoring .live-player-head{font-size:10px!important}#scoring #finishSetBtn{min-height:29px!important}}
+@media(orientation:portrait){#scoring .live-wrap{grid-template-rows:minmax(130px,18vh) minmax(610px,1fr) minmax(84px,10vh)}body:has(#scoring.active) #scoring .live-court-card{min-height:610px}#scoring .live-player-cell{overflow:auto}#scoring .live-actions button{font-size:9px!important}#scoring #finishSetBtn{max-width:none}#scoring .serve-status{font-size:10px}}
+/* Pro.1 0.1.1 — guia de seqüència i salvades. Sense canvis a Capa9-4. */
+#scoring .phase-toolbar{position:absolute;z-index:7;top:7%;left:3%;right:3%;display:flex;align-items:center;justify-content:center;gap:clamp(3px,.75vw,12px);color:white;font-size:clamp(9px,1.12vw,14px);background:rgba(3,13,23,.84);border:1px solid #cc873f;border-radius:7px;min-height:32px;padding:3px 6px}
+#scoring .phase-toolbar strong{color:#ffb05a;white-space:nowrap}
+#scoring .phase-toolbar button{min-height:27px;min-width:0;flex:0 1 auto;border:1px solid #597f98;background:#102e43;color:white;border-radius:5px;padding:3px 9px;font-size:clamp(8px,.85vw,12px);font-weight:800}
+#scoring .phase-toolbar button:disabled{opacity:.33}
+#scoring .phase-toolbar button[hidden],#scoring .rescue-picker[hidden]{display:none!important}
+#scoring #sosRescue:not(:disabled){background:#a34524;border-color:#ffa867}
+#scoring .rescue-picker{position:absolute;z-index:12;top:20%;left:6%;right:6%;max-height:75%;overflow:auto;background:#091827;color:#fff;border:2px solid #f4a348;box-shadow:0 6px 28px #000b;border-radius:10px;padding:12px;display:flex;gap:7px;flex-wrap:wrap;align-items:center;justify-content:center}
+#scoring .rescue-picker strong{width:100%;text-align:center;font-size:14px;color:#ffb45f}
+#scoring .rescue-picker button{min-height:39px;padding:7px 12px;color:white;background:#1c415a;border:1px solid #61829e;border-radius:7px;font-weight:800;cursor:pointer}
+@media (orientation:landscape) and (max-height:470px){#scoring .phase-toolbar{top:6%;min-height:26px;padding:2px;gap:3px;font-size:9px}#scoring .phase-toolbar button{min-height:23px;padding:1px 4px;font-size:8px}#scoring .live-court-grid{top:28%}#scoring .rescue-picker{top:17%;font-size:10px}#scoring .rescue-picker button{min-height:29px;padding:4px 8px}}
+#scoring .live-actions button.current-action{border:2px solid #f4b55c!important;background:rgba(69,36,8,.95)!important;color:#fff8ec!important}
+@media (orientation:landscape) and (max-height:470px){
+  /* En la vista compacta, només acció actual i bloqueig alternatiu: les eines queden a la vista. */
+  #scoring .live-actions{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:2px!important}
+  #scoring .live-actions button:not(.current-action):not(.block-alternative){display:none!important}
+  #scoring .live-actions button{min-height:23px!important;font-size:9px!important}
+  #scoring .player-tools{margin-top:3px!important}
+  #scoring .player-tools button{min-height:21px!important;font-size:8px!important}
+  #scoring .live-court-grid{top:26%;bottom:1%}
+  #scoring .live-player-cell{overflow-y:auto}
+}
+#scoring .live-player-cell.serving-now{border-color:#ffb155!important;box-shadow:inset 0 0 0 1px #ffb155,0 2px 12px #0008!important}
+
+/* Pro.1 0.1.4 — confirmació d'entrada al motor (no altera Capa 9.4.5). */
+.pro1-start-overlay{position:fixed;inset:0;z-index:2147483647;box-sizing:border-box;display:grid;place-items:center;overflow:auto;padding:max(20px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));background:radial-gradient(circle at 50% 0%,#193447 0%,#08121d 48%,#03080d 100%);color:#fff;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+.pro1-start-card{box-sizing:border-box;width:min(100%,560px);padding:clamp(18px,4vw,34px);border-radius:14px;background:#111d29;border:1px solid #526479;box-shadow:0 16px 60px #0009}
+.pro1-start-kicker{color:#ff9e3c;font-size:12px;letter-spacing:.13em;font-weight:900}
+.pro1-start-card h1{margin:9px 0 12px;color:white;font-size:clamp(24px,4vw,32px);line-height:1.1}
+.pro1-start-help{font-size:14px;line-height:1.5;color:#c7d2de}
+.pro1-start-status{font-size:14px;line-height:1.6;padding:13px 15px;border-left:4px solid #e9993d;border-radius:5px;background:#08131f;color:#fff;font-weight:700;overflow-wrap:anywhere}
+.pro1-start-status.has-error{border-left-color:#e2736b}
+.pro1-start-label{display:grid;gap:8px;font-size:14px;font-weight:800;margin:21px 0 12px}
+.pro1-start-label select{font:inherit;width:100%;min-height:48px;border-radius:7px;border:1px solid #8098aa;background:#071420;color:#fff;padding:8px 12px}
+.pro1-start-label select:focus-visible,.pro1-start-action:focus-visible,.pro1-start-back:focus-visible{outline:3px solid #ffb967;outline-offset:3px}
+.pro1-start-action{display:block;width:100%;min-height:48px;margin:14px 0;border:0;border-radius:7px;background:#f28a2b;color:#111820;font-size:15px;font-weight:900;cursor:pointer;padding:10px}
+.pro1-start-action:hover{background:#ffac59}
+.pro1-start-back{display:inline-block;margin:9px 0 0;color:#ffb967;font-size:14px;font-weight:750}
+@media(max-height:450px) and (orientation:landscape){.pro1-start-overlay{display:block;padding:8px max(14px,env(safe-area-inset-right))}.pro1-start-card{margin:auto;padding:10px 16px;width:min(100%,680px)}.pro1-start-card h1{font-size:19px;margin:3px 0}.pro1-start-help{font-size:11px;margin:4px 0}.pro1-start-status{padding:4px 8px;margin:6px 0;font-size:11px}.pro1-start-label{margin:5px 0;gap:2px;font-size:11px}.pro1-start-label select{min-height:28px;padding:3px 7px}.pro1-start-action{min-height:30px;padding:4px;margin:7px 0}.pro1-start-kicker{font-size:10px}}
+
+/* 0.1.5 — anotació en un sol toc per l'acció actual, en horitzontal compacte.
+   Cap alteració del disseny congelat de preparació (Capa9-4). */
+#scoring .quick-ratings{display:none}
+#scoring .quick-ratings[hidden]{display:none!important}
+@media (orientation:landscape) and (max-height:470px){
+ #scoring .live-court-grid{top:24%;bottom:1%}
+ #scoring .quick-ratings:not([hidden]){display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;margin-top:3px}
+ #scoring .quick-ratings .quick-grade{height:25px;min-height:25px;padding:0;font-size:14px;font-weight:950;color:#fff;border:1px solid #d6e0eb99;border-radius:4px;line-height:1;touch-action:manipulation;cursor:pointer}
+ #scoring .quick-ratings .quick-grade.rating-1{color:#16120b}
+ #scoring .quick-ratings .quick-grade:disabled{opacity:.3;cursor:not-allowed}
+ #scoring .quick-ratings .quick-grade:focus-visible{outline:2px solid white;outline-offset:1px}
+ #scoring .live-actions button{min-height:19px!important}
+ #scoring .player-tools button{min-height:18px!important}
+}
+
+/* 0.1.6 — La franja d’última operació reflecteix també canvis, rotacions i punts manuals. */
+#scoring #lastActionText{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+
+/* 0.1.7 — una pulsació a totes les pantalles de joc horitzontals. */
+@media (orientation:landscape) and (min-height:471px){
+ /* Les opcions de fase alienes a la jugada no han de tapar els quatre valors ràpids. */
+ #scoring .live-actions button:not(.current-action):not(.block-alternative){display:none!important}
+ #scoring .quick-ratings:not([hidden]){display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin-top:5px}
+ #scoring .quick-ratings .quick-grade{min-height:33px;padding:2px;font-size:clamp(15px,1.5vw,21px);font-weight:950;line-height:1;color:#fff;border:1px solid #d6e0eb99;border-radius:5px;touch-action:manipulation;cursor:pointer}
+ #scoring .quick-ratings .quick-grade.rating-1{color:#16120b}
+ #scoring .quick-ratings .quick-grade:disabled{opacity:.3;cursor:not-allowed}
+ #scoring .quick-ratings .quick-grade:focus-visible{outline:2px solid white;outline-offset:1px}
+}
+/* La fletxa de tornada ha de contrastar també amb el tema antic del motor. */
+#scoring .topbar button#liveBackBtn{display:grid;place-items:center;background:#102b40!important;color:#fff!important;border:1px solid #618199!important;padding:0!important;font-size:20px!important;line-height:1!important}
+/* L'entrada i la preparació conserven el mode vertical; només la pista activa el guardià. */
+#scoring .pro1-orientation-guard{display:none}
+@media (orientation:portrait){
+ #scoring.active .pro1-orientation-guard{box-sizing:border-box;display:flex;position:fixed;inset:0;z-index:10000;flex-direction:column;align-items:center;justify-content:center;gap:15px;padding:max(25px,env(safe-area-inset-top)) max(28px,env(safe-area-inset-right)) max(25px,env(safe-area-inset-bottom)) max(28px,env(safe-area-inset-left));background:radial-gradient(circle at 50% 10%,#1b394c,#03090e 70%);color:#fff;text-align:center}
+ #scoring .pro1-rotate-device{font-size:clamp(68px,20vw,110px);line-height:1;color:#ff9b36;font-weight:900;transform:rotate(-45deg)}
+ #scoring .pro1-orientation-guard h2{margin:0;color:#ffac51;font-size:clamp(24px,6vw,36px)}
+ #scoring .pro1-orientation-guard p{max-width:380px;margin:0;color:#d6e2eb;line-height:1.5;font-size:clamp(15px,4vw,19px)}
+ #scoring.active{overflow:hidden}
+}
+
+/* 0.2.1 — Controls compactes llegibles i accessibles al tacte. Només pantalla de partit. */
+@media (orientation:landscape) and (max-height:470px){
+ #scoring .live-player-head{font-size:clamp(11px,1.35vw,13px)!important;min-height:15px}
+ #scoring .live-actions button{font-size:10px!important;min-height:22px!important}
+ #scoring .player-tools button{font-size:9px!important;min-height:22px!important;line-height:1.1!important}
+ #scoring .quick-ratings .quick-grade{font-size:15px!important;min-height:28px!important;height:28px!important}
+ #scoring .phase-toolbar{font-size:10px!important}
+ #scoring .phase-toolbar button{font-size:9px!important;min-height:24px!important}
+ #scoring .team-score-controls button{width:28px;height:26px;min-width:28px}
+}
