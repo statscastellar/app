@@ -28,7 +28,7 @@ button{font:inherit}
 @media(orientation:portrait){.scene{background-position:56% center}}
 @media(orientation:landscape) and (max-height:600px){
   .header{min-height:52px;padding-top:max(5px,env(safe-area-inset-top,0px));padding-bottom:4px;padding-left:max(18px,calc(env(safe-area-inset-left,0px) + 12px));padding-right:max(18px,calc(env(safe-area-inset-right,0px) + 12px))}.club img{height:36px}.brand{font-size:17px}
-  .stage{height:calc(100dvh - 52px);justify-content:center;padding:5px max(18px,calc(env(safe-area-inset-right,0px) + 12px)) max(5px,env(safe-area-inset-bottom,0px)) max(18px,calc(env(safe-area-inset-left,0px) + 12px));gap:7px}.stage-panel{padding:7px 14px 8px}.stage-title{font-size:28px}.stage-subtitle{margin-top:3px;font-size:10px}.recover-shell{padding:11px 13px}.recover-heading{margin-bottom:8px}.recover-content{font-size:13px}.recover-content p{margin-bottom:5px}.row{margin-top:8px}.btn{min-height:36px;padding:7px 11px}
+  .stage{height:calc(100dvh - 52px);justify-content:flex-start;padding:5px max(22px,calc(env(safe-area-inset-right,0px) + 12px)) max(5px,env(safe-area-inset-bottom,0px)) max(22px,calc(env(safe-area-inset-left,0px) + 12px));gap:7px}.stage-panel{padding:6px 15px}.stage-title{font-size:clamp(24px,7vh,31px)}.stage-subtitle{margin-top:2px;font-size:10px}.recover-shell{padding:11px 13px}.recover-heading{margin-bottom:8px}.recover-content{font-size:13px}.recover-content p{margin-bottom:5px}.row{margin-top:8px}.btn{min-height:36px;padding:7px 11px}
   .scene{left:env(safe-area-inset-left,0px);right:env(safe-area-inset-right,0px);width:auto;background-position:center center}
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}

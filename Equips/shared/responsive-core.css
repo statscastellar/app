@@ -126,7 +126,7 @@ html.sc-responsive-ready body{
 }
 @media (orientation:landscape) and (max-height:500px){
   .sc-r-stage{
-    justify-content:center!important;
+    justify-content:flex-start!important;
     gap:7px!important;
     padding-top:5px!important;
     padding-bottom:max(5px,var(--sc-safe-bottom))!important;
