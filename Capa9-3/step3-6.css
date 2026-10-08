@@ -1,0 +1,18 @@
+.countbar{gap:6px}.countbar #c9-go{padding:4px 10px;border-radius:7px;border:1px solid #ff9a45;background:#f47721;color:#171b1e;font-weight:800;font-size:inherit}.countbar #c9-go:disabled{opacity:.5;cursor:default}.c9-warning{grid-column:1/-1;align-self:center;text-align:center;padding:18px;background:#151b20e8;border:1px solid #f47721;border-radius:12px}.c9-warning button{display:block;margin:12px auto 0;padding:10px;background:#f47721;border:0;border-radius:8px;font-weight:bold}#c9-saved:not([hidden]){position:fixed;z-index:20;left:50%;bottom:max(15px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(450px,calc(100% - 28px));background:#151b20;border:1px solid #f47721;border-radius:12px;padding:12px;text-align:center;box-shadow:0 8px 24px #000a;font-size:14px}.bottom .grid{overflow:auto!important}@media(orientation:portrait){.bottom .grid{grid-template-rows:none!important;grid-auto-rows:minmax(0,1fr)!important}}@media(orientation:landscape){.bottom .grid{grid-template-rows:none!important;grid-auto-rows:minmax(0,1fr)!important}}/* Integració 060 · capa de dorsals dinàmics independent del fons. */
+#photo-overlay .dynamic-dorsal{pointer-events:none;opacity:.72;transition:opacity .16s ease,filter .16s ease}
+#photo-overlay .dynamic-dorsal.selected{opacity:1;filter:drop-shadow(0 0 8px rgba(255,132,30,.9))}
+#photo-overlay .dorsal-bg{fill:rgba(9,13,17,.62);stroke:rgba(255,255,255,.62);stroke-width:2}
+#photo-overlay .dorsal-text{fill:#fff;font:900 46px Arial,Helvetica,sans-serif;paint-order:stroke;stroke:#111;stroke-width:3px}
+.field-hint{display:block;margin-top:4px;font-size:11px;opacity:.72}
+
+
+/* Integració 061 · Pas 3 amb fons per perfil i overlays HTML/CSS. */
+.scene{pointer-events:auto!important;overflow:hidden;}
+#player-overlay{position:absolute;inset:0;z-index:1;pointer-events:none}
+#player-overlay .slot-hit{position:absolute;border:0;background:transparent;padding:0;margin:0;cursor:pointer;pointer-events:auto;-webkit-tap-highlight-color:transparent;outline:none}
+#player-overlay .slot-hit.selected::after{content:'';position:absolute;inset:0;border:3px solid rgba(255,139,40,.96);border-radius:28px;box-shadow:0 0 0 2px rgba(255,139,40,.18),0 0 18px rgba(255,139,40,.56);background:rgba(244,119,33,.06)}
+#player-overlay .slot-label{position:fixed;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.15em;pointer-events:none}
+#player-overlay .slot-name{display:block;padding:.16em .45em;border-radius:999px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:rgba(10,13,18,.70);border:1px solid rgba(255,255,255,.25);color:#fff;font-weight:800;letter-spacing:.02em;line-height:1.1;text-shadow:0 1px 2px rgba(0,0,0,.85)}
+#player-overlay .slot-num{display:block;color:#fff;font-weight:900;line-height:1;text-shadow:0 2px 0 rgba(0,0,0,.65),0 0 6px rgba(0,0,0,.55)}
+html[data-visual-profile="infantil-a-validated"] #player-overlay .slot-label{display:none}
+@media(orientation:portrait){#player-overlay .slot-hit.selected::after{border-width:2px;border-radius:22px}}

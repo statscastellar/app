@@ -1,0 +1,12 @@
+.info,.match-summary{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:0!important;line-height:1.14!important;min-width:0!important}.info .match-info-label,.match-summary .match-info-label{display:block!important;color:#ff963e!important;font-weight:800!important;font-size:clamp(10px,.8vw,12px)!important;margin-top:5px!important}.info .match-info-label:first-child,.match-summary .match-info-label:first-child{margin-top:0!important}.info .match-info-value,.match-summary .match-info-value{display:block!important;color:#fff!important;font-weight:800!important;font-size:clamp(11px,.95vw,14px)!important;overflow-wrap:anywhere!important;line-height:1.16!important}@media(orientation:landscape) and (max-height:500px){.info .match-info-label,.match-summary .match-info-label{font-size:10px!important;margin-top:3px!important}.info .match-info-value,.match-summary .match-info-value{font-size:11px!important}}@media(orientation:portrait){.info .match-info-label,.match-summary .match-info-label{font-size:10px!important}.info .match-info-value,.match-summary .match-info-value{font-size:11px!important}}
+/* Capa 9.3: títol coherent i instrucció just sota el títol en horitzontal. */
+.stage-title{font-size:clamp(34px,5vw,58px)!important}
+@media (orientation:landscape){
+ .header{padding-left:max(14px,env(safe-area-inset-left,0px))!important;padding-right:max(14px,env(safe-area-inset-right,0px))!important}
+ .main{padding-left:max(14px,env(safe-area-inset-left,0px))!important;padding-right:max(14px,env(safe-area-inset-right,0px))!important}
+ .stage-title{font-size:clamp(30px,5.6vh,42px)!important}
+ .heading-row{flex:none!important}
+ .instruction{align-self:flex-start!important;margin:0!important;max-width:min(46vw,420px)!important;position:relative!important;z-index:4!important}
+ .photo-wrap{min-height:0!important}
+}
+@media (orientation:landscape) and (max-height:500px){.stage-panel{padding:7px 13px!important}.instruction{padding:5px 10px!important}.instruction strong{font-size:12px!important}.instruction small{font-size:10px!important}}

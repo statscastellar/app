@@ -1,0 +1,16 @@
+'use strict';
+const assert=require('assert');
+const {createMatchFromDraft}=require('../src/match-factory');
+const {MatchEngine}=require('../src/match-engine');
+const {buildMatchReport}=require('../src/match-report');
+const {validateReportConsistency}=require('../src/report-consistency');
+const draft=require('../fixtures/draft.json');
+const {state,actionLog}=createMatchFromDraft(draft,{matchId:'m-consistency',now:'2026-10-05T13:30:00Z'});
+const e=new MatchEngine(state,actionLog);
+e.ratePlayer('4',2);e.ratePlayer('3',3);e.finishSet();e.finishMatch();
+const r=buildMatchReport(e.state,e.log);
+assert.equal(r.schemaVersion,4);
+assert.equal(validateReportConsistency(r).ok,true);
+const bad=JSON.parse(JSON.stringify(r));bad.stats.teamAnna.SERVEI.counts[3]++;
+const chk=validateReportConsistency(bad);assert.equal(chk.ok,false);assert(chk.errors.some(x=>x.includes('SERVEI')));
+console.log('PASS MatchReport v4 valida consistència interna i detecta corrupció');

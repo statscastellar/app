@@ -1,0 +1,21 @@
+'use strict';
+const fs=require('fs'),path=require('path'),assert=require('assert');
+const {createMatchFromDraft}=require('../src/match-factory');
+const {MatchEngine}=require('../src/match-engine');
+const {buildMatchReport}=require('../src/match-report');
+const {makeIntegrity}=require('../src/session-integrity');
+const {makeReportIntegrity}=require('../src/report-integrity');
+const {prepareVerifiedExport}=require('../src/export-service');
+const E=require('../../shared/export-pro2.js');
+const draft=JSON.parse(fs.readFileSync(path.join(__dirname,'../fixtures/draft.json'),'utf8'));
+const {state,actionLog}=createMatchFromDraft(draft,{matchId:'m-export-021',now:'2026-10-05T13:00:00Z'});
+const e=new MatchEngine(state,actionLog); e.finishSet(); e.finishMatch();
+const report=buildMatchReport(e.state,e.log);
+const rec={matchId:e.state.identity.matchId,finalState:e.state,actionLog:e.log,report,integrity:makeIntegrity(e.state,e.log),reportIntegrity:makeReportIntegrity(report,e.state,e.log),completedAt:e.state.lifecycle.finishedAt};
+const prepared=prepareVerifiedExport(rec);
+assert(prepared.audit.verified);assert.equal(prepared.audit.matchId,rec.matchId);
+const x=E.buildXlsxBytes(prepared.report,prepared.audit),o=E.buildOdsBytes(prepared.report,prepared.audit);
+for(const b of [x,o]){const z=Buffer.from(b);assert(z.includes(Buffer.from('VERIFICACI')));assert(z.includes(Buffer.from(prepared.audit.sessionDigest)));assert(z.includes(Buffer.from(prepared.audit.reportDigest)));}
+const bad=JSON.parse(JSON.stringify(rec));bad.report.metadata.opponent='MANIPULAT';assert.throws(()=>prepareVerifiedExport(bad),/Integritat|MatchReport/);
+const badLog=JSON.parse(JSON.stringify(rec));badLog.actionLog.actions[0].data.genesis.metadata.opponent='MANIPULAT';assert.throws(()=>prepareVerifiedExport(badLog),/Integritat|ActionLog|reproducció/);
+console.log('PASS exportació 021 verificada + traça XLSX/ODS + rebuig de fonts manipulades');

@@ -1,0 +1,10 @@
+'use strict';
+const fs=require('fs'),path=require('path'),assert=require('assert');
+const src=fs.readFileSync(path.join(__dirname,'../../Informe/report.js'),'utf8');
+for(const x of ['function efficiencyScale(','function efficiencyColor(','function paintEfficiencyRow(','function paintEfficiencyCell(']) assert(src.includes(x),`Falta ${x}`);
+assert(!src.includes('tr.className=efficiencyClass('),'Encara s’aplica l’escala fixa antiga al rànquing');
+for(const id of ['technicalPlayers','ranking','foundationSummary','setSummary','playerFoundation','historyPlayers','historyFoundations']) assert(src.includes(id),`Falta taula ${id}`);
+assert(src.includes('paintEfficiencyRow(tr,p.efficiency,individualScale)'));
+assert(src.includes('paintEfficiencyRow(tr,p.efficiency,rankScale)'));
+assert(src.includes('paintEfficiencyCell(tr.cells[2],p.total.efficiency,accScale)'));
+console.log('PASS 052 — escala contínua vermell→groc→verd aplicada a totes les taules d’eficiència');
