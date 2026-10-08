@@ -17,12 +17,14 @@
     transform:none!important;
   }
   .sc-ipad-frame::before{
-    top:env(safe-area-inset-top,0px)!important;
-    right:env(safe-area-inset-right,0px)!important;
-    bottom:env(safe-area-inset-bottom,0px)!important;
-    left:env(safe-area-inset-left,0px)!important;
-    background-size:contain!important;
-    background-position:center center!important;
+    top:0!important;
+    right:0!important;
+    bottom:0!important;
+    left:0!important;
+    /* La portada ja disposa d'un fons horitzontal propi. En iPad ha d'omplir
+       tota la pantalla: evitem les bandes negres introduïdes per contain. */
+    background-size:cover!important;
+    background-position:34% center!important;
     background-repeat:no-repeat!important;
     background-color:#1b100b!important;
   }

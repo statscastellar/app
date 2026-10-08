@@ -121,16 +121,18 @@ function setupEditor(report,rec){
   setMode(false);
 }
 const ANALYSIS_SELECTION_PREFIX='analysisSelection:';
+function canonicalTeamId(id){id=String(id||'default');return id==='infantil-a'||id==='castellar-infantil-a'?'castellar-infantil-a':id}
+function analysisReport(r){const c=JSON.parse(JSON.stringify(r));if(c?.metadata)c.metadata.teamId=canonicalTeamId(c.metadata.teamId);return c}
 let analysisReports=[],historyAnalytics=null;
 function reportDateKey(r){return `${r?.metadata?.date||''}|${r?.matchId||''}`;}
 async function initialAnalysisIds(teamReports,teamId,currentId){
   const valid=new Set(teamReports.map(r=>String(r.matchId))),mode=params.get('analysis');
   if(mode==='all')return new Set(valid);
-  const saved=await store.adapter.get('settings',ANALYSIS_SELECTION_PREFIX+(teamId||'default'));
+  const keyTeam=canonicalTeamId(teamId);let saved=await store.adapter.get('settings',ANALYSIS_SELECTION_PREFIX+keyTeam);if(!saved&&keyTeam==='castellar-infantil-a')saved=await store.adapter.get('settings',ANALYSIS_SELECTION_PREFIX+'infantil-a');
   const ids=Array.isArray(saved?.matchIds)?saved.matchIds.map(String).filter(x=>valid.has(x)):[];
   const out=new Set(ids.length?ids:[...valid]);out.add(String(currentId));return out;
 }
-async function persistAnalysisIds(teamId,ids){await store.adapter.put('settings',ANALYSIS_SELECTION_PREFIX+(teamId||'default'),{schemaVersion:1,teamId:teamId||null,matchIds:[...ids],updatedAt:new Date().toISOString()});}
+async function persistAnalysisIds(teamId,ids){const keyTeam=canonicalTeamId(teamId);await store.adapter.put('settings',ANALYSIS_SELECTION_PREFIX+keyTeam,{schemaVersion:1,teamId:keyTeam,matchIds:[...ids],updatedAt:new Date().toISOString()});}
 function setupAnalysisFilter(report,teamReports,selectedIds,onApply){
   const list=$('#analysisMatchList'),actions=$('#analysisFilterActions'),toggle=$('#toggleAnalysisMatches'),apply=$('#applyAnalysisSelection'),allBtn=$('#analysisAll'),last5=$('#analysisLatest5'),status=$('#analysisFilterStatus');
   const sorted=[...teamReports].sort((a,b)=>reportDateKey(a).localeCompare(reportDateKey(b))),current=String(report.matchId),boxes=new Map();
@@ -147,10 +149,10 @@ try{
   if(!id)throw new Error('Falta l\'identificador del partit.');
   const rec=await store.getHistory(id);if(!rec||!rec.report)throw new Error('No s\'ha trobat aquest partit a l\'Historial.');
   const prepared=P.prepareVerifiedExport(rec),report=prepared.report,exportAudit=prepared.audit;const all=await store.listHistoryVerified();
-  const reportPairs=all.map(r=>({record:r,report:P.reportFromCompletedRecord(r)})).filter(x=>x.report);const teamPairs=reportPairs.filter(x=>!report.metadata?.teamId||x.report.metadata?.teamId===report.metadata.teamId),sameTeam=teamPairs.map(x=>x.report);
+  const reportPairs=all.map(r=>({record:r,report:P.reportFromCompletedRecord(r)})).filter(x=>x.report);const currentTeam=canonicalTeamId(report.metadata?.teamId),teamPairs=reportPairs.filter(x=>!report.metadata?.teamId||canonicalTeamId(x.report.metadata?.teamId)===currentTeam),sameTeam=teamPairs.map(x=>x.report);
   const selectedIds=await initialAnalysisIds(sameTeam,report.metadata?.teamId,id);selectedIds.add(String(id));
   const a=P.buildMatchAnalytics(report);
-  async function applyHistorySelection(ids){analysisReports=sameTeam.filter(r=>ids.has(String(r.matchId)));if(!analysisReports.some(r=>String(r.matchId)===String(id)))analysisReports.push(report);historyAnalytics=P.buildHistoryAnalytics(analysisReports,{teamId:report.metadata?.teamId||null});renderHistory(historyAnalytics);}
+  async function applyHistorySelection(ids){analysisReports=sameTeam.filter(r=>ids.has(String(r.matchId)));if(!analysisReports.some(r=>String(r.matchId)===String(id)))analysisReports.push(report);historyAnalytics=P.buildHistoryAnalytics(analysisReports.map(analysisReport),{teamId:currentTeam||null});renderHistory(historyAnalytics);}
   await applyHistorySelection(selectedIds);
   $('#subtitle').textContent=report.metadata?.date||'';$('#team').textContent=report.metadata?.teamName||'';$('#rival').textContent=report.metadata?.opponent||'Rival';$('#date').textContent=report.metadata?.date||'';$('#venue').textContent=report.metadata?.venue==='home'?'Casa':report.metadata?.venue==='away'?'Fora':'';$('#score').textContent=score(report);$('#setScores').textContent=(report.result?.sets||[]).map(s=>`S${s.set} ${setScore(s)}`).join('   ');
   renderMain(report);renderPercentages(report);renderAnna(report,a);renderDetail(report,a);setupEditor(report,rec);setupAnalysisFilter(report,sameTeam,selectedIds,applyHistorySelection);$('#report').hidden=false;

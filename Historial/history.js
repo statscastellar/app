@@ -12,14 +12,15 @@ const SELECTION_PREFIX='analysisSelection:';
 function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2400)}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function reportOf(r){return P.reportFromCompletedRecord(r)}
-function teamIdOf(r){return reportOf(r)?.metadata?.teamId||r.metadata?.teamId||'default'}
+function canonicalTeamId(id){id=String(id||'default');return id==='infantil-a'||id==='castellar-infantil-a'?'castellar-infantil-a':id}
+function teamIdOf(r){return canonicalTeamId(reportOf(r)?.metadata?.teamId||r.metadata?.teamId||'default')}
 function score(r){const report=reportOf(r);if(report?.metadata?.legacyResult)return String(report.metadata.legacyResult).replace('-', '–');let a=0,b=0;for(const s of report?.result?.sets||[]){if(s.winner==='team')a++;else if(s.winner==='rival')b++;}return `${a}–${b}`}
 function outcome(r){const report=reportOf(r);const sets=report?.result?.sets||[];const decided=sets.filter(s=>s.winner==='team'||s.winner==='rival');if(decided.length){let t=0,o=0;for(const s of decided){if(s.winner==='team')t++;else o++;}return t>o?'win':t<o?'loss':'neutral';}const raw=score(r).replace('–','-'),m=raw.match(/(\d+)\s*-\s*(\d+)/);if(!m)return 'neutral';const left=Number(m[1]),right=Number(m[2]),away=report?.metadata?.venue==='away';const team=away?right:left,opp=away?left:right;return team>opp?'win':team<opp?'loss':'neutral'}
 function setText(r){const report=reportOf(r);return (report?.result?.sets||[]).map(x=>{const a=x.score?.team??x.team??x.home,b=x.score?.rival??x.rival??x.away;return a==null||b==null?`S${x.set} —`:`S${x.set} ${a}–${b}`}).join(' · ')||'Sense sets tancats'}
 function dateKey(r){const rep=reportOf(r);return String(rep?.metadata?.date||r.metadata?.date||'')+'|'+String(r.matchId||'')}
 function visibleRows(){return activeTeamFilter&&activeTeamFilter!=='all'?rowsCache.filter(r=>teamIdOf(r)===activeTeamFilter):rowsCache}
 function currentTeamId(){const rows=visibleRows();return rows[0]?teamIdOf(rows[0]):(activeTeamFilter&&activeTeamFilter!=='all'?activeTeamFilter:'default')}
-async function loadSelection(rows){if(!rows.length){selected=new Set();return;}const teamId=teamIdOf(rows[0]),key=SELECTION_PREFIX+teamId,stored=await store.adapter.get('settings',key);const ids=new Set(rows.filter(r=>teamIdOf(r)===teamId).map(r=>String(r.matchId)));const hasSaved=Array.isArray(stored?.matchIds),saved=hasSaved?stored.matchIds.map(String).filter(x=>ids.has(x)):[];selected=new Set(hasSaved?saved:[...ids]);}
+async function loadSelection(rows){if(!rows.length){selected=new Set();return;}const teamId=teamIdOf(rows[0]),key=SELECTION_PREFIX+teamId;let stored=await store.adapter.get('settings',key);if(!stored&&teamId==='castellar-infantil-a')stored=await store.adapter.get('settings',SELECTION_PREFIX+'infantil-a');const ids=new Set(rows.filter(r=>teamIdOf(r)===teamId).map(r=>String(r.matchId)));const hasSaved=Array.isArray(stored?.matchIds),saved=hasSaved?stored.matchIds.map(String).filter(x=>ids.has(x)):[];selected=new Set(hasSaved?saved:[...ids]);}
 async function saveSelection(){if(!rowsCache.length)return;const teamId=currentTeamId();await store.adapter.put('settings',SELECTION_PREFIX+teamId,{schemaVersion:1,teamId,matchIds:[...selected],updatedAt:new Date().toISOString()});updateSelectionStatus();}
 function updateSelectionStatus(){const rows=visibleRows(),valid=new Set(rows.map(r=>String(r.matchId))),total=rows.length,n=[...selected].filter(id=>valid.has(String(id))).length;$('#selectionStatus').textContent=`${n} de ${total} partit(s) inclosos a l'anàlisi.`;$('#analyzeSelectedBtn').disabled=n<1;}
 async function bootstrapBundled(){const key='legacyBootstrap056';if(await store.adapter.get('settings',key))return {imported:0,skipped:0};let imported=0,skipped=0;const importedIds=[];for(const url of BUNDLED){try{const res=await fetch(url,{cache:'no-store'});if(!res.ok)throw new Error(String(res.status));const doc=await res.json();const out=await store.importLegacyMatch(doc);if(out.status==='imported'){imported++;importedIds.push(String(out.matchId));}else skipped++;}catch(e){console.warn('Importació antiga',url,e);}}if(importedIds.length){const selectionKey=SELECTION_PREFIX+'infantil-a',saved=await store.adapter.get('settings',selectionKey);if(Array.isArray(saved?.matchIds)){const matchIds=[...new Set([...saved.matchIds.map(String),...importedIds])];await store.adapter.put('settings',selectionKey,{...saved,matchIds,updatedAt:new Date().toISOString()});}}await store.adapter.put('settings',key,{version:1,doneAt:new Date().toISOString()});return {imported,skipped};}
@@ -32,7 +33,7 @@ function latestSelectedId(ids){const rows=rowsCache.filter(r=>ids.has(String(r.m
 async function openAnalysis(ids,mode='selected'){if(!ids.size){toast('Selecciona almenys un partit.');return;}selected=new Set(ids);await saveSelection();const id=latestSelectedId(selected);if(!id){toast('No s’ha trobat cap partit seleccionat.');return;}location.href='../Informe/index.html?id='+encodeURIComponent(id)+'&analysis='+encodeURIComponent(mode)+'#advanced';}
 function teamLabelFor(id,rows){
  const fromRows=rows.find(r=>teamIdOf(r)===id);const raw=reportOf(fromRows)?.metadata?.teamName||fromRows?.metadata?.teamName||'';
- if(id==='infantil-a'||id==='castellar-infantil-a')return 'Infantil A';
+ if(canonicalTeamId(id)==='castellar-infantil-a')return 'Infantil A';
  return raw||id;
 }
 async function setupTeamFilter(rows){
@@ -40,8 +41,7 @@ async function setupTeamFilter(rows){
  const ids=[...new Set(rows.map(teamIdOf))];
  sel.innerHTML='';
  for(const id of ids){const o=document.createElement('option');o.value=id;o.textContent=teamLabelFor(id,rows);sel.appendChild(o);}
- if(ids.includes('infantil-a'))activeTeamFilter='infantil-a';
- else if(ids.includes('castellar-infantil-a'))activeTeamFilter='castellar-infantil-a';
+ if(ids.includes('castellar-infantil-a'))activeTeamFilter='castellar-infantil-a';
  else activeTeamFilter=ids[0]||'all';
  if(!ids.length){const o=document.createElement('option');o.value='all';o.textContent='Tots els equips';sel.appendChild(o);activeTeamFilter='all';}
  sel.value=activeTeamFilter;
