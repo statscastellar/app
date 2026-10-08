@@ -1,0 +1,1946 @@
+{
+  "format": "Stats Castellar Match",
+  "version": "1.0",
+  "exportedAt": "2026-10-06T10:30:00.000Z",
+  "match": {
+    "id": "legacy-Stats_Castellar_Alpicat_03-10-2026",
+    "teamId": "infantil-a",
+    "teamName": "Infantil A",
+    "opponent": "Alpicat",
+    "date": "2026-10-03",
+    "venue": "home",
+    "players": [
+      {
+        "id": "legacy-alpicat-2026-10-03-3",
+        "number": 3,
+        "name": "Nora"
+      },
+      {
+        "id": "legacy-alpicat-2026-10-03-4",
+        "number": 4,
+        "name": "Aran"
+      },
+      {
+        "id": "legacy-alpicat-2026-10-03-6",
+        "number": 6,
+        "name": "Avril"
+      },
+      {
+        "id": "legacy-alpicat-2026-10-03-7",
+        "number": 7,
+        "name": "Emma"
+      },
+      {
+        "id": "legacy-alpicat-2026-10-03-8",
+        "number": 8,
+        "name": "Isona"
+      },
+      {
+        "id": "legacy-alpicat-2026-10-03-10",
+        "number": 10,
+        "name": "Thais"
+      },
+      {
+        "id": "legacy-alpicat-2026-10-03-11",
+        "number": 11,
+        "name": "Yveth"
+      },
+      {
+        "id": "legacy-alpicat-2026-10-03-13",
+        "number": 13,
+        "name": "Maria"
+      },
+      {
+        "id": "legacy-alpicat-2026-10-03-16",
+        "number": 16,
+        "name": "Ainhoa"
+      },
+      {
+        "id": "legacy-alpicat-2026-10-03-18",
+        "number": 18,
+        "name": "Ària"
+      },
+      {
+        "id": "legacy-alpicat-2026-10-03-28",
+        "number": 28,
+        "name": "Mariona"
+      },
+      {
+        "id": "legacy-alpicat-2026-10-03-66",
+        "number": 66,
+        "name": "Núria"
+      }
+    ],
+    "completedSets": [
+      {
+        "set": 1,
+        "scores": {
+          "castellar": 0,
+          "rival": 0
+        },
+        "actions": [
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Defensa",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-6",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-6",
+            "action": "Servei",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-6",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-6",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-6",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-6",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-6",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-6",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-6",
+            "action": "Defensa",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-6",
+            "action": "Defensa",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Servei",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Servei",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 7
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 8
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 9
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Defensa",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Servei",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Servei",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Atac",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Defensa",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Atac",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Defensa",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Servei",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Servei",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Atac",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Defensa",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Defensa",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          }
+        ],
+        "participation": {
+          "legacy-alpicat-2026-10-03-3": {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "number": 3,
+            "name": "Nora",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-alpicat-2026-10-03-6": {
+            "playerId": "legacy-alpicat-2026-10-03-6",
+            "number": 6,
+            "name": "Avril",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-alpicat-2026-10-03-13": {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "number": 13,
+            "name": "Maria",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-alpicat-2026-10-03-16": {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "number": 16,
+            "name": "Ainhoa",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-alpicat-2026-10-03-18": {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "number": 18,
+            "name": "Ària",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-alpicat-2026-10-03-28": {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "number": 28,
+            "name": "Mariona",
+            "playedMs": 60000,
+            "percentage": 100
+          }
+        },
+        "substitutions": []
+      },
+      {
+        "set": 2,
+        "scores": {
+          "castellar": 0,
+          "rival": 0
+        },
+        "actions": [
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Servei",
+            "value": 0,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Recepció",
+            "value": 0,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Recepció",
+            "value": 1,
+            "set": 2,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 2,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 2,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 2,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 2,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 2,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Atac",
+            "value": 3,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Defensa",
+            "value": 2,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Defensa",
+            "value": 3,
+            "set": 2,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Defensa",
+            "value": 3,
+            "set": 2,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Defensa",
+            "value": 3,
+            "set": 2,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Servei",
+            "value": 2,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Servei",
+            "value": 2,
+            "set": 2,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Servei",
+            "value": 3,
+            "set": 2,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Servei",
+            "value": 3,
+            "set": 2,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Col·locació",
+            "value": 0,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 2,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Atac",
+            "value": 0,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Atac",
+            "value": 1,
+            "set": 2,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Atac",
+            "value": 1,
+            "set": 2,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Atac",
+            "value": 1,
+            "set": 2,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Atac",
+            "value": 1,
+            "set": 2,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Atac",
+            "value": 2,
+            "set": 2,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Atac",
+            "value": 3,
+            "set": 2,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Atac",
+            "value": 3,
+            "set": 2,
+            "time": 7
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Defensa",
+            "value": 0,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Defensa",
+            "value": 3,
+            "set": 2,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Defensa",
+            "value": 3,
+            "set": 2,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-7",
+            "action": "Servei",
+            "value": 0,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-7",
+            "action": "Servei",
+            "value": 0,
+            "set": 2,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-7",
+            "action": "Servei",
+            "value": 3,
+            "set": 2,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-7",
+            "action": "Recepció",
+            "value": 1,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-7",
+            "action": "Recepció",
+            "value": 3,
+            "set": 2,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-7",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-7",
+            "action": "Atac",
+            "value": 1,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-7",
+            "action": "Atac",
+            "value": 2,
+            "set": 2,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-7",
+            "action": "Atac",
+            "value": 3,
+            "set": 2,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-7",
+            "action": "Atac",
+            "value": 3,
+            "set": 2,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-7",
+            "action": "Defensa",
+            "value": 2,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-10",
+            "action": "Servei",
+            "value": 0,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-10",
+            "action": "Servei",
+            "value": 2,
+            "set": 2,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-10",
+            "action": "Servei",
+            "value": 3,
+            "set": 2,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-10",
+            "action": "Recepció",
+            "value": 2,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-10",
+            "action": "Col·locació",
+            "value": 0,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-10",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 2,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-10",
+            "action": "Atac",
+            "value": 0,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-10",
+            "action": "Atac",
+            "value": 1,
+            "set": 2,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-10",
+            "action": "Atac",
+            "value": 3,
+            "set": 2,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Servei",
+            "value": 0,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Servei",
+            "value": 2,
+            "set": 2,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Servei",
+            "value": 2,
+            "set": 2,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Servei",
+            "value": 2,
+            "set": 2,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Defensa",
+            "value": 3,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Servei",
+            "value": 0,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Servei",
+            "value": 2,
+            "set": 2,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Servei",
+            "value": 2,
+            "set": 2,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Servei",
+            "value": 2,
+            "set": 2,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Servei",
+            "value": 3,
+            "set": 2,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Servei",
+            "value": 3,
+            "set": 2,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Servei",
+            "value": 3,
+            "set": 2,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Servei",
+            "value": 3,
+            "set": 2,
+            "time": 7
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Recepció",
+            "value": 0,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Recepció",
+            "value": 0,
+            "set": 2,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Recepció",
+            "value": 1,
+            "set": 2,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Recepció",
+            "value": 2,
+            "set": 2,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Recepció",
+            "value": 3,
+            "set": 2,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 2,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 2,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 2,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 2,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 2,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 2,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Atac",
+            "value": 0,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Atac",
+            "value": 3,
+            "set": 2,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Defensa",
+            "value": 1,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "action": "Defensa",
+            "value": 3,
+            "set": 2,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-66",
+            "action": "Servei",
+            "value": 0,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-66",
+            "action": "Servei",
+            "value": 3,
+            "set": 2,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-66",
+            "action": "Recepció",
+            "value": 0,
+            "set": 2,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-66",
+            "action": "Recepció",
+            "value": 1,
+            "set": 2,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-66",
+            "action": "Defensa",
+            "value": 1,
+            "set": 2,
+            "time": 0
+          }
+        ],
+        "participation": {
+          "legacy-alpicat-2026-10-03-3": {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "number": 3,
+            "name": "Nora",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-alpicat-2026-10-03-4": {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "number": 4,
+            "name": "Aran",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-alpicat-2026-10-03-7": {
+            "playerId": "legacy-alpicat-2026-10-03-7",
+            "number": 7,
+            "name": "Emma",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-alpicat-2026-10-03-8": {
+            "playerId": "legacy-alpicat-2026-10-03-8",
+            "number": 8,
+            "name": "Isona",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-alpicat-2026-10-03-10": {
+            "playerId": "legacy-alpicat-2026-10-03-10",
+            "number": 10,
+            "name": "Thais",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-alpicat-2026-10-03-13": {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "number": 13,
+            "name": "Maria",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-alpicat-2026-10-03-66": {
+            "playerId": "legacy-alpicat-2026-10-03-66",
+            "number": 66,
+            "name": "Núria",
+            "playedMs": 60000,
+            "percentage": 100
+          }
+        },
+        "substitutions": []
+      },
+      {
+        "set": 3,
+        "scores": {
+          "castellar": 0,
+          "rival": 0
+        },
+        "actions": [
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Servei",
+            "value": 0,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Servei",
+            "value": 3,
+            "set": 3,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Servei",
+            "value": 3,
+            "set": 3,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Recepció",
+            "value": 0,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 3,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 3,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 3,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Atac",
+            "value": 0,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Atac",
+            "value": 1,
+            "set": 3,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Atac",
+            "value": 3,
+            "set": 3,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Atac",
+            "value": 3,
+            "set": 3,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Atac",
+            "value": 3,
+            "set": 3,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "action": "Defensa",
+            "value": 3,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Servei",
+            "value": 2,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Servei",
+            "value": 2,
+            "set": 3,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Servei",
+            "value": 2,
+            "set": 3,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Servei",
+            "value": 2,
+            "set": 3,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Servei",
+            "value": 3,
+            "set": 3,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Recepció",
+            "value": 1,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Recepció",
+            "value": 2,
+            "set": 3,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Atac",
+            "value": 2,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "action": "Defensa",
+            "value": 1,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-10",
+            "action": "Servei",
+            "value": 0,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-10",
+            "action": "Recepció",
+            "value": 1,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-10",
+            "action": "Defensa",
+            "value": 0,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Servei",
+            "value": 1,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Servei",
+            "value": 2,
+            "set": 3,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Servei",
+            "value": 2,
+            "set": 3,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Recepció",
+            "value": 1,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Atac",
+            "value": 0,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Atac",
+            "value": 1,
+            "set": 3,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Atac",
+            "value": 3,
+            "set": 3,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Defensa",
+            "value": 1,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Defensa",
+            "value": 3,
+            "set": 3,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "action": "Defensa",
+            "value": 3,
+            "set": 3,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Servei",
+            "value": 1,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Servei",
+            "value": 2,
+            "set": 3,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Servei",
+            "value": 3,
+            "set": 3,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Servei",
+            "value": 3,
+            "set": 3,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Recepció",
+            "value": 2,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 3,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Atac",
+            "value": 1,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Atac",
+            "value": 3,
+            "set": 3,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Atac",
+            "value": 3,
+            "set": 3,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Atac",
+            "value": 3,
+            "set": 3,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "action": "Atac",
+            "value": 3,
+            "set": 3,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Servei",
+            "value": 2,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Recepció",
+            "value": 1,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Recepció",
+            "value": 2,
+            "set": 3,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Recepció",
+            "value": 2,
+            "set": 3,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Col·locació",
+            "value": 0,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 3,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 3,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 3,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Atac",
+            "value": 0,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Atac",
+            "value": 0,
+            "set": 3,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Atac",
+            "value": 1,
+            "set": 3,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Atac",
+            "value": 3,
+            "set": 3,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Defensa",
+            "value": 0,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "action": "Defensa",
+            "value": 1,
+            "set": 3,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Servei",
+            "value": 2,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Servei",
+            "value": 2,
+            "set": 3,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Servei",
+            "value": 2,
+            "set": 3,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Servei",
+            "value": 3,
+            "set": 3,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Servei",
+            "value": 3,
+            "set": 3,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Servei",
+            "value": 3,
+            "set": 3,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Servei",
+            "value": 3,
+            "set": 3,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Recepció",
+            "value": 1,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Recepció",
+            "value": 3,
+            "set": 3,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Col·locació",
+            "value": 0,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 3,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 3,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Atac",
+            "value": 3,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Atac",
+            "value": 3,
+            "set": 3,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Defensa",
+            "value": 2,
+            "set": 3,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "action": "Defensa",
+            "value": 3,
+            "set": 3,
+            "time": 1
+          }
+        ],
+        "participation": {
+          "legacy-alpicat-2026-10-03-3": {
+            "playerId": "legacy-alpicat-2026-10-03-3",
+            "number": 3,
+            "name": "Nora",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-alpicat-2026-10-03-4": {
+            "playerId": "legacy-alpicat-2026-10-03-4",
+            "number": 4,
+            "name": "Aran",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-alpicat-2026-10-03-10": {
+            "playerId": "legacy-alpicat-2026-10-03-10",
+            "number": 10,
+            "name": "Thais",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-alpicat-2026-10-03-13": {
+            "playerId": "legacy-alpicat-2026-10-03-13",
+            "number": 13,
+            "name": "Maria",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-alpicat-2026-10-03-16": {
+            "playerId": "legacy-alpicat-2026-10-03-16",
+            "number": 16,
+            "name": "Ainhoa",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-alpicat-2026-10-03-18": {
+            "playerId": "legacy-alpicat-2026-10-03-18",
+            "number": 18,
+            "name": "Ària",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-alpicat-2026-10-03-28": {
+            "playerId": "legacy-alpicat-2026-10-03-28",
+            "number": 28,
+            "name": "Mariona",
+            "playedMs": 60000,
+            "percentage": 100
+          }
+        },
+        "substitutions": []
+      }
+    ],
+    "finished": true,
+    "finishedAt": "2026-10-03T20:00:00.000Z",
+    "legacy": true,
+    "legacyResult": "3-0",
+    "imported": true,
+    "importedAt": "2026-10-06T10:30:00.000Z",
+    "normalization": {
+      "source": "Estadistiques-Castellar-infantilA(2).xlsx",
+      "rule": "Truncar només recomptes d'accions x.5: 1.5→1 i 0.5→0; percentatges/càlculs derivats no es trunquen.",
+      "removedHalfActions": 2,
+      "sourceActions": 241,
+      "normalizedActions": 240
+    }
+  }
+}

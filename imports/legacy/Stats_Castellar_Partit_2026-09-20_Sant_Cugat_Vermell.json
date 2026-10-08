@@ -1,0 +1,4906 @@
+{
+  "format": "Stats Castellar Match",
+  "version": "1.0",
+  "exportedAt": "2026-10-05T17:54:53.133Z",
+  "match": {
+    "id": "legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)",
+    "teamId": "infantil-a",
+    "teamName": "Infantil A",
+    "opponent": "Sant Cugat Vermell",
+    "date": "2026-09-20",
+    "venue": "home",
+    "players": [
+      {
+        "id": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+        "number": 3,
+        "name": "Nora"
+      },
+      {
+        "id": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+        "number": 4,
+        "name": "Aran"
+      },
+      {
+        "id": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+        "number": 6,
+        "name": "Avril"
+      },
+      {
+        "id": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+        "number": 7,
+        "name": "Emma"
+      },
+      {
+        "id": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+        "number": 8,
+        "name": "Isona"
+      },
+      {
+        "id": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+        "number": 10,
+        "name": "Thais"
+      },
+      {
+        "id": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+        "number": 11,
+        "name": "Yveth"
+      },
+      {
+        "id": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+        "number": 13,
+        "name": "Maria"
+      },
+      {
+        "id": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+        "number": 16,
+        "name": "Ainhoa"
+      },
+      {
+        "id": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+        "number": 18,
+        "name": "Ària"
+      },
+      {
+        "id": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+        "number": 28,
+        "name": "Mariona"
+      },
+      {
+        "id": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+        "number": 66,
+        "name": "Núria"
+      }
+    ],
+    "completedSets": [
+      {
+        "set": 1,
+        "scores": {
+          "castellar": 0,
+          "rival": 0
+        },
+        "actions": [
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 7
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 7
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 7
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 8
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Atac",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 7
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 8
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 9
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 10
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 11
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 12
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Bloqueig",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Bloqueig",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Bloqueig",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Bloqueig",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Bloqueig",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Bloqueig",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Bloqueig",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "action": "Bloqueig",
+            "value": 2,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 7
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 8
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Atac",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "action": "Bloqueig",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 7
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 8
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 9
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Atac",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Atac",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Bloqueig",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "action": "Bloqueig",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Atac",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Atac",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Col·locació",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Atac",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Atac",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Col·locació",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Atac",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Atac",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Bloqueig",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Bloqueig",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "action": "Bloqueig",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 7
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Col·locació",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Atac",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "action": "Bloqueig",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 7
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 7
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 7
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 8
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 9
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 10
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 11
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Col·locació",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 7
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 8
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 9
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Atac",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Atac",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 7
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Bloqueig",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "action": "Bloqueig",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Atac",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Bloqueig",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Bloqueig",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "action": "Bloqueig",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 7
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 8
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 9
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 10
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 11
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 12
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 13
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Col·locació",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Col·locació",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Col·locació",
+            "value": 0,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Col·locació",
+            "value": 0,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 7
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 8
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 7
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 8
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Atac",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Atac",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "action": "Bloqueig",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 7
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 7
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 8
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Col·locació",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Col·locació",
+            "value": 1,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 7
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 8
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Atac",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Atac",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 5
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 6
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 7
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 8
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 9
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 10
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 11
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 12
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Bloqueig",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Bloqueig",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "action": "Bloqueig",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Servei",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Servei",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Servei",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Recepció",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 3
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Recepció",
+            "value": 1,
+            "set": 1,
+            "time": 4
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Recepció",
+            "value": 2,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Recepció",
+            "value": 3,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Col·locació",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Col·locació",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Atac",
+            "value": 0,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Atac",
+            "value": 0,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Atac",
+            "value": 1,
+            "set": 1,
+            "time": 2
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 0
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Atac",
+            "value": 2,
+            "set": 1,
+            "time": 1
+          },
+          {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "action": "Atac",
+            "value": 3,
+            "set": 1,
+            "time": 0
+          }
+        ],
+        "participation": {
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "number": 3,
+            "name": "Nora",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "number": 4,
+            "name": "Aran",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "number": 13,
+            "name": "Maria",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "number": 16,
+            "name": "Ainhoa",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "number": 18,
+            "name": "Ària",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "number": 28,
+            "name": "Mariona",
+            "playedMs": 60000,
+            "percentage": 100
+          }
+        },
+        "substitutions": []
+      },
+      {
+        "set": 2,
+        "scores": {
+          "castellar": 0,
+          "rival": 0
+        },
+        "actions": [],
+        "participation": {
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "number": 6,
+            "name": "Avril",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "number": 7,
+            "name": "Emma",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "number": 8,
+            "name": "Isona",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "number": 10,
+            "name": "Thais",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "number": 11,
+            "name": "Yveth",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "number": 66,
+            "name": "Núria",
+            "playedMs": 60000,
+            "percentage": 100
+          }
+        },
+        "substitutions": []
+      },
+      {
+        "set": 3,
+        "scores": {
+          "castellar": 0,
+          "rival": 0
+        },
+        "actions": [],
+        "participation": {
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "number": 3,
+            "name": "Nora",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "number": 6,
+            "name": "Avril",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "number": 10,
+            "name": "Thais",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "number": 13,
+            "name": "Maria",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "number": 18,
+            "name": "Ària",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "number": 28,
+            "name": "Mariona",
+            "playedMs": 60000,
+            "percentage": 100
+          }
+        },
+        "substitutions": []
+      },
+      {
+        "set": 4,
+        "scores": {
+          "castellar": 0,
+          "rival": 0
+        },
+        "actions": [],
+        "participation": {
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "number": 3,
+            "name": "Nora",
+            "playedMs": 24000,
+            "percentage": 40
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-4",
+            "number": 4,
+            "name": "Aran",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-7",
+            "number": 7,
+            "name": "Emma",
+            "playedMs": 36000,
+            "percentage": 60
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-8",
+            "number": 8,
+            "name": "Isona",
+            "playedMs": 36000,
+            "percentage": 60
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-11",
+            "number": 11,
+            "name": "Yveth",
+            "playedMs": 36000,
+            "percentage": 60
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "number": 13,
+            "name": "Maria",
+            "playedMs": 24000,
+            "percentage": 40
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-16",
+            "number": 16,
+            "name": "Ainhoa",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "number": 18,
+            "name": "Ària",
+            "playedMs": 24000,
+            "percentage": 40
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "number": 28,
+            "name": "Mariona",
+            "playedMs": 24000,
+            "percentage": 40
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-66",
+            "number": 66,
+            "name": "Núria",
+            "playedMs": 36000,
+            "percentage": 60
+          }
+        },
+        "substitutions": []
+      },
+      {
+        "set": 5,
+        "scores": {
+          "castellar": 0,
+          "rival": 0
+        },
+        "actions": [],
+        "participation": {
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-3",
+            "number": 3,
+            "name": "Nora",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-6",
+            "number": 6,
+            "name": "Avril",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-10",
+            "number": 10,
+            "name": "Thais",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-13",
+            "number": 13,
+            "name": "Maria",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-18",
+            "number": 18,
+            "name": "Ària",
+            "playedMs": 60000,
+            "percentage": 100
+          },
+          "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28": {
+            "playerId": "legacy-legacy-Stats_Castellar_Sant_Cugat_Vermell_20-09-2026(3)-28",
+            "number": 28,
+            "name": "Mariona",
+            "playedMs": 60000,
+            "percentage": 100
+          }
+        },
+        "substitutions": []
+      }
+    ],
+    "finished": true,
+    "finishedAt": 1789898400000,
+    "legacy": true,
+    "legacyResult": "2-3",
+    "imported": true,
+    "importedAt": 1790269770182
+  }
+}
