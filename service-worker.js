@@ -1,89 +1,97 @@
-const CACHE='stats-castellar-1.0.1';
-
-const LOCAL=[
+const CACHE_NAME = 'stats-castellar-1.0.1-release-20261008';
+const APP_SHELL = [
   './',
   './index.html',
   './manifest.webmanifest',
+  './apple-touch-icon.png',
   './icon-192.png',
   './icon-512.png',
-  './apple-touch-icon.png'
-];
-
-const EXTERNAL=[
-  'https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js',
-  'https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js'
+  './css/style.css',
+  './js/app.js',
+  './js/home-pro2.js',
+  './shared/pro2-core.bundle.js',
+  './shared/team-store.js',
+  './shared/draft-store.js',
+  './assets/escut-club.png',
+  './assets/fons-horitzontal.png',
+  './assets/fons-vertical.png'
 ];
 
 self.addEventListener('install', event => {
-  event.waitUntil((async()=>{
-    const cache=await caches.open(CACHE);
-    await cache.addAll(LOCAL);
-
-    // Deixem els exportadors PDF disponibles també sense connexió.
-    await Promise.all(EXTERNAL.map(async url=>{
-      try{
-        const r=await fetch(url,{mode:'cors'});
-        if(r.ok) await cache.put(url,r);
-      }catch(_){}
-    }));
-
-    // Activa aquesta versió sense esperar que desaparegui l'anterior.
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE_NAME);
+    await cache.addAll(APP_SHELL);
     await self.skipWaiting();
   })());
 });
 
 self.addEventListener('activate', event => {
-  event.waitUntil((async()=>{
-    // Elimina les memòries cau de versions anteriors.
-    const keys=await caches.keys();
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
     await Promise.all(
       keys
-        .filter(k=>k.startsWith('stats-castellar-') && k!==CACHE)
-        .map(k=>caches.delete(k))
+        .filter(key => key.startsWith('stats-castellar-') && key !== CACHE_NAME)
+        .map(key => caches.delete(key))
     );
     await self.clients.claim();
   })());
 });
 
 self.addEventListener('fetch', event => {
-  if(event.request.method!=='GET') return;
+  if (event.request.method !== 'GET') return;
 
-  // Per a la navegació (obrir l'app), primer comprovem si hi ha
-  // una versió nova a GitHub. Si no hi ha Internet, fem servir
-  // l'index guardat i l'app continua funcionant offline.
-  if(event.request.mode==='navigate'){
-    event.respondWith((async()=>{
-      try{
-        const response=await fetch(event.request,{cache:'no-store'});
-        if(response && response.ok){
-          const cache=await caches.open(CACHE);
-          await cache.put('./index.html',response.clone());
+  const url = new URL(event.request.url);
+
+  // Navegació: xarxa primer. Això fa que GitHub Pages mostri sempre
+  // la versió publicada més recent; si no hi ha connexió, usa la cache.
+  if (event.request.mode === 'navigate') {
+    event.respondWith((async () => {
+      try {
+        const response = await fetch(event.request, { cache: 'no-store' });
+        if (response && response.ok) {
+          const cache = await caches.open(CACHE_NAME);
+          cache.put(event.request, response.clone());
           return response;
         }
-      }catch(_){}
+      } catch (_) {}
 
-      const cached=await caches.match('./index.html');
-      if(cached) return cached;
-
-      return caches.match('./');
+      return (await caches.match(event.request)) ||
+             (await caches.match('./index.html')) ||
+             (await caches.match('./'));
     })());
     return;
   }
 
-  // Per a la resta de fitxers mantenim cache-first.
-  event.respondWith((async()=>{
-    const cached=await caches.match(event.request);
-    if(cached) return cached;
+  // Recursos de la pròpia app: cache primer i, si no hi són,
+  // es descarreguen i queden guardats per a usos posteriors.
+  if (url.origin === self.location.origin) {
+    event.respondWith((async () => {
+      const cached = await caches.match(event.request);
+      if (cached) return cached;
 
-    try{
-      const response=await fetch(event.request);
-      if(response && (response.ok || response.type==='opaque')){
-        const cache=await caches.open(CACHE);
-        cache.put(event.request,response.clone());
+      const response = await fetch(event.request);
+      if (response && response.ok) {
+        const cache = await caches.open(CACHE_NAME);
+        cache.put(event.request, response.clone());
       }
       return response;
-    }catch(err){
-      throw err;
+    })());
+    return;
+  }
+
+  // Recursos externs: xarxa, amb fallback a cache si ja s'havien usat.
+  event.respondWith((async () => {
+    try {
+      const response = await fetch(event.request);
+      if (response && (response.ok || response.type === 'opaque')) {
+        const cache = await caches.open(CACHE_NAME);
+        cache.put(event.request, response.clone());
+      }
+      return response;
+    } catch (_) {
+      const cached = await caches.match(event.request);
+      if (cached) return cached;
+      throw _;
     }
   })());
 });
