@@ -127,10 +127,13 @@
  .motto-script{font-size:clamp(27px,7.4vw,33px)!important}
 }
 
-/* Stats Castellar 1.0.5 — Configuració centrada exactament sota Historial i Equips */
+/* Stats Castellar 1.0.6 — centrat geomètric real de Configuració */
 .menu .slot:nth-child(5){
   grid-column:1 / -1!important;
-  justify-self:center!important;
+  justify-self:start!important;
+  position:relative!important;
+  left:50%!important;
+  transform:translateX(-50%)!important;
   width:calc((100% - clamp(9px,1.5vw,18px))/2)!important;
 }
 @media(orientation:portrait){
