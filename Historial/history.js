@@ -1,9 +1,6 @@
 (async()=>{'use strict';
 const P=window.StatsPro2,$=q=>document.querySelector(q);const store=new P.Pro2Storage(new P.IndexedDBStorageAdapter());
 const BUNDLED=[
- '../imports/legacy/Stats_Castellar_Partit_2026-09-13_Sant_Celoni.json',
- '../imports/legacy/Stats_Castellar_Partit_2026-09-20_Gadex.json',
- '../imports/legacy/Stats_Castellar_Partit_2026-09-20_Sant_Cugat_Vermell.json',
  '../imports/legacy/Stats_Castellar_Partit_2026-09-26_Sant_Cugat_Negre(2)(1).json',
  '../imports/legacy/Stats_Castellar_Partit_2026-10-03_Alpicat.json'
 ];
