@@ -72,7 +72,6 @@ function renderBlocks(ui){
 function render(){
  const s=engine.state, venue=s.metadata.venue, ui=P.buildCapa7UiState(engine,{localMode});
  $('#ownScoreZone').style.order=venue==='away'?'4':'2';$('#rivalScoreZone').style.order=venue==='away'?'2':'4';
- const vt=$('#venueTest');if(vt){vt.value=venue==='away'?'visitant':'local';vt.disabled=true;}
  $('#scoreHome').textContent=s.game.score.team;$('#scoreAway').textContent=s.game.score.rival;$('#setNumber').textContent=s.game.currentSet;$('#rivalName').textContent=s.metadata.opponent;$('#actionValue').textContent=ui.phaseLabel;$('#actionBox').disabled=!ui.phaseSkipEnabled;$('#actionBox').classList.toggle('skip-enabled',ui.phaseSkipEnabled);
  const dots=$('#setDots');dots.innerHTML='';for(let i=0;i<5;i++){const d=document.createElement('i'),r=s.game.sets[i];if(r?.winner==='team')d.className='won';else if(r?.winner==='rival')d.className='lost';else if(i===s.game.currentSet-1)d.className='active';dots.appendChild(d);}
  $('#undoBtn').disabled=!ui.undoEnabled;$('#undoLabel').textContent=ui.undoLabel;
