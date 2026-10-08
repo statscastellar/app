@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101419">
+  <title>Stats Castellar · Recuperar partit</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="scene" role="img" aria-label="Fisioterapeuta tractant l'espatlla d'una jugadora de vòlei"></div>
+
+  <header class="header">
+    <div class="left">
+      <button class="back" type="button" aria-label="Tornar a inici" onclick="location.href='../index.html'">←</button>
+      <div class="brand">STATS <span>CASTELLAR</span></div>
+    </div>
+    <div class="club">
+      <div class="club-name">VOLEI<br>FS CASTELLAR</div>
+      <img src="../assets/escut-club.svg" alt="Escut FS Castellar Volei">
+    </div>
+  </header>
+
+  <main class="stage" aria-label="Recuperar partit">
+    <div class="stage-panel">
+      <h1 class="stage-title">RECUPERAR <span>PARTIT</span></h1>
+      <p class="stage-subtitle">PARTITS NO FINALITZATS</p>
+    </div>
+
+    <section id="card" class="recover-shell" aria-label="Partits no finalitzats">
+      <div class="recover-heading">
+        <strong>PARTITS PENDENTS</strong>
+        <span>Continua qualsevol partit desat o elimina'l si ja no el necessites.</span>
+      </div>
+      <div id="content" class="recover-content">Carregant…</div>
+    </section>
+  </main>
+
+  <script src="../shared/pro2-core.bundle.js"></script>
+  <script src="recover.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:#15191d;color:#fff}
+body{min-height:100vh;min-height:100dvh;overflow:hidden}
+button{font:inherit}
+.scene{position:fixed;inset:0;background-image:url('../assets/bg-recuperar-partit.png');background-size:cover;background-position:center center;background-repeat:no-repeat}
+.scene:after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.10),rgba(0,0,0,.01) 38%,rgba(0,0,0,.10));pointer-events:none}
+
+/* Mateixa capçalera visual que Pas 1 */
+.header{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:76px;padding:calc(env(safe-area-inset-top,0px) + 9px) max(18px,env(safe-area-inset-right,0px)) 9px max(18px,env(safe-area-inset-left,0px));background:rgba(10,14,18,.89);border-bottom:2px solid #f47721}
+.left{display:flex;align-items:center;gap:16px;min-width:0}.back{border:0;background:transparent;color:#fff;font-size:30px;line-height:1;cursor:pointer;min-width:34px;min-height:44px;padding:0}.brand{font-size:clamp(15px,2vw,22px);font-style:italic;font-weight:900;white-space:nowrap;letter-spacing:.1px}.brand span{color:#f47721}.club{display:flex;align-items:center;gap:9px;flex-shrink:0}.club img{display:block;width:auto;height:clamp(39px,5.2vw,53px);object-fit:contain}.club-name{font-weight:900;font-size:clamp(10px,1.15vw,14px);font-style:italic;line-height:1.08;white-space:nowrap}
+
+.stage{position:relative;z-index:1;height:calc(100dvh - 76px);width:min(100%,1040px);margin:0 auto;padding:clamp(9px,2vh,20px) max(22px,env(safe-area-inset-right,0px)) 8px max(22px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch;gap:clamp(8px,1.5vh,15px);min-height:0}
+.stage-panel{display:block;width:fit-content;max-width:100%;align-self:flex-start;padding:17px 25px 19px;background:rgba(21,27,32,.50);border:1px solid rgba(255,255,255,.13);border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.19);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.stage-title{margin:0;font-size:clamp(34px,5vw,58px);font-weight:900;font-style:italic;line-height:1.03;letter-spacing:-1.4px;text-shadow:0 2px 12px rgba(0,0,0,.6)}.stage-title span{color:#f47721}.stage-subtitle{margin:9px 0 0;font-size:clamp(12px,1.3vw,16px);font-weight:700;letter-spacing:1.2px;text-shadow:0 2px 8px rgba(0,0,0,.85)}
+
+.recover-shell{width:100%;padding:clamp(16px,2vw,24px);background:rgba(21,27,32,.50);border:1px solid rgba(255,255,255,.17);border-radius:12px;box-shadow:0 7px 20px rgba(0,0,0,.18);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.recover-heading{display:flex;flex-direction:column;gap:4px;margin-bottom:14px}.recover-heading strong{font-size:clamp(13px,1.4vw,17px);letter-spacing:.05em}.recover-heading span{font-size:clamp(11px,1.1vw,14px);color:#d0d6da}
+.recover-content{font-size:clamp(14px,1.35vw,17px)}
+.recover-content p{margin:0 0 10px}.recover-content p:last-child{margin-bottom:0}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:15px}.btn{border:1px solid rgba(255,255,255,.20);border-radius:9px;padding:11px 15px;font-weight:800;cursor:pointer;min-height:44px}.primary{background:#f47721;color:#111;border-color:#f47721}.secondary{background:#374151;color:#fff}.danger{background:rgba(105,30,34,.90);color:#fff;border-color:rgba(255,160,160,.25)}
+.muted{color:#c4ccd1}.status{padding:9px 11px;border-radius:8px;background:rgba(7,13,17,.70);margin-top:10px;color:#fecaca;border:1px solid rgba(255,255,255,.12)}.linkbtn{display:inline-flex;align-items:center;text-decoration:none}
+
+@media(max-width:480px){
+  .header{min-height:65px;padding-top:calc(env(safe-area-inset-top,0px) + 6px);padding-bottom:6px}.left{gap:8px}.brand{font-size:15px}.club{gap:5px}.club img{height:38px}.club-name{font-size:9px}
+  .stage{height:calc(100dvh - 65px);justify-content:flex-start;padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px));padding-top:clamp(8px,1.4vh,13px);padding-bottom:clamp(105px,14vh,145px);gap:clamp(7px,1.2vh,12px)}
+  .stage-panel{padding:12px 15px 14px}.stage-title{font-size:clamp(29px,8vw,39px)}.stage-subtitle{font-size:10px;margin-top:5px}.recover-shell{padding:14px}.row{gap:8px}.btn{flex:1 1 150px}
+}
+@media(orientation:portrait){.scene{background-position:56% center}}
+@media(orientation:landscape) and (max-height:600px){
+  .header{min-height:52px;padding-top:max(5px,env(safe-area-inset-top,0px));padding-bottom:4px;padding-left:max(18px,calc(env(safe-area-inset-left,0px) + 12px));padding-right:max(18px,calc(env(safe-area-inset-right,0px) + 12px))}.club img{height:36px}.brand{font-size:17px}
+  .stage{height:calc(100dvh - 52px);justify-content:center;padding:5px max(18px,calc(env(safe-area-inset-right,0px) + 12px)) max(5px,env(safe-area-inset-bottom,0px)) max(18px,calc(env(safe-area-inset-left,0px) + 12px));gap:7px}.stage-panel{padding:7px 14px 8px}.stage-title{font-size:28px}.stage-subtitle{margin-top:3px;font-size:10px}.recover-shell{padding:11px 13px}.recover-heading{margin-bottom:8px}.recover-content{font-size:13px}.recover-content p{margin-bottom:5px}.row{margin-top:8px}.btn{min-height:36px;padding:7px 11px}
+  .scene{left:env(safe-area-inset-left,0px);right:env(safe-area-inset-right,0px);width:auto;background-position:center center}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* Integració 071: múltiples partits pendents, sense alterar el disseny base validat */
+.recover-content{display:grid;gap:12px}
+.recover-match{padding:12px 0;border-top:1px solid rgba(255,255,255,.14)}
+.recover-match:first-child{border-top:0;padding-top:0}
+.recover-match:last-child{padding-bottom:0}

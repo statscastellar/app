@@ -1,0 +1,22 @@
+(()=>{'use strict';
+const DEFAULT_TEAM={schemaVersion:1,teamId:'castellar-infantil-a',name:'Infantil Femení A',category:{code:'INFANTIL',label:'Infantil',ageGroup:'U14'},sex:'female',season:'2026-27',visualProfile:{profileId:'infantil-a-validated',backgroundKey:'2f356fc38f5bf2d3.png',customBackgroundAssetId:null},players:[['p3',3,'Nora'],['p4',4,'Aran'],['p6',6,'Avril'],['p7',7,'Emma'],['p8',8,'Isona'],['p10',10,'Thais'],['p11',11,'Yveth'],['p13',13,'Maria'],['p16',16,'Ainhoa'],['p18',18,'Ària'],['p28',28,'Mariona'],['p66',66,'Núria']].map(([playerId,number,name])=>({playerId,number,name,active:true,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()})),active:true,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};
+const clone=x=>JSON.parse(JSON.stringify(x)); let teams=[]; let adapter=null;
+function normalizeTeam(t){const x=clone(t);if(String(x?.category?.code||'').toUpperCase()==='MASTER')x.sex='mixed';if(window.Pro2VisualProfiles){const vp=Pro2VisualProfiles.resolve(x);x.visualProfile={...(x.visualProfile||{}),...vp};}x.gameFormat=x.gameFormat||{format:'volleyball-6x6',playersOnCourt:6,minivolleyEnabled:false};return x;}
+async function init(){adapter=new StatsPro2.IndexedDBStorageAdapter();let rows=await adapter.list('teams');if(!rows.length){await adapter.put('teams',DEFAULT_TEAM.teamId,DEFAULT_TEAM);rows=[DEFAULT_TEAM]}teams=rows.map(x=>normalizeTeam(x));return true}
+const ready=init();
+function team(id){return teams.find(t=>t.teamId===id)||null}
+async function persist(t){t=normalizeTeam(t);t.updatedAt=new Date().toISOString();await adapter.put('teams',t.teamId,t);const i=teams.findIndex(x=>x.teamId===t.teamId);if(i<0)teams.push(clone(t));else teams[i]=clone(t);return clone(t)}
+window.Pro2TeamStore={
+ ready,
+ listTeams:()=>clone(teams.filter(t=>t.active)),
+ getTeam:id=>{const t=team(id);return t?clone(t):null},
+ getActivePlayers:id=>{const t=team(id);return t?clone((t.players||[]).filter(p=>p.active)):[]},
+ getOtherTeams:id=>clone(teams.filter(t=>t.active&&t.teamId!==id)),
+ async createTeam(input){const id=input.teamId||('team-'+crypto.randomUUID());if(team(id))throw new Error('Ja existeix aquest equip.');const t={schemaVersion:1,teamId:id,name:String(input.name||'').trim(),category:input.category||{code:'',label:'',ageGroup:null},sex:input.sex||'female',season:String(input.season||'').trim()||'2026-27',visualProfile:input.visualProfile||{profileId:null,backgroundKey:null,customBackgroundAssetId:null},gameFormat:{format:'volleyball-6x6',playersOnCourt:6,minivolleyEnabled:false},players:[],active:true,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};if(!t.name)throw new Error('El nom de l’equip és obligatori.');return persist(t)},
+ async updateTeam(id,patch){const t=team(id);if(!t)throw new Error('Equip no trobat.');Object.assign(t,clone(patch));return persist(t)},
+ async setTeamActive(id,active){const t=team(id);if(!t)throw new Error('Equip no trobat.');t.active=!!active;return persist(t)},
+ async addPlayer(id,p){const t=team(id);if(!t)throw new Error('Equip no trobat.');const name=String(p.name||'').trim(),number=Number(p.number);if(!name||!Number.isInteger(number)||number<0||number>99)throw new Error('Nom o dorsal invàlid.');if((t.players||[]).some(x=>x.active&&x.number===number))throw new Error('Aquest dorsal ja està en ús.');const now=new Date().toISOString();const row={playerId:p.playerId||('player-'+crypto.randomUUID()),number,name,active:true,createdAt:now,updatedAt:now};t.players=t.players||[];t.players.push(row);await persist(t);return clone(row)},
+ async updatePlayer(id,pid,patch){const t=team(id);if(!t)throw new Error('Equip no trobat.');const p=(t.players||[]).find(x=>x.playerId===pid);if(!p)throw new Error('Jugadora no trobada.');if(patch.number!=null){const n=Number(patch.number);if(!Number.isInteger(n)||n<0||n>99)throw new Error('Dorsal invàlid.');if(t.players.some(x=>x.playerId!==pid&&x.active&&x.number===n))throw new Error('Aquest dorsal ja està en ús.');p.number=n}if(patch.name!=null){const n=String(patch.name).trim();if(!n)throw new Error('Nom invàlid.');p.name=n}p.updatedAt=new Date().toISOString();await persist(t);return clone(p)},
+ async setPlayerActive(id,pid,active){const t=team(id);if(!t)throw new Error('Equip no trobat.');const p=(t.players||[]).find(x=>x.playerId===pid);if(!p)throw new Error('Jugadora no trobada.');p.active=!!active;p.updatedAt=new Date().toISOString();await persist(t);return clone(p)}
+};
+})()
