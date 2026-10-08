@@ -1,6 +1,0 @@
-/* V8: preserve photo visibility and full guest labels */
-.panel.glass{background:rgba(17,21,26,.22)!important;backdrop-filter:blur(1.5px)!important;-webkit-backdrop-filter:blur(1.5px)!important}
-.slot .player{text-overflow:clip!important;white-space:normal!important;overflow-wrap:anywhere!important;line-height:1.08!important}
-.slot.guest-slot .player{font-size:clamp(10px,1.08vw,16px)!important;padding-left:3px!important;padding-right:27px!important}
-.slot.empty{background:transparent!important;border-color:rgba(190,190,190,.24)!important}
-@media(orientation:portrait){.slot.guest-slot .player{font-size:clamp(10px,2.65vw,14px)!important;padding-right:23px!important}}

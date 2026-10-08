@@ -1,6 +1,0 @@
-
-.c9-next-wrap{position:fixed;z-index:80;bottom:max(14px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(480px,calc(100% - 28px));display:flex;flex-direction:column;gap:6px}
-#c9-next{width:100%;border:1px solid #ffb46b;border-radius:12px;padding:12px 18px;background:#ef7b22;color:#151515;font-weight:900;box-shadow:0 5px 24px #0009}
-#c9-error{font-size:13px;text-align:center;background:#151515e8;border-radius:6px;color:#fff;padding:5px}#c9-error:empty{display:none}
-body{padding-bottom:75px}
-@media(orientation:landscape){.c9-next-wrap{left:auto;right:max(12px,env(safe-area-inset-right));transform:none;width:min(240px,26vw)}#c9-next{padding:9px 12px}}

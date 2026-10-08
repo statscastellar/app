@@ -1,5 +1,0 @@
-/* Capa 9.3: el resum és independent del títol i ancorat al cantó dret. */
-.info{position:fixed!important;inset:auto!important;top:calc(53px + env(safe-area-inset-top,0px))!important;right:calc(14px + env(safe-area-inset-right,0px))!important;left:auto!important;bottom:auto!important;transform:none!important;float:none!important;margin:0!important;z-index:1000!important;width:clamp(165px,19vw,215px)!important;max-width:30vw!important;box-sizing:border-box!important}
-@media(orientation:landscape) and (max-height:500px){.info{top:calc(47px + env(safe-area-inset-top,0px))!important}}
-@media(orientation:portrait){.info{right:calc(9px + env(safe-area-inset-right,0px))!important;width:145px!important;max-width:42vw!important}}
-@media(orientation:landscape){.stage-panel{position:relative!important}.stage-panel>.instruction{position:absolute!important;top:100%!important;left:0!important;right:auto!important;margin:0!important;z-index:8!important}}

@@ -1,5 +1,0 @@
-
-#opponent{font-size:16px!important;touch-action:manipulation}
-#c9-hide-keyboard{display:none;position:fixed;z-index:9999;right:max(12px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));padding:11px 17px;border:1px solid #ffb46b;border-radius:10px;background:#ef7b22;color:#151515;font:700 16px Arial,sans-serif;box-shadow:0 3px 15px #0008}
-body.c9-typing #c9-hide-keyboard{display:block}
-body.c9-typing .c9-next-wrap{display:none}
