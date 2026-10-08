@@ -119,6 +119,12 @@ function applyAction(state, action) {
       state.flow.rivalTransit = true;
       state.game.phase = PHASE.DEFENSA;
       break;
+    case ACTION.PHASE_SKIP:
+      assert(d.from && d.to, 'Salt de fase incomplet');
+      state.game.phase = d.to;
+      state.flow.rivalCourtAvailable = false;
+      state.flow.rivalTransit = false;
+      break;
     case ACTION.POSITION_CHANGE:
       state.game.court = clone(d.after);
       break;
@@ -477,6 +483,7 @@ function buildCapa7UiState(engine, options = {}) {
     rivalCourtEnabled: !temporaryUiMode && !!state.flow.rivalCourtAvailable,
     sosEnabled: !temporaryUiMode && (sosStatus === 'available' || sosStatus === 'active'),
     sosActive,
+    phaseSkipEnabled: !temporaryUiMode && !sosActive && [PHASE.RECEPCIO,PHASE.DEFENSA,PHASE.COLLOCACIO].includes(phase),
     blocksEnabled: !temporaryUiMode,
     undoEnabled: undoStack.length > 0,
     undoLabel: undoStack.length ? (undoStack[undoStack.length - 1].label || '') : ''
@@ -523,6 +530,7 @@ const ACTION = Object.freeze({
   SOS_AVAILABLE: 'SOS_AVAILABLE',
   SOS_ACTIVATE: 'SOS_ACTIVATE',
   CAMP_RIVAL: 'CAMP_RIVAL',
+  PHASE_SKIP: 'PHASE_SKIP',
   ROTATION: 'ROTATION',
   POSITION_CHANGE: 'POSITION_CHANGE',
   SUBSTITUTION: 'SUBSTITUTION',
@@ -1211,6 +1219,26 @@ class MatchEngine {
     return this.snapshot();
   }
 
+  advancePhase() {
+    assert(this.state.lifecycle.status === 'active', 'Partit finalitzat');
+    assert(!this.state.flow.temporaryMode, 'Hi ha un mode temporal actiu');
+    assert(this.state.flow.sos.status !== 'active', 'No es pot saltar fase durant una Salvada');
+    const from = this.state.game.phase;
+    const next = {
+      [PHASE.RECEPCIO]: PHASE.COLLOCACIO,
+      [PHASE.DEFENSA]: PHASE.COLLOCACIO,
+      [PHASE.COLLOCACIO]: PHASE.ATAC
+    }[from];
+    assert(next, 'Aquesta fase no admet salt manual');
+    this._checkpoint(`SALT ${from} → ${next}`);
+    this._append(ACTION.PHASE_SKIP, { from, to: next });
+    this.state.game.phase = next;
+    this.state.flow.rivalCourtAvailable = false;
+    this.state.flow.rivalTransit = false;
+    this._validate();
+    return this.snapshot();
+  }
+
   rivalCourt() {
     assert(this.state.flow.rivalCourtAvailable, 'Camp rival no disponible');
     assert(!this.state.flow.temporaryMode, 'Mode temporal actiu');
@@ -1538,6 +1566,7 @@ const ACTION_LABEL = Object.freeze({
   [ACTION.POINT]:'Punt',
   [ACTION.SOS_ACTIVATE]:'SOS',
   [ACTION.CAMP_RIVAL]:'Camp rival',
+  [ACTION.PHASE_SKIP]:'Salt de fase',
   [ACTION.ROTATION]:'Rotació',
   [ACTION.POSITION_CHANGE]:'Posicions',
   [ACTION.SUBSTITUTION]:'Canvi',
@@ -2104,6 +2133,11 @@ function validateActionLog(actionLog, state = null) {
       assert(d.playerId, `playerId absent a ${a.actionId}`);
     }
     if (a.type === ACTION.BLOQUEIG) assert([0,1,2].includes(d.value), `Bloqueig només admet 0/1/2 a ${a.actionId}`);
+    if (a.type === ACTION.PHASE_SKIP) {
+      assert([ACTION.RECEPCIO,ACTION.DEFENSA,ACTION.COLLOCACIO].includes(d.from), `Origen de salt invàlid a ${a.actionId}`);
+      const expectedTo = d.from === ACTION.COLLOCACIO ? ACTION.ATAC : ACTION.COLLOCACIO;
+      assert(d.to === expectedTo, `Destí de salt invàlid a ${a.actionId}`);
+    }
     if (a.type === ACTION.POINT) {
       assert(['team','rival'].includes(d.side), `Costat de punt invàlid a ${a.actionId}`);
       assert(d.scoreBefore && d.scoreAfter, `Marcador absent a ${a.actionId}`);

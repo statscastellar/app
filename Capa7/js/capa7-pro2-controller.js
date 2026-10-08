@@ -73,7 +73,7 @@ function render(){
  const s=engine.state, venue=s.metadata.venue, ui=P.buildCapa7UiState(engine,{localMode});
  $('#ownScoreZone').style.order=venue==='away'?'4':'2';$('#rivalScoreZone').style.order=venue==='away'?'2':'4';
  const vt=$('#venueTest');if(vt){vt.value=venue==='away'?'visitant':'local';vt.disabled=true;}
- $('#scoreHome').textContent=s.game.score.team;$('#scoreAway').textContent=s.game.score.rival;$('#setNumber').textContent=s.game.currentSet;$('#rivalName').textContent=s.metadata.opponent;$('#actionValue').textContent=ui.phaseLabel;
+ $('#scoreHome').textContent=s.game.score.team;$('#scoreAway').textContent=s.game.score.rival;$('#setNumber').textContent=s.game.currentSet;$('#rivalName').textContent=s.metadata.opponent;$('#actionValue').textContent=ui.phaseLabel;$('#actionBox').disabled=!ui.phaseSkipEnabled;$('#actionBox').classList.toggle('skip-enabled',ui.phaseSkipEnabled);
  const dots=$('#setDots');dots.innerHTML='';for(let i=0;i<5;i++){const d=document.createElement('i'),r=s.game.sets[i];if(r?.winner==='team')d.className='won';else if(r?.winner==='rival')d.className='lost';else if(i===s.game.currentSet-1)d.className='active';dots.appendChild(d);}
  $('#undoBtn').disabled=!ui.undoEnabled;$('#undoLabel').textContent=ui.undoLabel;
  const camp=$('#rivalCourtBtn');camp.disabled=!ui.rivalCourtEnabled;camp.classList.toggle('enabled',ui.rivalCourtEnabled);
@@ -115,7 +115,7 @@ async function boot(){
  sessionStorage.removeItem(resumeKey);
  await loadTacticalLocks();
  $$('[data-score-team]').forEach(b=>b.onclick=()=>run(()=>Number(b.dataset.delta)>0?engine.manualPoint(b.dataset.scoreTeam==='home'?'team':'rival'):engine.manualMinus(b.dataset.scoreTeam==='home'?'team':'rival')));
- $('#undoBtn').onclick=()=>run(()=>engine.undo());$('#rivalCourtBtn').onclick=()=>run(()=>engine.rivalCourt());$('#sosBtn').onclick=toggleSOS;$('#positionsBtn').onclick=togglePositions;$('#changeBtn').onclick=startChange;$('#homeBtn').onclick=home;$('#finishSetBtn').onclick=finishSet;$('#finishMatchBtn').onclick=finishMatch;$('#modalLayer').onclick=e=>{if(e.target===$('#modalLayer'))closeModal();};
+ $('#actionBox').onclick=()=>run(()=>engine.advancePhase());$('#undoBtn').onclick=()=>run(()=>engine.undo());$('#rivalCourtBtn').onclick=()=>run(()=>engine.rivalCourt());$('#sosBtn').onclick=toggleSOS;$('#positionsBtn').onclick=togglePositions;$('#changeBtn').onclick=startChange;$('#homeBtn').onclick=home;$('#finishSetBtn').onclick=finishSet;$('#finishMatchBtn').onclick=finishMatch;$('#modalLayer').onclick=e=>{if(e.target===$('#modalLayer'))closeModal();};
  render();
 }
 boot().catch(e=>{console.error(e);alert('Error iniciant Pro.2: '+e.message);});

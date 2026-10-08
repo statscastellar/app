@@ -1,4 +1,4 @@
-const CACHE_NAME = 'stats-castellar-1.0.6-release-20261008';
+const CACHE_NAME = 'stats-castellar-1.0.7-release-20261008';
 const APP_SHELL = [
   './',
   './index.html',
@@ -10,6 +10,7 @@ const APP_SHELL = [
   './js/app.js',
   './js/home-pro2.js',
   './shared/pro2-core.bundle.js',
+  './shared/ipad-frame.css',
   './shared/team-store.js',
   './shared/draft-store.js',
   './assets/escut-club.png',

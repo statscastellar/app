@@ -521,3 +521,9 @@ body.position-dragging{overflow:hidden;touch-action:none}
 .player-slot.position-mode .player-id{pointer-events:none}
 .block-slot button:disabled{opacity:.30;filter:grayscale(.55);cursor:not-allowed}
 @media(orientation:landscape) and (max-height:450px){.lock-mark{left:3px;top:3px;width:22px;height:22px;font-size:11px}.lock-toggle{left:3px;top:3px;width:28px;height:28px;font-size:13px}}
+
+/* Stats Castellar 1.0.7 · Acció actual com a salt manual de seqüència */
+.zone.action.skip-enabled{border-color:#e6a24a;box-shadow:inset 0 0 0 1px rgba(230,162,74,.28),0 0 10px rgba(230,162,74,.16);background:linear-gradient(180deg,rgba(30,39,45,.98),rgba(12,22,29,.98))}
+.zone.action.skip-enabled:active{transform:translateY(1px);filter:brightness(1.12)}
+.zone.action.skip-enabled .header-title:after{content:' · TOCA PER SALTAR';font-size:.72em;color:#e6a24a}
+@media(orientation:portrait){.zone.action.skip-enabled .header-title:after{content:' · SALT';}}

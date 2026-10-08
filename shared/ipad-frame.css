@@ -1,0 +1,29 @@
+/* Stats Castellar 1.0.7 · marc responsive compartit per tauletes 4:3 / iPad.
+   Les imatges de fons fixes es mostren completes, sense retallar el seu marc,
+   i respecten les safe areas del dispositiu. No modifica la geometria del contingut. */
+@media (min-width:700px) and (max-width:1400px) and (orientation:landscape) and (max-aspect-ratio:3/2),
+       (min-width:700px) and (max-width:1100px) and (orientation:portrait) {
+  .sc-fixed-bg{
+    top:env(safe-area-inset-top,0px)!important;
+    right:env(safe-area-inset-right,0px)!important;
+    bottom:env(safe-area-inset-bottom,0px)!important;
+    left:env(safe-area-inset-left,0px)!important;
+    width:auto!important;
+    height:auto!important;
+    background-size:contain!important;
+    background-position:center center!important;
+    background-repeat:no-repeat!important;
+    background-color:#15191d!important;
+    transform:none!important;
+  }
+  .sc-ipad-frame::before{
+    top:env(safe-area-inset-top,0px)!important;
+    right:env(safe-area-inset-right,0px)!important;
+    bottom:env(safe-area-inset-bottom,0px)!important;
+    left:env(safe-area-inset-left,0px)!important;
+    background-size:contain!important;
+    background-position:center center!important;
+    background-repeat:no-repeat!important;
+    background-color:#1b100b!important;
+  }
+}
