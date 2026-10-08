@@ -126,3 +126,7 @@
  .screen>.motto{bottom:calc(clamp(76px,11.1dvh,108px)*3 + clamp(8px,1.1dvh,12px)*2 + max(23px,env(safe-area-inset-bottom)) + 5px)!important}
  .motto-script{font-size:clamp(27px,7.4vw,33px)!important}
 }
+
+/* Stats Castellar 1.0.2 — Configuració centrada en quedar 5 opcions */
+.menu .slot:nth-child(5):last-child{grid-column:1 / -1;justify-self:center;width:calc(50% - clamp(5px,.75vw,9px))}
+@media(orientation:portrait){.menu .slot:nth-child(5):last-child{width:calc(50% - 4px)}}
