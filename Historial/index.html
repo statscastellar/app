@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101419">
+  <title>Stats Castellar · Historial de partits</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="scene" role="img" aria-label="Autocar en ruta amb Castellar del Vallès al fons"></div>
+
+  <header class="header">
+    <div class="left">
+      <button id="backBtn" class="back" type="button" aria-label="Tornar a inici">←</button>
+      <div class="brand">STATS <span>CASTELLAR</span></div>
+    </div>
+    <div class="club">
+      <div class="club-name">VOLEI<br>FS CASTELLAR</div>
+      <img src="../assets/escut-club.svg" alt="Escut FS Castellar Volei">
+    </div>
+  </header>
+
+  <main class="stage" aria-label="Historial de partits">
+    <div class="stage-panel">
+      <h1 class="stage-title">HISTORIAL DE <span>PARTITS</span></h1>
+      <p class="stage-subtitle">PARTITS DISPUTATS · CONSULTA I ANÀLISI</p>
+    </div>
+
+    <section class="history-shell" aria-label="Partits guardats">
+      <div class="toolbar">
+        <div class="filter-field">
+          <label for="teamFilter">Equip</label>
+          <select id="teamFilter" aria-label="Filtrar historial per equip">
+            <option value="all">Tots els equips</option>
+          </select>
+        </div>
+        <div class="header-actions">
+          <button id="cumulativeBtn" class="cum" type="button">Estadístiques acumulades</button>
+          <button id="importBtn" class="import" type="button">Importa partit</button>
+          <input id="importFile" type="file" accept="application/json,.json" multiple hidden>
+        </div>
+      </div>
+
+      <section id="selectionPanel" class="selection-panel">
+        <div>
+          <strong>ANÀLISI HISTÒRICA</strong>
+          <span>Selecciona quins partits vols incloure a les taules i gràfiques.</span>
+        </div>
+        <div class="selection-actions">
+          <button id="selectModeBtn" type="button">Seleccionar partits</button>
+          <button id="selectAllBtn" type="button" hidden>Tots</button>
+          <button id="selectNoneBtn" type="button" hidden>Cap</button>
+          <button id="analyzeSelectedBtn" type="button" hidden>Analitzar seleccionats</button>
+        </div>
+        <div id="selectionStatus" class="selection-status"></div>
+      </section>
+
+      <div class="history-scroll">
+        <section id="empty" class="empty" hidden>No hi ha cap partit finalitzat.</section>
+        <section id="list" class="history-list"></section>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" hidden></div>
+  <script src="../shared/pro2-core.bundle.js"></script>
+  <script src="../shared/team-store.js"></script>
+  <script src="history.js"></script>
+</body>
+</html>

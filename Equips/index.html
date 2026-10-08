@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stats Castellar · Equips · Integració 064</title>
+<link rel="stylesheet" href="css/equips.css">
+  <link rel="stylesheet" href="shared/responsive-core.css">
+</head>
+<body>
+<main class="screen">
+  <div class="bg"></div>
+  <div class="overlay"></div>
+  <img class="wall-crest" id="wallCrest" src="assets/escut-paret.png" alt="" aria-hidden="true">
+  <header class="header">
+    <div class="left">
+      <button class="back" type="button" aria-label="Tornar enrere" onclick="location.href='../index.html'">←</button>
+      <div class="brand">STATS <span>CASTELLAR</span></div>
+    </div>
+    <div class="club">
+      <div class="club-name">VOLEI<br>FS CASTELLAR</div>
+      <img src="assets/escut-club.svg" alt="Escut oficial Volei FS Castellar">
+    </div>
+  </header>
+  <section class="title-card">
+    <h1>EQU<span class="orange">IPS</span></h1>
+    <p>GESTIÓ D’EQUIPS I PLANTILLES</p>
+  </section>
+
+
+  <section id="teamsView" class="teams-panel view active" aria-label="Llista d'equips">
+    <div id="teamsList">
+      <div class="team-row" id="teamRow" data-team-id="infantil-a">
+        <a class="team-link" href="#plantilla" aria-label="Obrir Infantil Femení A">
+          <div class="team-main">
+            <div class="team-name">Infantil Femení A</div>
+            <div class="team-meta">Infantil · Femení · Temporada 2026-27</div>
+          </div>
+          
+        </a>
+        <div class="team-actions">
+          <button class="icon-btn edit" id="editTeam" type="button" aria-label="Editar equip">✎</button>
+          <button class="delete-team" id="deleteTeam" type="button" aria-label="Eliminar equip">×</button>
+        </div>
+      </div>
+    </div>
+    <a class="add-team" id="addTeam" href="#afegir-equip" aria-label="Afegir equip">
+      <span class="plus">+</span>
+      <span>Afegir equip</span>
+    </a>
+  </section>
+
+
+
+  <div class="modal" id="teamModal" aria-hidden="true">
+    <div class="modal-card">
+      <h2 id="teamModalTitle">Afegir equip</h2>
+      <div class="form-grid">
+        <div class="field full">
+          <label for="teamNameInput">Nom de l’equip</label>
+          <input id="teamNameInput" type="text" placeholder="Ex. Infantil Femení A">
+        </div>
+        <div class="field">
+          <label for="teamCategoryInput">Categoria</label>
+          <select id="teamCategoryInput"><option>Sènior</option><option>Júnior</option><option>Juvenil</option><option>Cadet</option><option selected>Infantil</option><option>Màster</option></select>
+        </div>
+        <div class="field">
+          <label for="teamSexInput">Sexe</label>
+          <select id="teamSexInput"><option selected>Femení</option><option>Masculí</option></select><small class="field-hint">Màster es defineix automàticament com a Mixt.</small>
+        </div>
+        <div class="field full">
+          <label for="teamSeasonInput">Temporada</label>
+          <input id="teamSeasonInput" type="text" value="2026-27" placeholder="2026-27">
+        </div>
+      </div>
+      <div class="small-note">Els equips es mostraran automàticament de categoria més alta a més baixa.</div>
+      <div class="modal-actions">
+        <button class="btn secondary" id="cancelTeam" type="button">Cancel·lar</button>
+        <button class="btn primary" id="saveTeam" type="button">Desar</button>
+      </div>
+    </div>
+  </div>
+<section id="eliminar-equip-2" class="hash-modal">
+    <div class="hash-card">
+      <h2>Segona confirmació</h2>
+      <p>S’eliminarà l’equip i tota la seva plantilla. Aquesta acció no es pot desfer.</p>
+      <div class="hash-actions">
+        <a class="hash-btn secondary" href="#">Cancel·lar</a>
+        <a class="hash-btn danger" href="#">Eliminar definitivament</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="../shared/pro2-core.bundle.js"></script>
+<script src="../shared/visual-profiles.js"></script><script src="../shared/team-store.js"></script>
+<script src="js/equips.js" defer></script>
+
+  <script src="shared/responsive-core.js"></script>
+  <script>
+    StatsResponsive.mount({
+      root: '.screen',
+      header: '.header',
+      title: '.title-card',
+      content: '.teams-panel'
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,337 @@
+:root {
+  --orange:#f47721;
+  --header-h:76px;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-left:env(safe-area-inset-left,0px);
+  --safe-right:env(safe-area-inset-right,0px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;width:100%;font-family:Arial,Helvetica,sans-serif;background:#15191d;color:white}
+body{min-height:100vh;min-height:100dvh;overflow-x:hidden}
+.screen{position:relative;width:100vw;height:100vh;height:100dvh;overflow:hidden;background:#111}
+.bg{position:absolute;inset:0;background:url("../assets/equips-fons.png") center center / cover no-repeat;}
+.overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.10),transparent 35%);pointer-events:none}
+
+/* ESCUT DE PARET: mateix SVG oficial, recurs independent del fons raster. */
+.wall-crest{
+  position:absolute;
+  z-index:2;
+  width:clamp(74px,8.4vw,142px);
+  height:auto;
+  object-fit:contain;
+  transform:none;
+  transform-origin:center center;
+  pointer-events:none;
+  user-select:none;
+  opacity:1;
+  filter:none;
+  will-change:left,top,width;
+}
+
+
+
+
+
+/* CAPÇALERA: còpia del Pas 1 real. */
+.header{position:relative;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:76px;padding:calc(env(safe-area-inset-top,0px) + 9px) max(18px,env(safe-area-inset-right,0px)) 9px max(18px,env(safe-area-inset-left,0px));background:rgba(10,14,18,.89);border-bottom:2px solid #f47721}
+.left{display:flex;align-items:center;gap:16px;min-width:0}
+.back{border:0;background:transparent;color:#fff;font-size:30px;line-height:1;cursor:pointer;min-width:34px;min-height:44px;padding:0}
+.brand{font-size:clamp(15px,2vw,22px);font-style:italic;font-weight:900;white-space:nowrap;letter-spacing:.1px}
+.brand span{color:#f47721}
+.club{display:flex;align-items:center;gap:9px;flex-shrink:0}
+.club img{display:block;width:auto;height:clamp(39px,5.2vw,53px);object-fit:contain}
+.club-name{font-weight:900;font-size:clamp(10px,1.15vw,14px);font-style:italic;line-height:1.08;white-space:nowrap}
+@media(max-width:480px){.header{min-height:65px;padding-top:calc(env(safe-area-inset-top,0px) + 6px);padding-bottom:6px}.left{gap:8px}.brand{font-size:15px}.club{gap:5px}.club img{height:38px}.club-name{font-size:9px}}
+@media(orientation:portrait){.bg{background-position:40% center}}
+@media(orientation:landscape) and (max-height:500px){.header{min-height:52px;padding-top:max(5px,env(safe-area-inset-top,0px));padding-bottom:4px}.club img{height:36px}.brand{font-size:17px}.bg{background-position:center 55%}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* Títol / cos: el responsive-core els situa dins el mateix marc canònic de Pas 1. */
+.title-card{position:absolute;z-index:15;left:clamp(18px,22vw,360px);top:calc(var(--safe-top) + var(--header-h) + 18px);width:min(360px,calc(100vw - 36px - var(--safe-left) - var(--safe-right)));padding:14px 20px 15px;border-radius:16px;background:rgba(47,48,55,.54);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 10px 26px rgba(0,0,0,.20)}
+.title-card h1{margin:0;font-size:clamp(42px,4.2vw,58px);line-height:.92;font-style:italic;font-weight:900;letter-spacing:.2px;text-transform:uppercase;white-space:nowrap}
+.title-card .orange{color:var(--orange)}
+.title-card p{margin:7px 0 0;font-size:clamp(12px,.92vw,14px);line-height:1.1;font-weight:800;letter-spacing:.1px;text-transform:uppercase;white-space:nowrap}
+@media(max-width:900px){.title-card{left:clamp(14px,16vw,90px);top:calc(var(--safe-top) + var(--header-h) + 16px);width:min(520px,calc(100vw - 28px - var(--safe-left) - var(--safe-right)));padding:16px 22px}.title-card h1{font-size:clamp(36px,8vw,52px)}.title-card p{font-size:clamp(12px,2.6vw,14px)}}
+@media(orientation:landscape){:root{--header-h:50px}.title-card{left:clamp(120px,16vw,220px);top:calc(var(--safe-top) + var(--header-h) + 10px);width:clamp(280px,24vw,350px);padding:10px 18px 12px;border-radius:16px}.title-card h1{font-size:clamp(28px,3.8vw,40px);line-height:.92}.title-card p{margin-top:6px;font-size:clamp(10px,1vw,12px);white-space:nowrap}}
+@media(orientation:portrait) and (max-width:500px){.title-card{left:18px}.title-card p{white-space:normal;max-width:22ch}}
+
+.teams-panel{
+  position:absolute;
+  z-index:14;
+  left:clamp(18px, 22vw, 360px);
+  top:calc(var(--safe-top) + var(--header-h) + 128px);
+  width:min(620px, calc(100vw - 36px - var(--safe-left) - var(--safe-right)));
+}
+.team-row,
+.add-team{
+  display:flex;
+  align-items:center;
+  min-height:58px;
+  padding:12px 18px;
+  border-radius:14px;
+  background:rgba(30,32,38,.72);
+  box-shadow:0 8px 24px rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.07);
+}
+.team-row{
+  justify-content:space-between;
+  cursor:pointer;
+}
+.team-name{
+  font-size:clamp(18px,1.7vw,24px);
+  font-weight:900;
+  letter-spacing:.1px;
+}
+.team-arrow{
+  font-size:28px;
+  line-height:1;
+  opacity:.9;
+}
+.add-team{
+  margin-top:10px;
+  gap:10px;
+  cursor:pointer;
+  color:#fff;
+}
+.add-team .plus{
+  width:28px;
+  height:28px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:var(--orange);
+  color:#111;
+  font-size:22px;
+  font-weight:900;
+}
+.add-team span:last-child{
+  font-size:clamp(16px,1.5vw,20px);
+  font-weight:800;
+}
+@media (orientation: landscape){
+  .teams-panel{
+    left:clamp(120px, 16vw, 220px);
+    top:calc(var(--safe-top) + var(--header-h) + 95px);
+    width:clamp(360px, 34vw, 500px);
+  }
+  .team-row,
+  .add-team{
+    min-height:48px;
+    padding:10px 16px;
+    border-radius:13px;
+  }
+  .team-name{font-size:clamp(16px,1.7vw,21px);}
+  .add-team span:last-child{font-size:clamp(14px,1.4vw,18px);}
+}
+@media (orientation: portrait) and (max-width:500px){
+  .teams-panel{
+    left:18px;
+    right:18px;
+    width:auto;
+    top:calc(var(--safe-top) + var(--header-h) + 150px);
+  }
+}
+
+
+.team-actions{display:flex;align-items:center;gap:10px}
+.delete-team{
+  width:34px;height:34px;border:0;border-radius:10px;
+  background:rgba(187,45,45,.88);color:#fff;
+  display:grid;place-items:center;font-size:18px;font-weight:900;
+}
+.team-open{
+  width:34px;height:34px;border:0;border-radius:10px;
+  background:rgba(255,255,255,.08);color:#fff;
+  display:grid;place-items:center;font-size:26px;line-height:1;
+}
+.view{display:none}
+.view.active{display:block}
+.roster-panel{
+  position:absolute;z-index:14;
+  left:clamp(18px,22vw,360px);
+  top:calc(var(--safe-top) + var(--header-h) + 128px);
+  width:min(660px,calc(100vw - 36px - var(--safe-left) - var(--safe-right)));
+}
+.roster-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  margin-bottom:10px
+}
+.roster-title{
+  font-size:clamp(18px,1.7vw,24px);font-weight:900
+}
+.roster-list{
+  display:grid;grid-template-columns:1fr;gap:8px;
+  max-height:calc(100vh - 245px);overflow:auto;padding-right:2px
+}
+.player-row{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  min-height:44px;padding:9px 14px;border-radius:12px;
+  background:rgba(30,32,38,.72);border:1px solid rgba(255,255,255,.06)
+}
+.player-id{display:flex;align-items:center;gap:10px;min-width:0}
+.player-number{
+  min-width:34px;height:34px;padding:0 8px;border-radius:9px;
+  display:grid;place-items:center;background:rgba(239,134,39,.95);
+  color:#111;font-weight:900
+}
+.player-name{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.remove-player{
+  border:0;border-radius:9px;padding:7px 10px;
+  background:rgba(187,45,45,.88);color:#fff;font-weight:900
+}
+.roster-actions{display:flex;gap:8px;flex-wrap:wrap}
+.action-btn{
+  border:0;border-radius:11px;padding:10px 14px;
+  font-weight:900;font-size:14px
+}
+.action-btn.orange{background:var(--orange);color:#111}
+.action-btn.dark{background:rgba(255,255,255,.10);color:#fff}
+@media (orientation: landscape){
+  .roster-panel{
+    left:clamp(120px,16vw,220px);
+    top:calc(var(--safe-top) + var(--header-h) + 95px);
+    width:clamp(420px,45vw,640px);
+  }
+  .roster-list{max-height:calc(100vh - 190px)}
+}
+@media (orientation: portrait) and (max-width:500px){
+  .roster-panel{
+    left:18px;right:18px;width:auto;
+    top:calc(var(--safe-top) + var(--header-h) + 150px);
+  }
+  .roster-list{max-height:calc(100vh - 275px)}
+}
+
+
+.team-link{
+  flex:1;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  color:inherit;text-decoration:none;min-width:0
+}
+.team-row{gap:10px}
+.back-link{display:inline-block;text-decoration:none}
+.roster-target{display:none}
+.roster-target:target{display:block}
+body:has(.roster-target:target) #teamsView{display:none}
+body:has(.roster-target:target) .title-card h1,
+body:has(.roster-target:target) .title-card p{visibility:hidden}
+.roster-target:target::before{
+  content:"INFANTIL A";
+  display:block;
+  font-size:clamp(26px,3.6vw,40px);
+  line-height:.95;
+  font-style:italic;
+  font-weight:900;
+  margin-bottom:4px
+}
+.roster-target:target::after{
+  content:"GESTIÓ DE PLANTILLA";
+  display:block;
+  font-size:clamp(10px,1vw,12px);
+  font-weight:800;
+  margin-bottom:12px
+}
+
+
+/* ===== Capa Equips v6: gestió completa ===== */
+.icon-btn{
+  border:0;border-radius:10px;min-width:34px;height:34px;padding:0 10px;
+  display:grid;place-items:center;font-weight:900;cursor:pointer
+}
+.icon-btn.edit{background:rgba(255,255,255,.10);color:#fff}
+.team-meta{font-size:12px;opacity:.72;margin-top:3px;font-weight:700}
+.team-main{min-width:0}
+.team-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.team-actions{flex-shrink:0}
+.roster-toolbar{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-bottom:10px;flex-wrap:wrap
+}
+.roster-count{font-size:12px;opacity:.75;font-weight:800}
+.player-tools{display:flex;gap:7px;align-items:center}
+.edit-player{
+  border:0;border-radius:9px;padding:7px 10px;
+  background:rgba(255,255,255,.10);color:#fff;font-weight:900
+}
+.empty-state{
+  padding:18px;border-radius:12px;background:rgba(30,32,38,.72);
+  border:1px dashed rgba(255,255,255,.16);text-align:center;font-weight:800;opacity:.85
+}
+.modal{
+  position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;
+  padding:calc(18px + var(--safe-top)) calc(18px + var(--safe-right)) 18px calc(18px + var(--safe-left));
+  background:rgba(0,0,0,.66)
+}
+.modal.open{display:flex}
+.modal-card{
+  width:min(520px,100%);max-height:calc(100vh - 36px);overflow:auto;
+  border-radius:18px;padding:18px;background:rgba(24,27,34,.98);
+  border:1px solid rgba(255,255,255,.10);box-shadow:0 18px 60px rgba(0,0,0,.45)
+}
+.modal-card h2{margin:0 0 14px;font-size:24px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field.full{grid-column:1/-1}
+.field label{font-size:12px;font-weight:900;opacity:.8;text-transform:uppercase}
+.field input,.field select{
+  width:100%;border:1px solid rgba(255,255,255,.12);border-radius:10px;
+  background:#151922;color:#fff;padding:11px 12px;font:inherit;outline:none
+}
+.field input:focus,.field select:focus{border-color:var(--orange)}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.btn{
+  border:0;border-radius:10px;padding:10px 14px;font-weight:900;cursor:pointer
+}
+.btn.primary{background:var(--orange);color:#111}
+.btn.secondary{background:rgba(255,255,255,.10);color:#fff}
+.btn.danger{background:#a52d2d;color:#fff}
+.small-note{font-size:11px;opacity:.68;margin-top:8px;line-height:1.35}
+@media (max-width:520px){
+  .form-grid{grid-template-columns:1fr}
+  .field.full{grid-column:auto}
+  .modal-card{padding:16px}
+}
+
+
+a.icon-btn,a.delete-team,a.add-team,a.action-btn,a.edit-player,a.remove-player{
+  text-decoration:none
+}
+.hash-modal{
+  position:fixed;inset:0;z-index:100;display:none;
+  align-items:center;justify-content:center;
+  padding:calc(18px + var(--safe-top)) calc(18px + var(--safe-right)) 18px calc(18px + var(--safe-left));
+  background:rgba(0,0,0,.72)
+}
+.hash-modal:target{display:flex}
+.hash-card{
+  width:min(520px,100%);max-height:calc(100vh - 36px);overflow:auto;
+  border-radius:18px;padding:18px;background:#181b22;
+  border:1px solid rgba(255,255,255,.10);box-shadow:0 18px 60px rgba(0,0,0,.45)
+}
+.hash-card h2{margin:0 0 14px;font-size:24px}
+.hash-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;flex-wrap:wrap}
+.hash-btn{
+  display:inline-block;text-decoration:none;border-radius:10px;padding:10px 14px;font-weight:900
+}
+.hash-btn.primary{background:var(--orange);color:#111}
+.hash-btn.secondary{background:rgba(255,255,255,.10);color:#fff}
+.hash-btn.danger{background:#a52d2d;color:#fff}
+.hash-card .field{margin-bottom:10px}
+.hash-card input,.hash-card select{
+  width:100%;border:1px solid rgba(255,255,255,.12);border-radius:10px;
+  background:#151922;color:#fff;padding:11px 12px;font:inherit
+}
+.hash-card label{display:block;font-size:12px;font-weight:900;opacity:.8;margin-bottom:5px;text-transform:uppercase}
+
+/* 006: controls funcionals sense navegació hash de la maqueta antiga */
+button.action-btn,button.edit-player,button.remove-player,button.icon-btn,button.delete-team{font:inherit;cursor:pointer}
+button.edit-player,button.remove-player{border:0}
+
+
+
+/* Integració 064: plantilla en pantalla separada. */
+.roster-page .roster-panel{display:flex!important;flex-direction:column;position:absolute;z-index:14;left:clamp(120px,16vw,220px);top:calc(var(--safe-top) + var(--header-h) + 95px);width:clamp(420px,45vw,640px);height:calc(100dvh - var(--safe-top) - var(--header-h) - 115px);min-height:0;overflow:hidden}
+.roster-page .roster-head{flex:0 0 auto}
+.roster-page .roster-list{flex:1 1 auto;min-height:0;max-height:none!important;overflow-y:auto!important;overflow-x:hidden;padding-right:8px;scrollbar-gutter:stable}
+.roster-page .roster-list::-webkit-scrollbar{width:10px}.roster-page .roster-list::-webkit-scrollbar-thumb{background:rgba(244,119,33,.85);border-radius:999px}.roster-page .roster-list::-webkit-scrollbar-track{background:rgba(255,255,255,.08);border-radius:999px}
+.roster-page .roster-list{scrollbar-width:auto;scrollbar-color:rgba(244,119,33,.85) rgba(255,255,255,.08)}
+@media(orientation:portrait){.roster-page .roster-panel{left:18px;right:18px;width:auto;top:calc(var(--safe-top) + var(--header-h) + 150px);height:calc(100dvh - var(--safe-top) - var(--header-h) - 170px)}}

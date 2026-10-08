@@ -1,0 +1,146 @@
+/*
+  STATS CASTELLAR · RESPONSIVE CORE 002
+  Patró canònic extret del Pas 1 REAL (Capa 9.1), no reinterpretat.
+  Objectiu: que qualsevol pantalla adopti el mateix marc geomètric i
+  el mateix comportament per PC / tauleta / mòbil / safe areas.
+*/
+:root{
+  --sc-safe-top:env(safe-area-inset-top,0px);
+  --sc-safe-right:env(safe-area-inset-right,0px);
+  --sc-safe-bottom:env(safe-area-inset-bottom,0px);
+  --sc-safe-left:env(safe-area-inset-left,0px);
+  --sc-orange:#f47721;
+}
+
+html.sc-responsive-ready,
+html.sc-responsive-ready body{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  height:100dvh;
+  min-height:0!important;
+  max-height:100dvh;
+  overflow:hidden!important;
+  overscroll-behavior:none;
+}
+
+/* La pantalla passa a seguir la mateixa estructura vertical del Pas 1. */
+.sc-responsive-ready .screen,
+.sc-r-root{
+  display:flex!important;
+  flex-direction:column!important;
+  width:100%!important;
+  height:100%!important;
+  height:100dvh!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+
+/* Capçalera: mateix principi del Pas 1, amb safe areas reals. */
+
+/* Marc canònic del Pas 1: 1040px centrats, no left fixes ni vw arbitraris. */
+.sc-r-stage{
+  position:relative!important;
+  z-index:14!important;
+  flex:1 1 0!important;
+  min-height:0!important;
+  width:min(100%,1040px)!important;
+  max-width:1040px!important;
+  margin:0 auto!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:flex-start!important;
+  align-items:stretch!important;
+  gap:clamp(8px,1.5vh,15px)!important;
+  padding-top:clamp(9px,2vh,20px)!important;
+  padding-bottom:8px!important;
+  padding-left:max(22px,var(--sc-safe-left))!important;
+  padding-right:max(22px,var(--sc-safe-right))!important;
+  pointer-events:auto!important;
+}
+
+/* Títol: geometria i escala final del Pas 1. */
+.sc-r-title{
+  position:relative!important;
+  inset:auto!important;
+  flex:0 0 auto!important;
+  display:block!important;
+  width:fit-content!important;
+  max-width:100%!important;
+  align-self:flex-start!important;
+  text-align:left!important;
+  padding:17px 25px 19px!important;
+  border-radius:12px!important;
+}
+.sc-r-title h1{
+  margin:0!important;
+  font-size:clamp(34px,5vw,58px)!important;
+  line-height:1.03!important;
+  letter-spacing:-1.4px!important;
+  white-space:nowrap!important;
+}
+.sc-r-title p{
+  margin:9px 0 0!important;
+  font-size:clamp(12px,1.3vw,16px)!important;
+  line-height:1.1!important;
+  letter-spacing:1.2px!important;
+  white-space:nowrap!important;
+}
+
+/* Contingut: deixa de dependre de coordenades absolutes; s'ancora al mateix marc. */
+.sc-r-content{
+  position:relative!important;
+  inset:auto!important;
+  left:auto!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:auto!important;
+  align-self:flex-start!important;
+  max-width:100%!important;
+  margin:0!important;
+}
+.sc-r-content.teams-panel{width:min(620px,100%)!important;}
+.sc-r-content.roster-panel{width:min(660px,100%)!important;}
+
+/* Mòbil vertical: conserva exactament la filosofia final del Pas 1. */
+@media (orientation:portrait){
+  .sc-r-stage{
+    justify-content:flex-start!important;
+    gap:clamp(7px,1.2vh,12px)!important;
+    padding-top:clamp(8px,1.4vh,13px)!important;
+    padding-bottom:clamp(105px,14vh,145px)!important;
+  }
+  .sc-r-title{padding:8px 13px!important;}
+  .sc-r-title h1{font-size:clamp(27px,7vw,37px)!important;}
+  .sc-r-title p{margin-top:4px!important;font-size:clamp(9px,2.5vw,12px)!important;}
+  .sc-r-content{width:100%!important;max-width:100%!important;}
+}
+
+/* Mòbil horitzontal / Safari: mateixa compactació i respecte del notch. */
+@media (orientation:landscape) and (max-height:600px){
+  .sc-r-stage{
+    padding-left:max(22px,calc(var(--sc-safe-left) + 12px))!important;
+    padding-right:max(22px,calc(var(--sc-safe-right) + 12px))!important;
+  }
+}
+@media (orientation:landscape) and (max-height:500px){
+  .sc-r-stage{
+    justify-content:center!important;
+    gap:7px!important;
+    padding-top:5px!important;
+    padding-bottom:max(5px,var(--sc-safe-bottom))!important;
+  }
+  .sc-r-title{padding:6px 15px!important;}
+  .sc-r-title h1{font-size:clamp(24px,7vh,31px)!important;}
+  .sc-r-title p{margin-top:2px!important;font-size:10px!important;}
+  .sc-r-content.teams-panel{width:min(620px,100%)!important;}
+  .sc-r-content.roster-panel{width:min(660px,100%)!important;}
+}
+
+/* Pantalles verticals baixes: compactació sense desbordar. */
+@media (orientation:portrait) and (max-height:700px){
+  .sc-r-stage{gap:6px!important;}
+  .sc-r-title{padding:6px 12px!important;}
+  .sc-r-title h1{font-size:29px!important;}
+}
