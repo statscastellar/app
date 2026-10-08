@@ -36,10 +36,12 @@ function buildMatchAnalytics(report){
 function mergeBucket(target,b){if(!b)return;for(const k of [0,1,2,3])target.counts[k]+=Number(b.counts?.[k]||0);}
 function finalizeBucket(b){b.actions=[0,1,2,3].reduce((s,k)=>s+b.counts[k],0);b.annaPoints=b.counts[1]*5+b.counts[2]*8+b.counts[3]*10;b.efficiency=b.actions?b.annaPoints/(b.actions*10):null;b.percentages={};for(const k of [0,1,2,3])b.percentages[k]=b.actions?b.counts[k]/b.actions:null;return b;}
 function newBucket(){return {counts:{0:0,1:0,2:0,3:0},actions:0,annaPoints:0,efficiency:null,percentages:{0:null,1:null,2:null,3:null}};}
+function canonicalTeamId(id){id=String(id||'');return id==='infantil-a'||id==='castellar-infantil-a'?'castellar-infantil-a':id;}
+function canonicalPlayerId(p,teamId){const id=String(p?.playerId||'');if(canonicalTeamId(teamId)==='castellar-infantil-a'){const m=id.match(/^(?:ia-|p)(\d+)$/);if(m)return `p${Number(m[1])}`;}return id;}
 function reportDateKey(r,i){const d=r?.metadata?.date||'';return `${d}|${String(i).padStart(5,'0')}`;}
 function buildHistoryAnalytics(reports,options={}){
   let arr=(reports||[]).filter(Boolean);
-  const teamId=options.teamId||null;if(teamId)arr=arr.filter(r=>r?.metadata?.teamId===teamId);
+  const teamId=options.teamId?canonicalTeamId(options.teamId):null;if(teamId)arr=arr.filter(r=>canonicalTeamId(r?.metadata?.teamId)===teamId);
   arr=arr.map((r,i)=>({r,i})).sort((a,b)=>reportDateKey(a.r,a.i).localeCompare(reportDateKey(b.r,b.i))).map(x=>x.r);
   const perMatch=arr.map(r=>buildMatchAnalytics(r));
   const playerMap={};
@@ -48,9 +50,10 @@ function buildHistoryAnalytics(reports,options={}){
     const match=buildMatchAnalytics(report);
     for(const t of ANNA_TYPES)mergeBucket(teamFoundations[t],report?.stats?.teamAnna?.[t]);
     for(const p of report?.stats?.players||[]){
-      const x=playerMap[p.playerId]||(playerMap[p.playerId]={playerId:p.playerId,number:p.number??'',name:p.name||'',matches:[],foundations:Object.fromEntries(ANNA_TYPES.map(t=>[t,newBucket()])),total:newBucket(),saves:{counts:{1:0,2:0,3:0},total:0},blocks:{counts:{0:0,1:0,2:0},total:0}});
+      const canonicalId=canonicalPlayerId(p,report?.metadata?.teamId),key=canonicalId||String(p.playerId||'');
+      const x=playerMap[key]||(playerMap[key]={playerId:canonicalId||p.playerId,number:p.number??'',name:p.name||'',matches:[],foundations:Object.fromEntries(ANNA_TYPES.map(t=>[t,newBucket()])),total:newBucket(),saves:{counts:{1:0,2:0,3:0},total:0},blocks:{counts:{0:0,1:0,2:0},total:0}});
       x.number=p.number??x.number;x.name=p.name||x.name;
-      const pi=match.players.find(y=>y.playerId===p.playerId)||playerMatchInsight(p);
+      const pi=match.players.find(y=>String(y.playerId)===String(p.playerId))||playerMatchInsight(p);
       x.matches.push({matchId:report.matchId,date:report.metadata?.date||'',opponent:report.metadata?.opponent||'Rival',actions:pi.actions,efficiency:pi.efficiency,impact:pi.impact,pct0:pi.pct0,pct3:pi.pct3,foundations:pi.foundations});
       for(const t of ANNA_TYPES)mergeBucket(x.foundations[t],p?.anna?.[t]);
       mergeBucket(x.total,p?.annaTotal);
@@ -69,4 +72,4 @@ function buildHistoryAnalytics(reports,options={}){
   const total=newBucket();for(const t of ANNA_TYPES)mergeBucket(total,teamFoundations[t]);finalizeBucket(total);
   return {teamId:teamId||arr[0]?.metadata?.teamId||null,teamName:arr[0]?.metadata?.teamName||'',matches:arr.length,perMatch,players,teamFoundations:Object.entries(teamFoundations).map(([type,b])=>({type,label:LABELS[type]||type,...b})),teamTotal:total,teamFoundationEvolution};
 }
-module.exports={LABELS,TREND_THRESHOLD,trendLabel,scoreText,buildMatchAnalytics,buildHistoryAnalytics};
+module.exports={LABELS,TREND_THRESHOLD,trendLabel,scoreText,buildMatchAnalytics,buildHistoryAnalytics,canonicalTeamId,canonicalPlayerId};
