@@ -127,6 +127,14 @@
  .motto-script{font-size:clamp(27px,7.4vw,33px)!important}
 }
 
-/* Stats Castellar 1.0.2 — Configuració centrada en quedar 5 opcions */
-.menu .slot:nth-child(5):last-child{grid-column:1 / -1;justify-self:center;width:calc(50% - clamp(5px,.75vw,9px))}
-@media(orientation:portrait){.menu .slot:nth-child(5):last-child{width:calc(50% - 4px)}}
+/* Stats Castellar 1.0.5 — Configuració centrada exactament sota Historial i Equips */
+.menu .slot:nth-child(5){
+  grid-column:1 / -1!important;
+  justify-self:center!important;
+  width:calc((100% - clamp(9px,1.5vw,18px))/2)!important;
+}
+@media(orientation:portrait){
+  .menu .slot:nth-child(5){
+    width:calc((100% - clamp(8px,1.1dvh,12px))/2)!important;
+  }
+}
