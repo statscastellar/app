@@ -89,7 +89,27 @@ async function startMatch(serveSide){
  d.initialServe={side:serveSide,serverPlayerId:serveSide==='team'?spots['1']:null};
  d.completedSteps.step4=true;
  Pro2DraftStore.save(d);
- try{const made=P.createMatchFromDraft(d,{matchId:crypto.randomUUID()});const engine=new P.MatchEngine(made.state,made.actionLog);const storage=new P.Pro2Storage(new P.IndexedDBStorageAdapter());await storage.saveActive(engine);sessionStorage.setItem('StatsCastellarPro2_ResumeMatchId_v1',made.state.identity.matchId);Pro2DraftStore.clear();location.href='../Capa7/index.html';}catch(e){$('done').textContent='No s’ha pogut crear el partit: '+e.message;$('done').hidden=false;}
+ try{
+  const storage=new P.Pro2Storage(new P.IndexedDBStorageAdapter());
+  if(d.flowMode==='nextSet'){
+   if(!d.activeMatchId) throw new Error('Falta l’identificador del partit actiu.');
+   const engine=await storage.loadActive(d.activeMatchId);
+   if(!engine) throw new Error('No s’ha trobat el partit actiu que s’estava preparant.');
+   if(!engine.canStartNextSet()) throw new Error('El partit no té cap set pendent d’iniciar.');
+   engine.startNextSet({court:d.positions,servingSide:serveSide});
+   await storage.saveActive(engine);
+   sessionStorage.setItem('StatsCastellarPro2_ResumeMatchId_v1',engine.state.identity.matchId);
+   Pro2DraftStore.clear();
+   location.href='../Capa7/index.html';
+   return;
+  }
+  const made=P.createMatchFromDraft(d,{matchId:crypto.randomUUID()});
+  const engine=new P.MatchEngine(made.state,made.actionLog);
+  await storage.saveActive(engine);
+  sessionStorage.setItem('StatsCastellarPro2_ResumeMatchId_v1',made.state.identity.matchId);
+  Pro2DraftStore.clear();
+  location.href='../Capa7/index.html';
+ }catch(e){$('done').textContent=(d.flowMode==='nextSet'?'No s’ha pogut iniciar el set següent: ':'No s’ha pogut crear el partit: ')+e.message;$('done').hidden=false;}
 }
 $('save').onclick=openServeDialog;
 serveDialog.querySelectorAll('[data-side]').forEach(b=>b.onclick=()=>setServeSelection(b.dataset.side));

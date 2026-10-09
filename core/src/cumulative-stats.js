@@ -49,7 +49,7 @@ function calculateVerifiedCumulative(records,options={}) {
  const sources=input.map(verifyCompletedSource);
  const cumulative=calculateCumulative(input,options);
  const sourceAudit=sources
-   .filter(s=>!options.teamId||s.teamId===options.teamId)
+   .filter(s=>!options.teamId||canonicalTeamId(s.teamId)===canonicalTeamId(options.teamId))
    .sort((a,b)=>String(a.matchId).localeCompare(String(b.matchId)));
  const aggregateCore=clone(cumulative);
  const aggregateDigest=valueDigest({sources:sourceAudit,cumulative:aggregateCore});

@@ -1,0 +1,57 @@
+/* Stats Castellar 1.1.0
+   Taules de jugadores: identitat fixa a l'esquerra + desplaçament horitzontal.
+   No altera dades, càlculs ni impressió/exportacions. */
+.sc-player-scroll{
+  position:relative;
+  width:100%;
+  max-width:100%;
+  overflow-x:auto!important;
+  overflow-y:visible;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-inline:contain;
+  scrollbar-gutter:stable;
+  padding-bottom:3px;
+}
+.sc-player-scroll::-webkit-scrollbar{height:11px}
+.sc-player-scroll::-webkit-scrollbar-track{background:#dfe6eb;border-radius:999px}
+.sc-player-scroll::-webkit-scrollbar-thumb{background:#70889a;border:2px solid #dfe6eb;border-radius:999px}
+.sc-player-scroll{scrollbar-width:auto;scrollbar-color:#70889a #dfe6eb}
+
+.sc-player-freeze{--sc-freeze-first-width:0px}
+.sc-player-freeze .sc-freeze-col{
+  position:sticky!important;
+  z-index:3;
+  background:var(--sc-sticky-bg,#fff)!important;
+  background-clip:padding-box!important;
+}
+.sc-player-freeze .sc-freeze-col-1{left:0}
+.sc-player-freeze .sc-freeze-col-2{
+  left:var(--sc-freeze-first-width);
+  box-shadow:5px 0 7px -6px rgba(16,25,34,.72);
+}
+.sc-player-freeze thead .sc-freeze-col{z-index:6}
+.sc-player-freeze tbody .sc-freeze-col-1:only-child,
+.sc-player-freeze tbody .sc-freeze-col-1.sc-freeze-last{
+  box-shadow:5px 0 7px -6px rgba(16,25,34,.72);
+}
+.sc-player-freeze .sc-freeze-col-1,
+.sc-player-freeze .sc-freeze-col-2{isolation:isolate}
+
+/* El contenidor creat per a taules que abans no tenien wrapper conserva el flux. */
+.sc-player-scroll-auto{margin:0;}
+
+/* Indicació discreta que hi ha contingut lateral quan realment desborda. */
+.sc-player-scroll.sc-has-overflow{
+  border-bottom:1px solid rgba(112,136,154,.34);
+}
+
+@media (max-width:700px){
+  .sc-player-scroll{padding-bottom:7px}
+  .sc-player-scroll::-webkit-scrollbar{height:13px}
+}
+
+/* En PDF/impressió s'ha de conservar la taula original completa, sense sticky ni scroll. */
+@media print{
+  .sc-player-scroll{overflow:visible!important;padding-bottom:0!important;border-bottom:0!important}
+  .sc-player-freeze .sc-freeze-col{position:static!important;left:auto!important;box-shadow:none!important;background:inherit!important}
+}

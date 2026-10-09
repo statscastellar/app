@@ -86,11 +86,40 @@ function chooseCourtForChange(zone){if(localMode!=='CANVI')return;changeOutZone=
 function openBench(){const courtIds=Object.values(engine.state.game.court);const bench=engine.state.roster.snapshot.filter(p=>engine.state.roster.calledPlayerIds.includes(p.playerId)&&!courtIds.includes(p.playerId));const out=player(engine.state.game.court[changeOutZone]);modal(`Canvi · surt ${out.name}`,`<p>Selecciona la jugadora que entra.</p><div class="bench-grid">${bench.map(p=>`<button class="bench-card" data-in="${p.playerId}"><strong>${p.name}</strong><small>#${p.number}</small></button>`).join('')}</div>`,[{text:'Cancel·lar',action:closeModal}]);$$('#modalBody [data-in]').forEach(b=>b.onclick=()=>confirmChange(b.dataset.in));}
 function confirmChange(inId){const outId=engine.state.game.court[changeOutZone],out=player(outId),inc=player(inId);modal('Confirmar canvi',`<p><strong>${out.name} → ${inc.name}</strong></p><p>La jugadora entrant ocuparà exactament la mateixa zona.</p>`,[{text:'Cancel·lar',action:()=>{closeModal();localMode=null;changeOutZone=null;render();}},{text:'Confirmar',cls:'primary',action:async()=>{closeModal();localMode=null;changeOutZone=null;await run(()=>engine.substitute(outId,inId));tacticalLocks=T.pruneInactive(tacticalLocks,engine.state.game.court);await persistTacticalLocks();render();}}]);}
 function toggleSOS(){if(engine.state.flow.sos.status==='active'){run(()=>engine.undo());return;}run(()=>engine.activateSOS());}
-function finishSet(){const s=engine.state;modal('Finalitzar set',`<p>Vols tancar el set ${s.game.currentSet} amb el marcador <strong>${s.game.score.team}–${s.game.score.rival}</strong>?</p>`,[{text:'Cancel·lar',action:closeModal},{text:'Finalitzar set',cls:'primary',action:async()=>{closeModal();await run(()=>engine.finishSet());if(engine.isMatchDecided()) offerFinishAfterDecidingSet();else setupSet();}}]);}
+function buildNextSetDraft(team){
+ const s=engine.state,now=new Date().toISOString();
+ return {
+  schemaVersion:1,
+  draftId:(crypto.randomUUID?crypto.randomUUID():'draft-'+Date.now()),
+  team:team||{teamId:s.metadata.teamId,name:s.metadata.teamName},
+  match:{opponent:s.metadata.opponent,date:s.metadata.date,venue:s.metadata.venue},
+  rosterSnapshot:deep(s.roster.snapshot),
+  calledPlayerIds:deep(s.roster.calledPlayerIds),
+  startingSixIds:Object.values(s.game.court).filter(Boolean),
+  positions:deep(s.game.court),
+  initialServe:{side:'rival',serverPlayerId:null},
+  completedSteps:{step1:true,step2:true,step3:false,step4:false},
+  flowMode:'nextSet',
+  activeMatchId:s.identity.matchId,
+  previousSet:s.game.currentSet,
+  nextSet:s.game.currentSet+1,
+  createdAt:now,updatedAt:now
+ };
+}
+async function openNextSetFlow(){
+ if(!engine.canStartNextSet()) throw new Error('No hi ha cap set pendent de preparar.');
+ await persist();
+ let team=null;
+ try{team=await adapter.get('teams',engine.state.metadata.teamId);}catch(_){team=null;}
+ const draft=buildNextSetDraft(team);
+ Pro2DraftStore.save(draft);
+ sessionStorage.setItem('StatsCastellarPro2_ResumeMatchId_v1',engine.state.identity.matchId);
+ location.href='../Capa9-3/index.html';
+}
+function finishSet(){const s=engine.state;modal('Finalitzar set',`<p>Vols tancar el set ${s.game.currentSet} amb el marcador <strong>${s.game.score.team}–${s.game.score.rival}</strong>?</p>`,[{text:'Cancel·lar',action:closeModal},{text:'Finalitzar set',cls:'primary',action:async()=>{closeModal();await run(()=>engine.finishSet());if(engine.isMatchDecided()) offerFinishAfterDecidingSet();else try{await openNextSetFlow();}catch(e){toast(e.message||String(e));console.error(e);}}}]);}
 function offerFinishAfterDecidingSet(){const wins=engine.getSetWins();modal('Partit decidit',`<p>El partit ja té un guanyador per sets (<strong>${wins.team}–${wins.rival}</strong>).</p><p>Pots finalitzar-lo ara. No es prepararà cap set addicional.</p>`,[{text:'Desfer final de set',action:()=>{closeModal();run(()=>engine.undo());}},{text:'Finalitzar partit',cls:'danger',action:()=>{closeModal();finishMatch();}}]);}
-function setupSet(){const called=engine.state.roster.snapshot.filter(p=>engine.state.roster.calledPlayerIds.includes(p.playerId));const opts=called.map(p=>`<option value="${p.playerId}">#${p.number} ${p.name}</option>`).join('');modal(`Preparar set ${engine.state.game.currentSet+1}`,`<p>Selecciona les sis jugadores, situa-les a les zones 1–6 i indica qui serveix.</p><div class="setup-zones">${VISUAL_ZONES.map((z,i)=>`<div class="setup-zone">Zona ${z}<select data-setup="${z}">${opts}</select></div>`).join('')}</div><div class="serve-choice"><label><input type="radio" name="serve" value="team"> Serveix Castellar</label><label><input type="radio" name="serve" value="rival" checked> Serveix rival</label></div>`,[{text:'Confirmar inici del set',cls:'primary',action:()=>{const court={};$$('[data-setup]').forEach(x=>court[x.dataset.setup]=x.value);if(new Set(Object.values(court)).size!==6){toast('Calen sis jugadores diferents.');return;}const servingSide=$('input[name="serve"]:checked').value;closeModal();run(()=>engine.startNextSet({court,servingSide}));}}]);$$('[data-setup]').forEach(x=>x.value=engine.state.game.court[x.dataset.setup]||called[0]?.playerId||'');}
 function finishMatch(){modal('Finalitzar partit','<p>Aquesta acció tancarà definitivament el partit i l’eliminarà de Recuperar partit.</p>',[{text:'Cancel·lar',action:closeModal},{text:'Finalitzar partit',cls:'danger',action:async()=>{try{if(engine.state.lifecycle.status!=='finished') engine.finishMatch();const archived=await storage.finalize(engine);await clearTacticalLocks();closeModal();render();finalSummary(archived);}catch(e){if(await reconcileStale(e,{forFinalize:true}))return;toast('No s’ha pogut arxivar. El partit continua segur i pots tornar-ho a provar.');console.error(e);}}}]);}
-function finalSummary(archived){modal('Partit finalitzat',`<div class="final-summary"><p>Partit arxivat pel motor Pro.2.</p><p><strong>Accions:</strong> ${archived.actionLog.actions.length}</p><p><strong>Jugadores amb estadística:</strong> ${archived.report.stats.players.length}</p></div>`,[{text:'Veure informe',cls:'primary',action:()=>location.href='../Informe/index.html?id='+encodeURIComponent(archived.matchId)},{text:'Inici',action:()=>location.href='../index.html'}]);}
+function finalSummary(archived){modal('Partit finalitzat',`<div class="final-summary"><p>Partit arxivat correctament.</p><p><strong>Accions:</strong> ${archived.actionLog.actions.length}</p><p><strong>Jugadores amb estadística:</strong> ${archived.report.stats.players.length}</p></div>`,[{text:'Veure informe',cls:'primary',action:()=>location.href='../Informe/index.html?id='+encodeURIComponent(archived.matchId)},{text:'Inici',action:()=>location.href='../index.html'}]);}
 function home(){
  modal('Tornar a Inici','<p>El partit es guardarà automàticament com a partit en curs i es podrà recuperar.</p>',[
   {text:'Cancel·lar',action:closeModal},
@@ -117,5 +146,5 @@ async function boot(){
  $('#actionBox').onclick=()=>run(()=>engine.advancePhase());$('#undoBtn').onclick=()=>run(()=>engine.undo());$('#rivalCourtBtn').onclick=()=>run(()=>engine.rivalCourt());$('#sosBtn').onclick=toggleSOS;$('#positionsBtn').onclick=togglePositions;$('#changeBtn').onclick=startChange;$('#homeBtn').onclick=home;$('#finishSetBtn').onclick=finishSet;$('#finishMatchBtn').onclick=finishMatch;$('#modalLayer').onclick=e=>{if(e.target===$('#modalLayer'))closeModal();};
  render();
 }
-boot().catch(e=>{console.error(e);alert('Error iniciant Pro.2: '+e.message);});
+boot().catch(e=>{console.error(e);alert('Error iniciant el partit: '+e.message);});
 })();

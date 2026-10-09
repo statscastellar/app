@@ -10,7 +10,7 @@ const players=d.rosterSnapshot
   .filter(p=>d.calledPlayerIds.includes(p.playerId))
   .map(p=>({id:p.playerId,name:p.name,num:p.number}))
   .sort((a,b)=>a.num-b.num||String(a.name).localeCompare(String(b.name),'ca'));
-const chosen=new Set((d.startingSixIds||[]).filter(id=>d.calledPlayerIds.includes(id)));
+const chosen=new Set((d.flowMode==='nextSet'?[]:(d.startingSixIds||[])).filter(id=>d.calledPlayerIds.includes(id)));
 const visual=Pro2VisualProfiles.resolve(d.team||{});
 d.team.visualProfile=visual;
 d.team.gameFormat=d.team.gameFormat||{format:'volleyball-6x6',playersOnCourt:6,minivolleyEnabled:false};
@@ -108,7 +108,7 @@ function render(){
 }
 $('clear').onclick=()=>{chosen.clear();render()};
 go.onclick=()=>{if(chosen.size!==6)return;d.startingSixIds=players.filter(p=>chosen.has(p.id)).map(p=>p.id);d.positions={};d.initialServe={side:'rival',serverPlayerId:null};d.completedSteps.step3=true;d.completedSteps.step4=false;Pro2DraftStore.save(d);location.href='../Capa9-4/index.html';};
-document.querySelector('.back').onclick=()=>location.href='../Capa9-2/index.html';
+document.querySelector('.back').onclick=()=>{if(d.flowMode==='nextSet'){sessionStorage.setItem('StatsCastellarPro2_ResumeMatchId_v1',d.activeMatchId||'');location.href='../Capa7/index.html';}else location.href='../Capa9-2/index.html';};
 Pro2RenderMatchInfo(document.querySelector('.info'),d);
 const stageTitle=document.querySelector('.stage-subtitle');if(stageTitle)stageTitle.textContent='PAS 3 · SIS INICIAL';
 const strong=document.querySelector('.instruction strong'),small=document.querySelector('.instruction small');

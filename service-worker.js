@@ -1,6 +1,10 @@
-const CACHE_NAME = 'stats-castellar-1.0.15-release-20261009';
+const CACHE_NAME = 'stats-castellar-1.1.0-release-20261009';
 const APP_SHELL = [
-  './Informe/style.css?v=1.0.15',
+  './Informe/style.css?v=1.1.0',
+  './shared/player-scroll.css?v=1.1.0',
+  './shared/player-scroll.js?v=1.1.0',
+  './Informe/index.html',
+  './Acumulat/index.html',
   './',
   './index.html',
   './manifest.webmanifest',

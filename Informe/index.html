@@ -1,48 +1,43 @@
-<!doctype html>
-<html lang="ca"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><title>Stats Castellar Pro.2 · Informe</title><link rel="stylesheet" href="style.css?v=1.0.15"></head>
+<!DOCTYPE html>
+
+<html lang="ca"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/><title>Stats Castellar · Informe</title><link href="style.css?v=1.1.0" rel="stylesheet"/><link href="../shared/player-scroll.css?v=1.1.0" rel="stylesheet"/></head>
 <body>
-<header class="top"><button id="backBtn">← Historial</button><div><strong>INFORME DE PARTIT</strong><span id="subtitle"></span></div><div class="exports"><button id="editBtn" class="edit">Editar estadístiques</button><button id="pdfBtn">PDF</button><button id="odsBtn">ODS</button><button id="xlsxBtn">XLSX</button></div></header>
-<main id="report" hidden>
-  <section class="sheet page page-main">
-    <div class="sheet-title">FULL D'ESTADÍSTIQUES DE PARTIT</div>
-    <div class="meta-grid"><span>Equip: <strong id="team"></strong></span><span>Rival: <strong id="rival"></strong></span><span>Data: <strong id="date"></strong></span><span>Lloc: <strong id="venue"></strong></span></div>
-    <div class="result-line">Resultat: <strong id="score"></strong> <span id="setScores"></span></div>
-    <div id="editStatus" class="edit-status" hidden><span id="editStatusText">Mode edició: prem − al valor actual i després + al valor correcte.</span><button id="cancelPendingEdit" type="button" hidden>Cancel·la canvi pendent</button></div>
-    <div class="table-wrap"><table id="matchTable" class="stats-table"><thead></thead><tbody></tbody></table></div>
-    <div class="legend"><b>Servei:</b> 0 = Error · 1 = Fàcil · 2 = Correcte · 3 = Ace &nbsp; <b>Recepció, Defensa, Col·locació i Atac:</b> 0 = Error · 1 = Dolenta · 2 = Correcte · 3 = Perfecta &nbsp; <b>Bloqueig:</b> 0 = Fora · 1 = Toc · 2 = Punt &nbsp; <b>Salvades:</b> 1/2/3 = qualitat; no entren en cap mitjana.</div>
-  </section>
-
-  <section class="screen-extra"><button id="toggleAdvanced" class="advanced-btn">Veure anàlisi completa</button></section>
-  <section id="advanced" hidden>
-    <section class="sheet page"><div class="sheet-title">PERCENTATGES PER JUGADORA</div><div class="table-wrap"><table id="percentageTable" class="stats-table"><thead></thead><tbody></tbody></table></div><div class="legend">Percentatges calculats sobre el recompte 0/1/2/3 de cada fonament. L'eficiència tècnica usa l'escala ponderada 0→0, 1→5, 2→8 i 3→10. Salvades: només indicador independent.</div></section>
-
-    <section class="sheet page"><div class="sheet-title">INFORME TÈCNIC</div><div id="kpis" class="kpis"></div><h2>VALORACIÓ INDIVIDUAL</h2><div class="table-wrap"><table id="technicalPlayers" class="report-table"><thead><tr><th>Jugadora</th><th>Accions</th><th>Eficiència</th><th>Impacte</th><th>Fortalesa principal</th><th>%</th><th>Prioritat de millora</th><th>%</th><th>Valoració tècnica</th></tr></thead><tbody></tbody></table></div><div class="two-col"><div><h2>VALORACIÓ GLOBAL</h2><table id="ranking" class="report-table"><thead><tr><th>Jugadora</th><th>Accions</th><th>Eficiència</th><th>Impacte</th></tr></thead><tbody></tbody></table></div><div><h2>CONCLUSIONS I PLA DE TREBALL</h2><div id="conclusions" class="conclusions"></div></div></div><div class="method">Metodologia: Eficiència = (0×n0 + 5×n1 + 8×n2 + 10×n3) / (accions totals × 10). Les mostres inferiors a 5 accions són orientatives. Salvades no entren en cap mitjana; Bloqueig es tracta com a estadística Pro.2 separada de l’eficiència tècnica.</div></section>
-
-    <section class="sheet page"><div class="sheet-title">ESTADÍSTIQUES DEL PARTIT · PER FONAMENT I SET</div><div class="split"><div><h2>RESUM PER FONAMENT</h2><table id="foundationSummary" class="report-table"><thead><tr><th>Fonament</th><th>Accions</th><th>Eficiència</th><th>% de 0</th><th>% d'1</th><th>% de 2</th><th>% de 3</th></tr></thead><tbody></tbody></table></div><div><h2>RESUM PER SET</h2><table id="setSummary" class="report-table"><thead><tr><th>Set</th><th>Accions</th><th>Eficiència</th><th>% de 0</th><th>% d'1</th><th>% de 2</th><th>% de 3</th></tr></thead><tbody></tbody></table></div></div><h2>DETALL PER JUGADORA</h2><div class="table-wrap"><table id="playerFoundation" class="stats-table compact-detail"><thead></thead><tbody></tbody></table></div><h2>SALVADES I BLOQUEIG</h2><div class="table-wrap"><table id="specials" class="report-table specials-table"><thead><tr><th>Jugadora</th><th class="v1">Salvada 1</th><th class="v2">Salvada 2</th><th class="v3">Salvada 3</th><th>Total salvades</th><th class="block-v0">Bloc 0</th><th class="block-v1">Bloc 1</th><th class="block-v2">Bloc 2</th><th>Total bloqueigs</th></tr></thead><tbody></tbody></table></div></section>
-
-    <section class="sheet page history-analysis-sheet"><div class="sheet-title">ESTADÍSTIQUES ACUMULADES · EVOLUCIÓ</div><div id="analysisFilter" class="analysis-filter"><div><strong>PARTITS INCLOSOS A L'ANÀLISI</strong><span>El partit actual sempre queda inclòs. Marca o desmarca els partits comparatius i aplica els canvis.</span></div><button id="toggleAnalysisMatches" type="button">Canvia selecció</button><div id="analysisMatchList" class="analysis-match-list" hidden></div><div id="analysisFilterActions" class="analysis-filter-actions" hidden><button id="analysisAll" type="button">Tots</button><button id="analysisLatest5" type="button">Últims 5</button><button id="applyAnalysisSelection" type="button">Aplica selecció</button></div><div id="analysisFilterStatus" class="analysis-filter-status"></div></div>
-
-      <section class="analysis-block collective-analysis" aria-labelledby="collectiveAnalysisTitle">
-        <div class="analysis-block-title" id="collectiveAnalysisTitle"><span>ANÀLISI COL·LECTIVA</span><small>Equip · acumulats i evolució global</small></div>
-        <div id="historyKpis" class="kpis"></div>
-        <div class="charts"><div class="chart-card"><h3>Evolució de l'eficiència per partit · Equip</h3><div id="chartTeam"></div></div><div class="chart-card"><h3>Eficiència acumulada per fonament · Equip</h3><div id="chartFoundations"></div></div></div>
-        <h2>ACUMULAT I EVOLUCIÓ PER JUGADORA</h2><div class="table-wrap"><table id="historyPlayers" class="report-table"><thead></thead><tbody></tbody></table></div><p class="method">* L'impacte històric es mostra com a contribució relativa dins del total d'accions tècniques acumulades de l'equip.</p>
-        <div class="split"><div><h2>ACUMULAT PER FONAMENT · EQUIP</h2><table id="historyFoundations" class="report-table"><thead><tr><th>Fonament</th><th>Accions</th><th>Eficiència</th><th>% de 0</th><th>% d'1</th><th>% de 2</th><th>% de 3</th></tr></thead><tbody></tbody></table></div><div class="chart-card"><h3>Eficiència acumulada per fonament · Equip</h3><div id="chartFoundationsMirror"></div></div></div>
-        <h2>EVOLUCIÓ PER FONAMENT · EQUIP</h2><div class="table-wrap"><table id="historyFoundationEvolution" class="report-table"><thead></thead><tbody></tbody></table></div><div id="chartFoundationEvolution"></div>
-        <h2>EVOLUCIÓ PER JUGADORA I FONAMENT · TOTES LES JUGADORES</h2><div id="playerEvolution"></div>
-      </section>
-
-      <section class="analysis-block individual-analysis" aria-labelledby="individualAnalysisTitle">
-        <div class="individual-context-bar" id="individualAnalysisTitle">
-          <div class="individual-context-copy"><span>ANÀLISI INDIVIDUAL</span><strong id="individualContextName">—</strong></div>
-          <div class="history-player-picker"><label>Jugadora <select id="historyPlayerSelect"></select></label></div>
-        </div>
-        <h2>EVOLUCIÓ PER PARTITS · <span class="selected-player-name">—</span></h2>
-        <div class="split history-individual"><div class="table-wrap"><table id="historyIndividual" class="report-table"><thead><tr><th>Partit</th><th>Accions</th><th>Eficiència</th><th>Impacte</th><th>% de 0</th><th>% de 3</th></tr></thead><tbody></tbody></table></div><div class="chart-card"><h3>Evolució de l'eficiència · <span class="selected-player-name">—</span></h3><div id="chartIndividual"></div></div></div>
-        <h2>EVOLUCIÓ PER FONAMENT · <span class="selected-player-name">—</span></h2><div class="table-wrap"><table id="historyPlayerFoundationEvolution" class="report-table"><thead></thead><tbody></tbody></table></div><div class="chart-card selected-player-foundation-chart"><h3>Servei · Recepció · Col·locació · Atac · Defensa · <span class="selected-player-name">—</span></h3><div id="chartPlayerFoundationEvolution"></div></div>
-      </section>
-    </section>
-  </section>
+<header class="top"><button id="backBtn">← Historial</button><div><strong>INFORME DE PARTIT</strong><span id="subtitle"></span></div><div class="exports"><button class="edit" id="editBtn">Editar estadístiques</button><button id="pdfBtn">PDF</button><button id="odsBtn">ODS</button><button id="xlsxBtn">XLSX</button></div></header>
+<main hidden="" id="report">
+<section class="sheet page page-main">
+<div class="sheet-title">FULL D'ESTADÍSTIQUES DE PARTIT</div>
+<div class="meta-grid"><span>Equip: <strong id="team"></strong></span><span>Rival: <strong id="rival"></strong></span><span>Data: <strong id="date"></strong></span><span>Lloc: <strong id="venue"></strong></span></div>
+<div class="result-line">Resultat: <strong id="score"></strong> <span id="setScores"></span></div>
+<div class="edit-status" hidden="" id="editStatus"><span id="editStatusText">Mode edició: prem − al valor actual i després + al valor correcte.</span><button hidden="" id="cancelPendingEdit" type="button">Cancel·la canvi pendent</button></div>
+<div class="table-wrap"><table class="stats-table" id="matchTable"><thead></thead><tbody></tbody></table></div>
+<div class="legend"><b>Servei:</b> 0 = Error · 1 = Fàcil · 2 = Correcte · 3 = Ace   <b>Recepció, Defensa, Col·locació i Atac:</b> 0 = Error · 1 = Dolenta · 2 = Correcte · 3 = Perfecta   <b>Bloqueig:</b> 0 = Fora · 1 = Toc · 2 = Punt   <b>Salvades:</b> 1/2/3 = qualitat; no entren en cap mitjana.</div>
+</section>
+<section class="screen-extra"><button class="advanced-btn" id="toggleAdvanced">Veure anàlisi completa</button></section>
+<section hidden="" id="advanced">
+<section class="sheet page"><div class="sheet-title">PERCENTATGES PER JUGADORA</div><div class="table-wrap"><table class="stats-table" id="percentageTable"><thead></thead><tbody></tbody></table></div><div class="legend">Percentatges calculats sobre el recompte 0/1/2/3 de cada fonament. L'eficiència tècnica usa l'escala ponderada 0→0, 1→5, 2→8 i 3→10. Salvades: només indicador independent.</div></section>
+<section class="sheet page"><div class="sheet-title">INFORME TÈCNIC</div><div class="kpis" id="kpis"></div><h2>VALORACIÓ INDIVIDUAL</h2><div class="table-wrap"><table class="report-table" id="technicalPlayers"><thead><tr><th>Jugadora</th><th>Accions</th><th>Eficiència</th><th>Impacte</th><th>Fortalesa principal</th><th>%</th><th>Prioritat de millora</th><th>%</th><th>Valoració tècnica</th></tr></thead><tbody></tbody></table></div><div class="two-col"><div><h2>VALORACIÓ GLOBAL</h2><div class="table-wrap"><table class="report-table" id="ranking"><thead><tr><th>Jugadora</th><th>Accions</th><th>Eficiència</th><th>Impacte</th></tr></thead><tbody></tbody></table></div></div><div><h2>CONCLUSIONS I PLA DE TREBALL</h2><div class="conclusions" id="conclusions"></div></div></div><div class="method">Metodologia: Eficiència = (0×n0 + 5×n1 + 8×n2 + 10×n3) / (accions totals × 10). Les mostres inferiors a 5 accions són orientatives. Salvades no entren en cap mitjana; Bloqueig es tracta com a estadística Pro.2 separada de l’eficiència tècnica.</div></section>
+<section class="sheet page"><div class="sheet-title">ESTADÍSTIQUES DEL PARTIT · PER FONAMENT I SET</div><div class="split"><div><h2>RESUM PER FONAMENT</h2><div class="table-wrap"><table class="report-table" id="foundationSummary"><thead><tr><th>Fonament</th><th>Accions</th><th>Eficiència</th><th>% de 0</th><th>% d'1</th><th>% de 2</th><th>% de 3</th></tr></thead><tbody></tbody></table></div></div><div><h2>RESUM PER SET</h2><div class="table-wrap"><table class="report-table" id="setSummary"><thead><tr><th>Set</th><th>Accions</th><th>Eficiència</th><th>% de 0</th><th>% d'1</th><th>% de 2</th><th>% de 3</th></tr></thead><tbody></tbody></table></div></div></div><h2>DETALL PER JUGADORA</h2><div class="table-wrap"><table class="stats-table compact-detail" id="playerFoundation"><thead></thead><tbody></tbody></table></div><h2>SALVADES I BLOQUEIG</h2><div class="table-wrap"><table class="report-table specials-table" id="specials"><thead><tr><th>Jugadora</th><th class="v1">Salvada 1</th><th class="v2">Salvada 2</th><th class="v3">Salvada 3</th><th>Total salvades</th><th class="block-v0">Bloc 0</th><th class="block-v1">Bloc 1</th><th class="block-v2">Bloc 2</th><th>Total bloqueigs</th></tr></thead><tbody></tbody></table></div></section>
+<section class="sheet page history-analysis-sheet"><div class="sheet-title">ESTADÍSTIQUES ACUMULADES · EVOLUCIÓ</div><div class="analysis-filter" id="analysisFilter"><div><strong>PARTITS INCLOSOS A L'ANÀLISI</strong><span>El partit actual sempre queda inclòs. Marca o desmarca els partits comparatius i aplica els canvis.</span></div><button id="toggleAnalysisMatches" type="button">Canvia selecció</button><div class="analysis-match-list" hidden="" id="analysisMatchList"></div><div class="analysis-filter-actions" hidden="" id="analysisFilterActions"><button id="analysisAll" type="button">Tots</button><button id="analysisLatest5" type="button">Últims 5</button><button id="applyAnalysisSelection" type="button">Aplica selecció</button></div><div class="analysis-filter-status" id="analysisFilterStatus"></div></div>
+<section aria-labelledby="collectiveAnalysisTitle" class="analysis-block collective-analysis">
+<div class="analysis-block-title" id="collectiveAnalysisTitle"><span>ANÀLISI COL·LECTIVA</span><small>Equip · acumulats i evolució global</small></div>
+<div class="kpis" id="historyKpis"></div>
+<div class="charts"><div class="chart-card"><h3>Evolució de l'eficiència per partit · Equip</h3><div id="chartTeam"></div></div><div class="chart-card"><h3>Eficiència acumulada per fonament · Equip</h3><div id="chartFoundations"></div></div></div>
+<h2>ACUMULAT I EVOLUCIÓ PER JUGADORA</h2><div class="table-wrap"><table class="report-table" id="historyPlayers"><thead></thead><tbody></tbody></table></div><p class="method">* L'impacte històric es mostra com a contribució relativa dins del total d'accions tècniques acumulades de l'equip.</p>
+<div class="split"><div><h2>ACUMULAT PER FONAMENT · EQUIP</h2><div class="table-wrap"><table class="report-table" id="historyFoundations"><thead><tr><th>Fonament</th><th>Accions</th><th>Eficiència</th><th>% de 0</th><th>% d'1</th><th>% de 2</th><th>% de 3</th></tr></thead><tbody></tbody></table></div></div><div class="chart-card"><h3>Eficiència acumulada per fonament · Equip</h3><div id="chartFoundationsMirror"></div></div></div>
+<h2>EVOLUCIÓ PER FONAMENT · EQUIP</h2><div class="table-wrap"><table class="report-table" id="historyFoundationEvolution"><thead></thead><tbody></tbody></table></div><div id="chartFoundationEvolution"></div>
+<h2>EVOLUCIÓ PER JUGADORA I FONAMENT · TOTES LES JUGADORES</h2><div id="playerEvolution"></div>
+</section>
+<section aria-labelledby="individualAnalysisTitle" class="analysis-block individual-analysis">
+<div class="individual-context-bar" id="individualAnalysisTitle">
+<div class="individual-context-copy"><span>ANÀLISI INDIVIDUAL</span><strong id="individualContextName">—</strong></div>
+<div class="history-player-picker"><label>Jugadora <select id="historyPlayerSelect"></select></label></div>
+</div>
+<h2>EVOLUCIÓ PER PARTITS · <span class="selected-player-name">—</span></h2>
+<div class="split history-individual"><div class="table-wrap"><table class="report-table" id="historyIndividual"><thead><tr><th>Partit</th><th>Accions</th><th>Eficiència</th><th>Impacte</th><th>% de 0</th><th>% de 3</th></tr></thead><tbody></tbody></table></div><div class="chart-card"><h3>Evolució de l'eficiència · <span class="selected-player-name">—</span></h3><div id="chartIndividual"></div></div></div>
+<h2>EVOLUCIÓ PER FONAMENT · <span class="selected-player-name">—</span></h2><div class="table-wrap"><table class="report-table" id="historyPlayerFoundationEvolution"><thead></thead><tbody></tbody></table></div><div class="chart-card selected-player-foundation-chart"><h3>Servei · Recepció · Col·locació · Atac · Defensa · <span class="selected-player-name">—</span></h3><div id="chartPlayerFoundationEvolution"></div></div>
+</section>
+</section>
+</section>
 </main>
-<section id="error" class="error" hidden></section>
-<script src="../shared/pro2-core.bundle.js"></script><script src="../shared/export-pro2.js"></script><script src="report.js"></script></body></html>
+<section class="error" hidden="" id="error"></section>
+<script src="../shared/pro2-core.bundle.js"></script><script src="../shared/export-pro2.js"></script><script src="report.js"></script><script src="../shared/player-scroll.js?v=1.1.0"></script></body></html>

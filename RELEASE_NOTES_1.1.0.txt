@@ -1,0 +1,15 @@
+Stats Castellar 1.1.0
+Data de publicació: 09/10/2026
+Base estable anterior: 1.0.15
+
+Canvis principals:
+- Flux entre sets: Finalitzar set → Pas 3 → Pas 4 → set següent.
+- El Pas 3 entre sets s’obre sense titulars preseleccionades.
+- Taules responsive: scroll horitzontal quan cal i identificació de jugadora fixa.
+- Correcció de verificació d’acumulats quan l’identificador històric d’equip es canonicalitza.
+- Cache PWA actualitzada a 1.1.0.
+
+Validació:
+- Motor, estadístiques, SOS, bloqueig, canvis, rotacions, sets i finalització.
+- Persistència, integritat, exportació, còpies de seguretat i acumulats.
+- Sintaxi i referències locals de tota l’app.

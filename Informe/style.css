@@ -65,3 +65,103 @@
     .individual-context-bar{top:calc(96px + var(--sc-report-safe-top));}
   }
 }
+
+
+/* 1.1.0 · responsive de taules sense retalls */
+.table-wrap{
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  overflow-x:auto;
+  overflow-y:visible;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-x:contain;
+}
+.split,.two-col,.charts,.player-evolution-grid{min-width:0}
+.split>*,.two-col>*,.charts>*,.player-evolution-grid>*{min-width:0;max-width:100%}
+.chart-card,.history-chart-window,.history-chart-frame,
+#chartTeam,#chartFoundations,#chartFoundationsMirror,#chartFoundationEvolution,
+#chartIndividual,#chartPlayerFoundationEvolution,.player-chart{min-width:0;max-width:100%}
+.chart-card svg,.history-chart-frame svg,
+#chartTeam svg,#chartFoundations svg,#chartFoundationsMirror svg,
+#chartFoundationEvolution svg,#chartIndividual svg,#chartPlayerFoundationEvolution svg,.player-chart svg{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+}
+
+/* Dorsal + nom sempre visibles a les dues taules principals de jugadores. */
+#matchTable th:nth-child(1),#matchTable td:nth-child(1),
+#percentageTable th:nth-child(1),#percentageTable td:nth-child(1){
+  position:sticky;
+  left:0;
+  z-index:4;
+  width:58px;
+  min-width:58px;
+  max-width:58px;
+  background:#fff;
+}
+#matchTable th:nth-child(2),#matchTable td:nth-child(2),
+#percentageTable th:nth-child(2),#percentageTable td:nth-child(2){
+  position:sticky;
+  left:58px;
+  z-index:4;
+  min-width:112px;
+  background:#fff;
+  box-shadow:2px 0 0 #9aa8b3;
+}
+#matchTable thead tr:first-child th:nth-child(1),#matchTable thead tr:first-child th:nth-child(2),
+#percentageTable thead tr:first-child th:nth-child(1),#percentageTable thead tr:first-child th:nth-child(2){
+  z-index:6;
+  background:var(--blue)!important;
+  color:#fff!important;
+}
+
+/* A la resta de taules amples mantenim fixa la columna que identifica la fila. */
+#technicalPlayers th:first-child,#technicalPlayers td:first-child,
+#ranking th:first-child,#ranking td:first-child,
+#playerFoundation th:first-child,#playerFoundation td:first-child,
+#specials th:first-child,#specials td:first-child,
+#historyPlayers th:first-child,#historyPlayers td:first-child,
+#foundationSummary th:first-child,#foundationSummary td:first-child,
+#setSummary th:first-child,#setSummary td:first-child,
+#historyFoundations th:first-child,#historyFoundations td:first-child,
+#historyFoundationEvolution th:first-child,#historyFoundationEvolution td:first-child,
+#historyPlayerFoundationEvolution th:first-child,#historyPlayerFoundationEvolution td:first-child{
+  position:sticky;
+  left:0;
+  z-index:4;
+  background:#fff;
+  box-shadow:2px 0 0 #9aa8b3;
+}
+#technicalPlayers thead th:first-child,#ranking thead th:first-child,
+#playerFoundation thead th:first-child,#specials thead th:first-child,
+#historyPlayers thead th:first-child,#foundationSummary thead th:first-child,
+#setSummary thead th:first-child,#historyFoundations thead th:first-child,
+#historyFoundationEvolution thead th:first-child,#historyPlayerFoundationEvolution thead th:first-child{
+  z-index:6;
+  background:var(--blue)!important;
+  color:#fff!important;
+}
+
+@media(max-width:700px){
+  .table-wrap{touch-action:pan-x pan-y}
+  .stats-table,.report-table{width:max-content;min-width:100%}
+  #matchTable th:nth-child(2),#matchTable td:nth-child(2),
+  #percentageTable th:nth-child(2),#percentageTable td:nth-child(2){min-width:104px}
+}
+
+@media print{
+  .table-wrap{overflow:visible!important;max-width:none!important}
+  #matchTable th,#matchTable td,#percentageTable th,#percentageTable td,
+  #technicalPlayers th,#technicalPlayers td,#ranking th,#ranking td,
+  #playerFoundation th,#playerFoundation td,#specials th,#specials td,
+  #historyPlayers th,#historyPlayers td,#foundationSummary th,#foundationSummary td,
+  #setSummary th,#setSummary td,#historyFoundations th,#historyFoundations td,
+  #historyFoundationEvolution th,#historyFoundationEvolution td,
+  #historyPlayerFoundationEvolution th,#historyPlayerFoundationEvolution td{
+    position:static!important;
+    box-shadow:none!important;
+  }
+}
