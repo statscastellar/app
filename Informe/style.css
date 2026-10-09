@@ -48,3 +48,20 @@
 .history-analysis-sheet{padding-top:18px}.analysis-block{margin:18px 0 0;padding:16px;border:2px solid #c8d4dd;background:#fbfcfd}.analysis-block-title{display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin:-16px -16px 16px;padding:11px 14px;background:#e8f0f6;border-bottom:2px solid var(--blue)}.analysis-block-title span{font-size:17px;font-weight:900;color:var(--blue);letter-spacing:.3px}.analysis-block-title small{font-size:11px;color:#526675}.individual-analysis{border-color:#d4b66a;background:#fffdfa}.individual-context-bar{position:sticky;top:58px;z-index:8;display:flex;align-items:center;justify-content:space-between;gap:16px;margin:-16px -16px 16px;padding:10px 14px;background:#fff3cf;border-bottom:2px solid #d0a83d;box-shadow:0 3px 8px #0002}.individual-context-copy{display:flex;align-items:baseline;gap:12px;min-width:0}.individual-context-copy span{font-size:14px;font-weight:900;color:#765612;letter-spacing:.3px}.individual-context-copy strong{font-size:18px;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.individual-context-bar .history-player-picker{margin:0;flex:0 0 auto}.individual-context-bar .history-player-picker label{font-size:12px}.individual-context-bar .history-player-picker select{min-width:170px}.selected-player-name{font-weight:900;color:#765612}.selected-player-foundation-chart{margin-top:10px}.collective-analysis .player-evolution-block{border-top:1px solid #dce5eb;padding-top:12px}.individual-analysis h2:first-of-type{margin-top:8px}
 @media(max-width:700px){.individual-context-bar{top:96px;align-items:flex-start;flex-direction:column;gap:7px}.individual-context-copy{width:100%}.individual-context-bar .history-player-picker{width:100%}.individual-context-bar .history-player-picker label{display:flex;align-items:center;justify-content:space-between;width:100%}.individual-context-bar .history-player-picker select{min-width:0;width:min(68vw,280px)}.analysis-block-title{align-items:flex-start;flex-direction:column;gap:2px}}
 @media print{.analysis-block{border:0;padding:0;margin:0}.analysis-block-title{margin:0 0 8px;padding:5px 0;background:#fff;box-shadow:none}.individual-context-bar{position:static;margin:0 0 8px;padding:5px 0;background:#fff;border-bottom:2px solid #777;box-shadow:none}.individual-context-bar .history-player-picker{display:none!important}.collective-analysis{break-after:page}.individual-analysis{break-before:page}.selected-player-foundation-chart{border:0;padding:0}}
+
+
+/* 1.0.15 · iPhone portrait: top bar below notch / Dynamic Island */
+@media (orientation:portrait) and (max-width:600px){
+  .top{
+    padding-top:calc(9px + env(safe-area-inset-top, 0px));
+    padding-left:max(16px, env(safe-area-inset-left, 0px));
+    padding-right:max(16px, env(safe-area-inset-right, 0px));
+  }
+}
+@media (display-mode:standalone) and (orientation:portrait) and (max-width:600px){
+  @supports (-webkit-touch-callout:none){
+    :root{--sc-report-safe-top:max(env(safe-area-inset-top, 0px), 59px)}
+    .top{padding-top:calc(9px + var(--sc-report-safe-top));}
+    .individual-context-bar{top:calc(96px + var(--sc-report-safe-top));}
+  }
+}
