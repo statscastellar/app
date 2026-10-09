@@ -1,4 +1,4 @@
-const CACHE_NAME = 'stats-castellar-1.0.11-release-20261008';
+const CACHE_NAME = 'stats-castellar-1.0.12-release-20261009';
 const APP_SHELL = [
   './',
   './index.html',
