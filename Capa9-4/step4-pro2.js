@@ -52,15 +52,37 @@ function render(){
  const count=Object.values(spots).filter(Boolean).length;$('status').textContent=count+' de 6 col·locades';$('save').disabled=count!==6;$('selectedInfo').textContent=selected?'Seleccionada: '+byId(selected).name+'. Toca una zona.':'Arrossega una jugadora o toca-la i després toca una zona.';
 }
 $('reset').onclick=()=>{for(const z of Object.keys(spots))spots[z]=null;selected=null;render()};
-const serveDialog=$('serveDialog'),serveDialogInfo=$('serveDialogInfo');
+const serveDialog=$('serveDialog'),serveDialogInfo=$('serveDialogInfo'),serveChoices=$('serveChoices'),serveAccept=$('serveAccept'),serveConfirmStep=$('serveConfirmStep'),serveConfirmText=$('serveConfirmText');
+let selectedServeSide=null;
+function setServeSelection(side){
+ selectedServeSide=side;
+ serveDialog.querySelectorAll('[data-side]').forEach(b=>b.classList.toggle('selected',b.dataset.side===side));
+ serveAccept.disabled=!side;
+}
+function resetServeDialog(){
+ setServeSelection(null);
+ serveChoices.hidden=false;
+ serveAccept.parentElement.hidden=false;
+ serveConfirmStep.hidden=true;
+}
 function openServeDialog(){
  if(Object.values(spots).filter(Boolean).length!==6)return;
+ resetServeDialog();
  const server=spots['1']?byId(spots['1']):null;
  serveDialogInfo.textContent=server?'Si serveix Castellar, començarà #'+server.num+' '+server.name+' des de zona 1.':'Tria qui començarà servint.';
  serveDialog.hidden=false;
  requestAnimationFrame(()=>serveDialog.classList.add('open'));
 }
-function closeServeDialog(){serveDialog.classList.remove('open');setTimeout(()=>{serveDialog.hidden=true},120)}
+function closeServeDialog(){serveDialog.classList.remove('open');setTimeout(()=>{serveDialog.hidden=true;resetServeDialog()},120)}
+function showServeConfirmation(){
+ if(!selectedServeSide)return;
+ const server=spots['1']?byId(spots['1']):null;
+ const who=selectedServeSide==='team'?'CASTELLAR':'RIVAL';
+ serveConfirmText.textContent=selectedServeSide==='team'&&server?'Has indicat que comença servint CASTELLAR, amb #'+server.num+' '+server.name+' a zona 1. Ho confirmes?':'Has indicat que comença servint '+who+'. Ho confirmes?';
+ serveChoices.hidden=true;
+ serveAccept.parentElement.hidden=true;
+ serveConfirmStep.hidden=false;
+}
 async function startMatch(serveSide){
  closeServeDialog();
  d.positions=Object.fromEntries(Object.entries(spots));
@@ -70,7 +92,10 @@ async function startMatch(serveSide){
  try{const made=P.createMatchFromDraft(d,{matchId:crypto.randomUUID()});const engine=new P.MatchEngine(made.state,made.actionLog);const storage=new P.Pro2Storage(new P.IndexedDBStorageAdapter());await storage.saveActive(engine);sessionStorage.setItem('StatsCastellarPro2_ResumeMatchId_v1',made.state.identity.matchId);Pro2DraftStore.clear();location.href='../Capa7/index.html';}catch(e){$('done').textContent='No s’ha pogut crear el partit: '+e.message;$('done').hidden=false;}
 }
 $('save').onclick=openServeDialog;
-serveDialog.querySelectorAll('[data-side]').forEach(b=>b.onclick=()=>startMatch(b.dataset.side));
+serveDialog.querySelectorAll('[data-side]').forEach(b=>b.onclick=()=>setServeSelection(b.dataset.side));
+serveAccept.onclick=showServeConfirmation;
+$('serveConfirm').onclick=()=>{if(selectedServeSide)startMatch(selectedServeSide)};
+$('serveBack').onclick=()=>{serveConfirmStep.hidden=true;serveChoices.hidden=false;serveAccept.parentElement.hidden=false};
 $('serveCancel').onclick=closeServeDialog;
 serveDialog.addEventListener('click',e=>{if(e.target===serveDialog)closeServeDialog()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!serveDialog.hidden)closeServeDialog()});

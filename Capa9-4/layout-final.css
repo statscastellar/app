@@ -30,7 +30,7 @@
 }
 .pro2-serve{position:fixed;left:50%;bottom:max(56px,calc(env(safe-area-inset-bottom) + 48px));transform:translateX(-50%);z-index:20;display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:10px;background:rgba(15,20,25,.9);border:1px solid rgba(255,255,255,.22);font-size:11px}.pro2-serve strong{color:#f47721}.pro2-serve button{border:1px solid #f47721;background:#1d242a;color:white;border-radius:7px;padding:5px 8px;font-weight:800}.pro2-serve button.active{background:#f47721;color:#15191c}.pro2-server{opacity:.8;white-space:nowrap}@media(orientation:portrait){.pro2-serve{bottom:max(64px,calc(env(safe-area-inset-bottom) + 55px));max-width:94%;flex-wrap:wrap;justify-content:center}}
 
-/* 1.0.12 · servei inicial en diàleg */
+/* 1.0.13 · selecció + confirmació del servei inicial */
 .pro2-serve{display:none!important}
 .serve-dialog[hidden]{display:none!important}
 .serve-dialog{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:max(18px,env(safe-area-inset-top,0px)) max(18px,env(safe-area-inset-right,0px)) max(18px,env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px));background:rgba(0,0,0,.68);opacity:0;transition:opacity .12s ease}
@@ -41,5 +41,14 @@
 .serve-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .serve-choice{min-height:48px;border:1px solid #f47721;border-radius:10px;background:#1d242a;color:#fff;font-weight:900}
 .serve-choice:active{background:#f47721;color:#15191c}
-.serve-cancel{margin-top:11px;border:0;background:transparent;color:#c9d0d5;text-decoration:underline;padding:8px 12px}
+.serve-choice.selected{background:#f47721;color:#15191c;box-shadow:0 0 0 2px rgba(244,119,33,.25)}
+.serve-confirm-actions{display:flex;gap:10px;justify-content:center;align-items:center;margin-top:12px}
+.serve-accept,.serve-confirm,.serve-back{min-height:44px;border-radius:10px;padding:0 18px;font-weight:900}
+.serve-accept,.serve-confirm{border:1px solid #f47721;background:#f47721;color:#15191c}
+.serve-accept:disabled{opacity:.4;cursor:not-allowed}
+.serve-back{border:1px solid rgba(255,255,255,.3);background:#1d242a;color:#fff}
+.serve-cancel{margin-top:0;border:0;background:transparent;color:#c9d0d5;text-decoration:underline;padding:8px 12px}
+.serve-confirm-step{margin-top:4px}
+.serve-confirm-step[hidden]{display:none!important}
+.serve-confirm-step p{margin:0 0 14px;font-size:14px;line-height:1.4;color:#fff}
 @media (display-mode:standalone) and (orientation:portrait) and (max-width:600px){:root{--safe-top:max(env(safe-area-inset-top,0px),44px)}}
