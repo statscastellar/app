@@ -1,0 +1,71 @@
+{
+  "application": "Stats Castellar 1.1.0",
+  "sourceCommit": "dc54ab9a749467b246d2f1600d32ec19c52ba200",
+  "node": "v24.19.0",
+  "playwright": "1.57.0",
+  "appUnchanged": true,
+  "audit": {
+    "total": 39,
+    "passed": 39,
+    "failed": 0
+  },
+  "playwrightStats": {
+    "startTime": "2026-10-15T10:43:03.467Z",
+    "duration": 103586.196,
+    "expected": 47,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  },
+  "steps": [
+    {
+      "name": "audit",
+      "exitCode": 0,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "supplemental",
+      "exitCode": 1,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "playwright",
+      "exitCode": 1,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "investigation",
+      "exitCode": 0,
+      "signal": null,
+      "error": null
+    }
+  ],
+  "supplemental": {
+    "total": 18,
+    "passed": 17,
+    "failed": 1,
+    "knownFailure": "Punt manual després de finalitzar"
+  },
+  "functionalPlaywright": {
+    "total": 24,
+    "passed": 24,
+    "failed": 0
+  },
+  "visualPlaywright": {
+    "total": 24,
+    "passed": 23,
+    "failed": 1,
+    "knownFailure": "Selector de l’historial Android"
+  },
+  "investigation": {
+    "total": 9,
+    "passed": 9,
+    "failed": 0
+  },
+  "stableCommit": "17bfe321272cd991ae69978b6718ce2fe511a991",
+  "branch": "qa/proves-1.1.0",
+  "globalExitCode": 1
+}

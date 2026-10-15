@@ -1,0 +1,15 @@
+{
+  "name": "stats-castellar-isolated-tests",
+  "private": true,
+  "version": "1.1.0",
+  "scripts": {
+    "test:unit": "node --require ./fixtures/clock.cjs --test --test-isolation=none unit/*.test.cjs",
+    "test:e2e": "playwright test",
+    "test:visual": "playwright test --grep @visual",
+    "test": "node run-all.cjs",
+    "test:audit": "node run-audit.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.57.0"
+  }
+}

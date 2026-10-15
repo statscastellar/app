@@ -1,0 +1,40 @@
+{
+  "application": "Stats Castellar 1.1.0",
+  "sourceCommit": "dc54ab9a749467b246d2f1600d32ec19c52ba200",
+  "node": "v24.19.0",
+  "playwright": "1.57.0",
+  "appUnchanged": true,
+  "audit": {
+    "total": 39,
+    "passed": 39,
+    "failed": 0
+  },
+  "playwrightStats": {
+    "startTime": "2026-10-15T09:56:47.071Z",
+    "duration": 103603.218,
+    "expected": 46,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  },
+  "steps": [
+    {
+      "name": "audit",
+      "exitCode": 0,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "supplemental",
+      "exitCode": 1,
+      "signal": null,
+      "error": null
+    },
+    {
+      "name": "playwright",
+      "exitCode": 1,
+      "signal": null,
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+'use strict';
+const fs=require('fs'),path=require('path'),assert=require('assert');
+const html=fs.readFileSync(path.join(__dirname,'../../Informe/index.html'),'utf8');
+const js=fs.readFileSync(path.join(__dirname,'../../Informe/report.js'),'utf8');
+const legacyIds=['chartTeam','chartFoundations','historyPlayers','historyFoundations','chartFoundationEvolution','playerEvolution'];
+for(const id of legacyIds) assert(html.includes(`id="${id}"`),`053 no pot eliminar el bloc consolidat 051: ${id}`);
+const added052=['historyPlayerSelect','historyIndividual','chartIndividual','historyFoundationEvolution','historyPlayerFoundationEvolution','chartPlayerFoundationEvolution'];
+for(const id of added052) assert(html.includes(`id="${id}"`),`053 ha de conservar també el bloc nou 052: ${id}`);
+assert(js.includes("const root=$('#playerEvolution')"),'Falta render de progressió completa per totes les jugadores');
+assert(js.includes("player-evolution-grid"),'Falten les dues gràfiques per jugadora');
+console.log('PASS 053 — cap bloc consolidat d’informe desapareix; 051 + 052 conviuen');

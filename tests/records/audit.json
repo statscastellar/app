@@ -1,0 +1,241 @@
+{
+  "total": 39,
+  "passed": 39,
+  "failed": 0,
+  "results": [
+    {
+      "file": "anna-analytics-044.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "backup-restore-032.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "backup.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "capa7-ui-state-041.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "conflict-audit-chain-030.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "conflict-lifecycle-029.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "conflict-resolution-028.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "core.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "cumulative-teams.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "cumulative-verified-020.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "cumulative.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "efficiency-gradient-052.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "export-verified-021.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "full-match.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "golden-stats.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "history-analysis-054.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "integrity.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "legacy-import-046.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "maintenance-diagnostics-035.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "maintenance-journal-033.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "maintenance-journal-034.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "participation.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "post-match-edits-047.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "replay.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "report-analytics-export-044.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "report-consistency.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "report-export.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "report-integrity-019.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "report-polish-048.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "report-preservation-053.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "report-regeneration.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "schema-migrations-031.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "simulator-delete-043.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "stale-recovery-027.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "stats.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "storage.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "system-health-036.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "tactical-locks-055.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    },
+    {
+      "file": "temporal-concurrency-026.test.js",
+      "status": 0,
+      "signal": null,
+      "passed": true
+    }
+  ]
+}

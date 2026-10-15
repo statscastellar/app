@@ -1,0 +1,26 @@
+// Proves noves complementàries. No substitueixen les 39 proves de l'auditoria.
+const {test}=require('node:test');
+const a=require('node:assert/strict');
+const {APP,NOW,draft,engine}=require('../fixtures/synthetic.cjs');
+const {validateDraft}=require(APP+'/core/src/match-factory');
+const T=require(APP+'/Capa7/js/tactical-locks');
+const {MemoryStorageAdapter}=require(APP+'/core/src/storage-memory');
+const {Pro2Storage}=require(APP+'/core/src/storage-service');
+test('fixture: vuit jugadores artificials i esborrany vàlid',()=>{a.doesNotThrow(()=>validateDraft(draft()));a.equal(draft().calledPlayerIds.length,8)});
+test('fixture: instàncies independents',()=>{const d=draft();d.rosterSnapshot[0].name='canvi';a.equal(draft().rosterSnapshot[0].name,'Prova 1')});
+test('rellotge: data fixa i registre determinista',()=>{const e=engine();e.manualPoint('team');a.equal(Date.now(),Date.parse(NOW));a.ok(e.log.actions.every(x=>x.occurredAt===NOW));a.deepEqual(e.exportSession(),(()=>{const x=engine();x.manualPoint('team');return x.exportSession()})())});
+test('validació: titular no convocada rebutjada',()=>{const d=draft();d.startingSixIds[0]='absent';a.throws(()=>validateDraft(d))});
+test('validació: posicions duplicades rebutjades',()=>{const d=draft();d.positions['1']=d.positions['2'];a.throws(()=>validateDraft(d))});
+test('punt: recuperació de servei rota correctament',()=>{const e=engine();e.manualPoint('team');a.equal(e.state.game.court['1'],'qa-player-2');a.equal(e.state.game.phase,'SERVEI')});
+test('punt: servei propi no torna a rotar',()=>{const e=engine();e.manualPoint('team');const c=structuredClone(e.state.game.court);e.manualPoint('team');a.deepEqual(e.state.game.court,c);a.equal(e.state.game.score.team,2)});
+test('desfer: restaura marcador i rotació',()=>{const e=engine(),before=e.snapshot();e.manualPoint('team');e.undo();a.deepEqual(e.snapshot(),before)});
+test('marcador: no baixa de zero',()=>a.throws(()=>engine().manualMinus('team')));
+test('canvi: reserva entra a la zona de la titular',()=>{const e=engine();e.substitute('qa-player-1','qa-player-7');a.equal(e.state.game.court['1'],'qa-player-7')});
+test('recepció: valoració avança a col·locació',()=>{const e=engine();e.ratePlayer('1',2);a.equal(e.state.game.phase,'COLLOCACIO')});
+test('SOS: recupera el punt provisional',()=>{const e=engine();e.ratePlayer('1',0);e.activateSOS();e.ratePlayer('1',2);a.equal(e.state.game.score.rival,0);a.equal(e.state.game.phase,'COLLOCACIO')});
+test('multiset: inici net conserva resultat anterior',()=>{const e=engine();e.manualPoint('team');e.finishSet();a.equal(e.canStartNextSet(),true);e.startNextSet({court:draft().positions,servingSide:'rival'});a.equal(e.state.game.currentSet,2);a.deepEqual(e.state.game.score,{team:0,rival:0});a.equal(e.state.game.sets[0].team,1)});
+test('multiset: tres sets guanyats impedeixen set addicional',()=>{const e=engine();for(let i=0;i<3;i++){e.manualPoint('team');e.finishSet();if(i<2)e.startNextSet({court:draft().positions,servingSide:'rival'})}a.equal(e.canStartNextSet(),false)});
+test('persistència: desa i recupera puntuació independent',async()=>{const s=new Pro2Storage(new MemoryStorageAdapter()),e=engine();e.manualPoint('team');await s.saveActive(e);const loaded=await s.loadActive('qa-match');a.deepEqual(loaded.snapshot(),e.snapshot())});
+test('finalització: arxiva i elimina actiu',async()=>{const s=new Pro2Storage(new MemoryStorageAdapter()),e=engine();await s.saveActive(e);e.finishMatch();await s.finalize(e);a.equal(await s.loadActive('qa-match'),null);a.equal((await s.listHistory()).length,1)});
+test('bloqueigs tàctics — invariants complementàries',()=>{const c=draft().positions,l={'qa-player-1':'4'};a.equal(T.deriveVisualCourt(c,l)['4'],'qa-player-1');a.equal(T.blockRegZoneForVisual(c,T.deriveVisualCourt(c,l),'4'),null);a.equal(T.setLock(l,'qa-player-2','4',c).ok,false);a.equal(T.deriveVisualCourt(c,l,{servingSide:'team',phase:'SERVEI'})['1'],'qa-player-1');a.deepEqual(T.pruneInactive({...l,absent:'2'},c),l)});
+test('regressió: un partit finalitzat rebutja punts manuals',()=>{const e=engine();e.finishMatch();a.throws(()=>e.manualPoint('team'),/finalitzat/i)});

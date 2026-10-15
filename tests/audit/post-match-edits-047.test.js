@@ -1,0 +1,22 @@
+'use strict';
+const assert=require('assert'),fs=require('fs'),path=require('path');
+const {MemoryStorageAdapter}=require('../../core/src/storage-memory');
+const {Pro2Storage}=require('../../core/src/storage-service');
+const {prepareVerifiedExport}=require('../../core/src/export-service');
+const {reportFromCompletedRecord}=require('../../core/src/match-report');
+const {buildHistoryAnalytics}=require('../../core/src/anna-analytics');
+(async()=>{
+ const adapter=new MemoryStorageAdapter(),store=new Pro2Storage(adapter);
+ const doc=JSON.parse(fs.readFileSync(path.join(__dirname,'../fixtures/legacy/qa-B.json'),'utf8'));
+ const imp=await store.importLegacyMatch(doc), id=imp.matchId;
+ let rec=await store.getHistory(id), before=prepareVerifiedExport(rec).report;
+ const action=before.actions.find(a=>a.type==='SERVEI'&&a.value===1);assert(action,'Cal una acció editable');
+ const player=before.stats.players.find(p=>p.playerId===action.playerId), b1=player.anna.SERVEI.counts[1], b3=player.anna.SERVEI.counts[3], eff0=player.annaTotal.efficiency;
+ await store.editHistoryActionValue(id,action.actionId,3);
+ rec=await store.getHistory(id);assert.strictEqual(rec.postMatchEdits.edits.length,1);assert.strictEqual(rec.postMatchEdits.edits[0].previousValue,1);assert.strictEqual(rec.postMatchEdits.edits[0].newValue,3);
+ const after=prepareVerifiedExport(rec).report, qa_p2=after.stats.players.find(p=>p.playerId===action.playerId);
+ assert.strictEqual(qa_p2.anna.SERVEI.counts[1],b1-1);assert.strictEqual(qa_p2.anna.SERVEI.counts[3],b3+1);assert(qa_p2.annaTotal.efficiency>eff0);assert(after.actions.find(a=>a.actionId===action.actionId).editedPostMatch);
+ const h=buildHistoryAnalytics([reportFromCompletedRecord(rec)],{teamId:'qa-team'});assert.strictEqual(h.matches,1);assert.strictEqual(h.players.find(p=>p.playerId===action.playerId).total.efficiency,qa_p2.annaTotal.efficiency);
+ const raw=await adapter.get('completedMatches',id);raw.postMatchEdits.edits[0].newValue=0;await adapter.put('completedMatches',id,raw);let failed=false;try{await store.getHistory(id)}catch(e){failed=/postpartit/i.test(e.message)}assert(failed,'Una edició manipulada s’ha de rebutjar');
+ console.log('PASS 047 — edició postpartit auditada recalcula informe, exportació i històric');
+})().catch(e=>{console.error(e);process.exit(1)});

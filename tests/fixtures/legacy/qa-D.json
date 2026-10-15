@@ -1,0 +1,110 @@
+{
+  "format": "Stats Castellar Match",
+  "version": 1,
+  "exportedAt": "2030-01-15T12:00:00.000Z",
+  "match": {
+    "id": "qa-legacy-3",
+    "teamId": "qa-team",
+    "teamName": "Equip QA",
+    "opponent": "Rival QA D",
+    "date": "2030-01-13",
+    "venue": "home",
+    "legacy": false,
+    "legacyResult": "3-0",
+    "players": [
+      {
+        "id": "old-qa-18",
+        "number": 18,
+        "name": "Prova 18"
+      },
+      {
+        "id": "old-qa-19",
+        "number": 19,
+        "name": "Prova 19"
+      }
+    ],
+    "completedSets": [
+      {
+        "set": 1,
+        "scores": {
+          "castellar": 25,
+          "rival": 10
+        },
+        "actions": [
+          {
+            "playerId": "old-qa-18",
+            "action": "Servei",
+            "value": 1
+          },
+          {
+            "playerId": "old-qa-19",
+            "action": "Recepci\u00f3",
+            "value": 2
+          }
+        ],
+        "participation": {
+          "old-qa-18": {
+            "percentage": 100
+          },
+          "old-qa-19": {
+            "percentage": 100
+          }
+        }
+      },
+      {
+        "set": 2,
+        "scores": {
+          "castellar": 25,
+          "rival": 10
+        },
+        "actions": [
+          {
+            "playerId": "old-qa-18",
+            "action": "Servei",
+            "value": 1
+          },
+          {
+            "playerId": "old-qa-19",
+            "action": "Recepci\u00f3",
+            "value": 2
+          }
+        ],
+        "participation": {
+          "old-qa-18": {
+            "percentage": 100
+          },
+          "old-qa-19": {
+            "percentage": 100
+          }
+        }
+      },
+      {
+        "set": 3,
+        "scores": {
+          "castellar": 25,
+          "rival": 10
+        },
+        "actions": [
+          {
+            "playerId": "old-qa-18",
+            "action": "Servei",
+            "value": 1
+          },
+          {
+            "playerId": "old-qa-19",
+            "action": "Recepci\u00f3",
+            "value": 2
+          }
+        ],
+        "participation": {
+          "old-qa-18": {
+            "percentage": 100
+          },
+          "old-qa-19": {
+            "percentage": 100
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "description": "Investigaci\u00f3 a\u00efllada anterior a la conservaci\u00f3; casos observacionals del defecte existent.",
+  "profiles": [
+    "desktop-chromium",
+    "iphone-chromium",
+    "android-chromium"
+  ],
+  "tests": 9,
+  "passed": 9,
+  "failed": 0,
+  "observed": {
+    "visibleScoreAfterFinished": {
+      "team": 2,
+      "rival": 0
+    },
+    "archivedScore": {
+      "team": 1,
+      "rival": 0
+    },
+    "archiveUnchanged": true,
+    "pointInsertedBeforeArchiveAccepted": true
+  }
+}

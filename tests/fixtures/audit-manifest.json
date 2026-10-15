@@ -1,0 +1,275 @@
+[
+  {
+    "file": "anna-analytics-044.test.js",
+    "source": "core/tests/anna-analytics-044.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "792cdc63626e2a126bc088076e40afcb72bbb4f2627aac1ea617847dea29e070",
+    "adaptedSha256": "277126b11a10a696d5833e52652c3bb8d45dbe65c75f0dd92ca3a88ea6345c76"
+  },
+  {
+    "file": "backup-restore-032.test.js",
+    "source": "core/tests/backup-restore-032.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "38ad0926e90072fea61c858f59f27c66c5fe32631f445c39f7cc7613acc83319",
+    "adaptedSha256": "114fd6c8c696ada0b6ec6cb2d6d859278053d3646e1d5777fec50e8beec0c623"
+  },
+  {
+    "file": "backup.test.js",
+    "source": "core/tests/backup.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "5c1909bafbc1eef526fe5e919def2ef85c2efd87368377f0e901afa3a5029668",
+    "adaptedSha256": "2d8a3d8e8535339ea0977164f78a3c76d240b9a3f5503560f6dd70dba58e601c"
+  },
+  {
+    "file": "capa7-ui-state-041.test.js",
+    "source": "core/tests/capa7-ui-state-041.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "287493ba355f2d0f80b35a8440fac6e32ed42349bc26c83b510b89730ec8c04c",
+    "adaptedSha256": "f563865293cf56fb5b60a84829b70f4742db41f2d1fe10bdd43344ae402fa0da"
+  },
+  {
+    "file": "conflict-audit-chain-030.test.js",
+    "source": "core/tests/conflict-audit-chain-030.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "d3fb63b82fc0379735e67131a01b30fda8d090c972eceecf677ad7ee8be02cc2",
+    "adaptedSha256": "14922564a2ce0e7d40d012e97bed98a045f1d4e2f7eeb05ff9a446872d2cf824"
+  },
+  {
+    "file": "conflict-lifecycle-029.test.js",
+    "source": "core/tests/conflict-lifecycle-029.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "612db8ad6b445eea7f3502930b4680a2abc94ed833411f91b5fa882db5b8b4f9",
+    "adaptedSha256": "0e06292e4474c7f9d80d2e47e86ddc4f026a868e80a1b7599bdbfdc43d471c15"
+  },
+  {
+    "file": "conflict-resolution-028.test.js",
+    "source": "core/tests/conflict-resolution-028.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "b3f4ca8580dd526c3ef9e72986f277470ef7572731deb58f5da801984c3a4b17",
+    "adaptedSha256": "44b9c34ddcad15c0a40fedc5ace844d95af96a1d90fe4166cd53e81cda81f046"
+  },
+  {
+    "file": "core.test.js",
+    "source": "core/tests/core.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "347ad989ce6d002526169151e6a62185ced8b9588808a33521840a97e95d6a5a",
+    "adaptedSha256": "08d68bd4e0a413040fc22c76e69d2f2fdd0c607a28c4fd7a69137f80a4eb25e0"
+  },
+  {
+    "file": "cumulative-teams.test.js",
+    "source": "core/tests/cumulative-teams.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "a990eee046a721716604473497a149098da3f21529064bc982b01f50cc6671c3",
+    "adaptedSha256": "f6969ca69d1912d8aa8d08172ac48b41da4232e3c4898f02b278f5f897533cec"
+  },
+  {
+    "file": "cumulative-verified-020.test.js",
+    "source": "core/tests/cumulative-verified-020.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "8983ec52a8bbad6ee24f343e1883884577bdc7314ca71b3c2168ccd36c7df924",
+    "adaptedSha256": "5daf0491ea96c23c18e77cd2906c209c4bf76b7e3754c9c4f2035900d27b0a6c"
+  },
+  {
+    "file": "cumulative.test.js",
+    "source": "core/tests/cumulative.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "e47b42c82537dd093a61044b57f8ddbcb68249f1abdb4763e4f53070ad61c5c1",
+    "adaptedSha256": "1712df277661b0f6588640b63744b2deb6cc779bb1c0c2da652c4cf8fa53a998"
+  },
+  {
+    "file": "efficiency-gradient-052.test.js",
+    "source": "core/tests/efficiency-gradient-052.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "85ddd0aca4e6f4511c577866dfef200ee1ed58f8ab7c613f6e1565c66bfaf3b1",
+    "adaptedSha256": "85ddd0aca4e6f4511c577866dfef200ee1ed58f8ab7c613f6e1565c66bfaf3b1"
+  },
+  {
+    "file": "export-verified-021.test.js",
+    "source": "core/tests/export-verified-021.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "191fa0b786cb26952ecd1308f8cb766f7458ce9c6f7f671c9ece598246c67cbe",
+    "adaptedSha256": "247f85c81b9fb737241c2cc139ac78a6bf9f3152e47296d78cf890c22c5f252b"
+  },
+  {
+    "file": "full-match.test.js",
+    "source": "core/tests/full-match.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "c01d41a8d373b1cc2d53b92a6fd18c25220aab5e7711fb45f514e4a5086ac338",
+    "adaptedSha256": "1decb5df132d8824ccf842fcbcadc4da11ff6506538cee97a104e3e16bc6c28e"
+  },
+  {
+    "file": "golden-stats.test.js",
+    "source": "core/tests/golden-stats.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "1b814d6da30c5d00a1662e009b9dafe51de2afa608b9c0a47a4e73f635683e80",
+    "adaptedSha256": "adbda09166e305bebd5d91d8a9df62848f68c7857ce9bfafe409b5e1258bf358"
+  },
+  {
+    "file": "history-analysis-054.test.js",
+    "source": "core/tests/history-analysis-054.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "883be5cc81c78841ae2f4582581f18fea8d2ba0aeb059f7249d26d9e2e59afeb",
+    "adaptedSha256": "27602665c1347b5128681a85cdbd76d66908c12a264fa14d78519c0eec3d57c5"
+  },
+  {
+    "file": "integrity.test.js",
+    "source": "core/tests/integrity.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "39f81c12bf29aaac9024abed262555eab833ba66829605f8a9756681b43e419f",
+    "adaptedSha256": "0fff4fe6a1ae6b750047ffa6c7a504c751aaa783edc85a5465ce76c617409c8a"
+  },
+  {
+    "file": "legacy-import-046.test.js",
+    "source": "core/tests/legacy-import-046.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "6f75622897667d325643241a9fe211896d0924bd178f8576c0d88cc7063e87f2",
+    "adaptedSha256": "50f7981c95d1847776d91e5253e59d578e61768f498fdac9f220c6b9387a22e3"
+  },
+  {
+    "file": "maintenance-diagnostics-035.test.js",
+    "source": "core/tests/maintenance-diagnostics-035.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "66c21035b6ce7ca4e93096b648bae988245f166380fced179cb6a3a7a5345ca8",
+    "adaptedSha256": "de289a342b38f6c6e3e33ddb85659ec0bbb2151618e02d3e8e00737ef2f9cc7c"
+  },
+  {
+    "file": "maintenance-journal-033.test.js",
+    "source": "core/tests/maintenance-journal-033.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "0b03fc6eed49498e374e1200ee61166262abcb9191e63d3a99db502af6e77e94",
+    "adaptedSha256": "1ca634cd3ba38d3078837667d93c9a10d069aa8fc56422e2013df8ec90f4cb4a"
+  },
+  {
+    "file": "maintenance-journal-034.test.js",
+    "source": "core/tests/maintenance-journal-034.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "14642815ac7dfe9ac9c43197707158abfc9692325ce80faab0cce974aef64335",
+    "adaptedSha256": "84bf3808025c209245e505235548de3bd0c7ebbede5e8969c73b7666f333b53a"
+  },
+  {
+    "file": "participation.test.js",
+    "source": "core/tests/participation.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "ff4e5272f13bd94db4d99fcef98927a8fbe082b64e12b1c8708d29582fb7255a",
+    "adaptedSha256": "65d143d58727cedc676a2522f037969b1a51ed81b430d55d9c12e6620f0b1204"
+  },
+  {
+    "file": "post-match-edits-047.test.js",
+    "source": "core/tests/post-match-edits-047.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "ad136b2e4773dce6c0511763877f04fad18eedb7a64a3045434e5774d7292a4f",
+    "adaptedSha256": "56101e2b71a4ffed9b0829dcd4304827b9fc40c5a947d28afe9c3ca76638b6f2"
+  },
+  {
+    "file": "replay.test.js",
+    "source": "core/tests/replay.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "37299f76ad03e32f49b184c33128672881eb7e32329fc6d4e4bf03a21093dd72",
+    "adaptedSha256": "eebe8d2082a7f3a91acd058da62b5ee07c99139265542dc7b10e665e327107e1"
+  },
+  {
+    "file": "report-analytics-export-044.test.js",
+    "source": "core/tests/report-analytics-export-044.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "91d6594051dedea0774262de94469c7bb2626f82697ebb8b3a1cf33a8a51489b",
+    "adaptedSha256": "38141378be05687e5ca0092e3ca98cf3498937e1c63e3a146e3b75ae3043df98"
+  },
+  {
+    "file": "report-consistency.test.js",
+    "source": "core/tests/report-consistency.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "e12799ffd803cea9959fc4604e34e47d0605b3ce187e2ed6d3f6e99f8c976d0c",
+    "adaptedSha256": "1d052fc70b81dcd85869f358df69b571629d94b13c62f71a06d37cf477d6457a"
+  },
+  {
+    "file": "report-export.test.js",
+    "source": "core/tests/report-export.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "d7fea897616988e444abab1cdb58355fadc573377920cb88e9562b07753453bc",
+    "adaptedSha256": "68382947e7a2ca76891cb339392aa5a77c3a926a35d78f7a27915ad1849fde80"
+  },
+  {
+    "file": "report-integrity-019.test.js",
+    "source": "core/tests/report-integrity-019.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "2cb3adafa11b8b59c38a5e6a10115aae3ff28888b87e2ba193cb9178757c1e11",
+    "adaptedSha256": "12810a11277cf6267a18de47b417f6137e3fd4ecadac4ad43c26b0a5121de2b2"
+  },
+  {
+    "file": "report-polish-048.test.js",
+    "source": "core/tests/report-polish-048.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "a923abb455e394a8de8b45f2ced83b98594a8b7ebcd797b4acdb6c1e4ed0fec8",
+    "adaptedSha256": "c5a0da9966005ecd662d48cef93db4b76da0f5c89a143f45959cc18c74e6fbdb"
+  },
+  {
+    "file": "report-preservation-053.test.js",
+    "source": "core/tests/report-preservation-053.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "bd05f3ea107561f5d7642c719d4db6bb685bbc3078e0a81f23a68819734294b9",
+    "adaptedSha256": "bd05f3ea107561f5d7642c719d4db6bb685bbc3078e0a81f23a68819734294b9"
+  },
+  {
+    "file": "report-regeneration.test.js",
+    "source": "core/tests/report-regeneration.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "4242cb3445cae9ca44bb1109bbe0fc8ef9890c0c35d9c0fef5e2850cf1ea0451",
+    "adaptedSha256": "171631f97463c3bbbed6b892092f55d8c09b983f3b3a33bebbc42dd94f6113b7"
+  },
+  {
+    "file": "schema-migrations-031.test.js",
+    "source": "core/tests/schema-migrations-031.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "a49e91e795a121684cfd945e82c5235b721a82ffffd730aff72e6893861065f6",
+    "adaptedSha256": "e7d77740790874d00a525817ceff98ca5bcf7758484cfcc8baf8d3ffc891d4e1"
+  },
+  {
+    "file": "simulator-delete-043.test.js",
+    "source": "core/tests/simulator-delete-043.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "a407056f5f76d59ccebafb5bfe3e4f608fca1d0a8c7b7d9fedda3caf9151d669",
+    "adaptedSha256": "97d371339a64e13c38db58003cfa27df6192ddd9eb519c4d4ac86b8b0d9ded36"
+  },
+  {
+    "file": "stale-recovery-027.test.js",
+    "source": "core/tests/stale-recovery-027.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "91a284ee5b96104a5c77e6b9db3b172af88586689e0464d7e57db06e5bd0a605",
+    "adaptedSha256": "bf2cf492185338a10cac45120784d675adbb3f57a4db4a292100a80034ebbcdf"
+  },
+  {
+    "file": "stats.test.js",
+    "source": "core/tests/stats.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "ecd366a2ff9966bd5c41e9bf2ccebd2a0d8dfe48a8443bc9a71b8c6308b3288c",
+    "adaptedSha256": "971e1e482623ea1cca5e26fd54f9e5b593080512d702a0ce3d4538784685af29"
+  },
+  {
+    "file": "storage.test.js",
+    "source": "core/tests/storage.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "6aec7e98a20672d53116168281a66b0a786659290d03ab4bbda69d000d179de1",
+    "adaptedSha256": "61c1b7ceea1ba684a3a9a03f69ad2b47ece063fa6b1c850c3b47100d9f8c6535"
+  },
+  {
+    "file": "system-health-036.test.js",
+    "source": "core/tests/system-health-036.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "df2299aa1eb3abda4580e8dc5e44c35155ef68a626ee636b774dbc282b4919c8",
+    "adaptedSha256": "9561368b6476e105c4398ae4392d0e93756208a0947f1eb1981c89005306d4cf"
+  },
+  {
+    "file": "tactical-locks-055.test.js",
+    "source": "core/tests/tactical-locks-055.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "c25e0001e1377a2ace80c0b115ee9abcbe3e5102215bfccc6a0dd02584d5ec16",
+    "adaptedSha256": "c25e0001e1377a2ace80c0b115ee9abcbe3e5102215bfccc6a0dd02584d5ec16"
+  },
+  {
+    "file": "temporal-concurrency-026.test.js",
+    "source": "core/tests/temporal-concurrency-026.test.js",
+    "commit": "35334f841c4863f482813f43b0a8d6e1d8e852e7",
+    "originalSha256": "7825f2085b7b3c6b26813f64ea5c926fd9655ed6a24aa32a5b96fc7527403e87",
+    "adaptedSha256": "5eab350499c7b65e78348a0989cc15d3efeb3789b7ab46993b20c5df9ce4a2f2"
+  }
+]
