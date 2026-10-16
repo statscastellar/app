@@ -6,8 +6,10 @@ if(!P) throw new Error('StatsPro2 no carregat');
 if(!T) throw new Error('StatsPro2Tactical no carregat');
 const VISUAL_ZONES=['4','3','2','5','6','1'];
 const $=q=>document.querySelector(q), $$=q=>[...document.querySelectorAll(q)];
+let finalizing=false, archivedRecord=null;
 let engine=null, storage=null, adapter=null, localMode=null, positionsDraft=null, dragIndex=null, changeOutZone=null, tacticalLocks={};
 
+function live(){return engine?.state.lifecycle.status==='active';}
 function deep(x){return JSON.parse(JSON.stringify(x));}
 function player(id){return engine.state.roster.snapshot.find(p=>p.playerId===id)||{playerId:id,name:id,number:''};}
 function toast(msg){let t=$('.toast');if(!t){t=document.createElement('div');t.className='toast';document.body.appendChild(t);}t.textContent=msg;t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,1600);}
@@ -15,14 +17,14 @@ function modal(title,body,actions=[]){$('#modalTitle').textContent=title;$('#mod
 function closeModal(){$('#modalLayer').hidden=true;}
 function tacticalKey(){return engine?'pro2:tactical-locks:'+engine.state.identity.matchId:null;}
 async function loadTacticalLocks(){const key=tacticalKey();if(!key||!adapter){tacticalLocks={};return;}const row=await adapter.get('settings',key);tacticalLocks=T.sanitizeLocks(row?.locks||{},engine.state.game.court);}
-async function persistTacticalLocks(){const key=tacticalKey();if(!key||!adapter)return; tacticalLocks=T.sanitizeLocks(tacticalLocks,engine.state.game.court);await adapter.put('settings',key,{schemaVersion:1,matchId:engine.state.identity.matchId,locks:deep(tacticalLocks),updatedAt:new Date().toISOString()});}
+async function persistTacticalLocks(){if(!live())return;const key=tacticalKey();if(!key||!adapter)return; tacticalLocks=T.sanitizeLocks(tacticalLocks,engine.state.game.court);await adapter.put('settings',key,{schemaVersion:1,matchId:engine.state.identity.matchId,locks:deep(tacticalLocks),updatedAt:new Date().toISOString()});}
 async function clearTacticalLocks(){const key=tacticalKey();if(key&&adapter)await adapter.delete('settings',key);tacticalLocks={};}
 async function persist(){if(storage&&engine.state.lifecycle.status==='active') await storage.saveActive(engine);}
 function visualCourt(){return T.deriveVisualCourt(engine.state.game.court,tacticalLocks,{servingSide:engine.state.game.servingSide,phase:engine.state.game.phase});}
 function regZoneOfPlayer(pid){return T.regulatoryZoneOf(engine.state.game.court,pid);}
-async function toggleLockFor(pid,zone){if(tacticalLocks[pid]){delete tacticalLocks[pid];await persistTacticalLocks();render();toast('Fixació eliminada.');return;}const r=T.setLock(tacticalLocks,pid,zone,engine.state.game.court);if(!r.ok){toast('Aquesta zona ja està fixada per una altra jugadora.');return;}tacticalLocks=r.locks;await persistTacticalLocks();render();toast('Jugadora fixada a la zona '+zone+'.');}
+async function toggleLockFor(pid,zone){if(!live())return;if(tacticalLocks[pid]){delete tacticalLocks[pid];await persistTacticalLocks();render();toast('Fixació eliminada.');return;}const r=T.setLock(tacticalLocks,pid,zone,engine.state.game.court);if(!r.ok){toast('Aquesta zona ja està fixada per una altra jugadora.');return;}tacticalLocks=r.locks;await persistTacticalLocks();render();toast('Jugadora fixada a la zona '+zone+'.');}
 async function reconcileStale(error,{forFinalize=false}={}){
- if(!error||error.code!=='STALE_ACTIVE_WRITE'||!storage||!engine) return false;
+ if(!error||!['STALE_ACTIVE_WRITE','MATCH_ALREADY_FINALIZED'].includes(error.code)||!storage||!engine) return false;
  try{
    const r=await storage.reconcileStaleActive(engine);
    if(r.status==='rebased-saved'){render();toast('Canvis desats sobre la revisió més nova.');return true;}
@@ -33,11 +35,11 @@ async function reconcileStale(error,{forFinalize=false}={}){
      modal('Partit actualitzat en una altra còpia',`<p>Hi havia canvis més nous del mateix partit.</p><p>La teva branca local s’ha conservat com a conflicte <strong>${r.conflictId}</strong> i s’ha carregat la versió vigent. No s’han fusionat jugades automàticament.</p>`,[{text:'Continuar amb la versió vigent',cls:'primary',action:closeModal}]);
      return true;
    }
-   if(r.status==='finalized'){modal('Partit ja finalitzat','<p>Aquest partit ja s’ha finalitzat des d’una altra còpia. No es crearà cap altre partit actiu.</p>',[{text:'Anar a Historial',cls:'primary',action:()=>location.href='../Historial/index.html'}]);return true;}
+   if(r.status==='finalized'){engine=P.MatchEngine.fromSession({state:r.completed.finalState,actionLog:r.completed.actionLog,undoStack:[]});archivedRecord=r.completed;localMode=null;render();modal('Partit ja finalitzat','<p>Aquest partit ja s’ha finalitzat des d’una altra còpia. No es crearà cap altre partit actiu.</p>',[{text:'Anar a Historial',cls:'primary',action:()=>location.href='../Historial/index.html'}]);return true;}
    return false;
  }catch(syncError){console.error(syncError);return false;}
 }
-async function run(fn){try{fn();render();await persist();}catch(e){if(await reconcileStale(e))return;toast(e.message||String(e));console.error(e);}}
+async function run(fn){if(!live())return;try{fn();render();await persist();}catch(e){if(await reconcileStale(e))return;toast(e.message||String(e));console.error(e);}}
 
 function renderPlayers(ui){
  const g=$('#playerGrid');g.innerHTML='';
@@ -71,6 +73,8 @@ function renderBlocks(ui){
 }
 function render(){
  const s=engine.state, venue=s.metadata.venue, ui=P.buildCapa7UiState(engine,{localMode});
+ $$('[data-score-team]').forEach(b=>b.disabled=!ui.scoreEnabled);
+ $('#positionsBtn').disabled=!ui.matchActive;$('#changeBtn').disabled=!ui.matchActive;$('#finishSetBtn').disabled=!ui.matchActive;$('#finishMatchBtn').disabled=finalizing||!!archivedRecord;
  $('#ownScoreZone').style.order=venue==='away'?'4':'2';$('#rivalScoreZone').style.order=venue==='away'?'2':'4';
  $('#scoreHome').textContent=s.game.score.team;$('#scoreAway').textContent=s.game.score.rival;$('#setNumber').textContent=s.game.currentSet;$('#rivalName').textContent=s.metadata.opponent;$('#actionValue').textContent=ui.phaseLabel;$('#actionBox').disabled=!ui.phaseSkipEnabled;$('#actionBox').classList.toggle('skip-enabled',ui.phaseSkipEnabled);
  const dots=$('#setDots');dots.innerHTML='';for(let i=0;i<5;i++){const d=document.createElement('i'),r=s.game.sets[i];if(r?.winner==='team')d.className='won';else if(r?.winner==='rival')d.className='lost';else if(i===s.game.currentSet-1)d.className='active';dots.appendChild(d);}
@@ -80,12 +84,12 @@ function render(){
  $('#positionsBtn').classList.toggle('active-mode',localMode==='POSITIONS');$('#changeBtn').classList.toggle('active-mode',localMode==='CANVI');
  renderPlayers(ui);renderBlocks(ui);
 }
-function togglePositions(){if(localMode==='POSITIONS'){const next=deep(positionsDraft);localMode=null;positionsDraft=null;run(()=>engine.changePositions(next));return;}if(localMode)return;localMode='POSITIONS';positionsDraft=deep(engine.state.game.court);render();}
-function startChange(){if(localMode==='CANVI'){localMode=null;changeOutZone=null;render();return;}if(localMode)return;localMode='CANVI';changeOutZone=null;render();}
-function chooseCourtForChange(zone){if(localMode!=='CANVI')return;changeOutZone=zone;openBench();}
+function togglePositions(){if(!live())return;if(localMode==='POSITIONS'){const next=deep(positionsDraft);localMode=null;positionsDraft=null;run(()=>engine.changePositions(next));return;}if(localMode)return;localMode='POSITIONS';positionsDraft=deep(engine.state.game.court);render();}
+function startChange(){if(!live())return;if(localMode==='CANVI'){localMode=null;changeOutZone=null;render();return;}if(localMode)return;localMode='CANVI';changeOutZone=null;render();}
+function chooseCourtForChange(zone){if(!live())return;if(localMode!=='CANVI')return;changeOutZone=zone;openBench();}
 function openBench(){const courtIds=Object.values(engine.state.game.court);const bench=engine.state.roster.snapshot.filter(p=>engine.state.roster.calledPlayerIds.includes(p.playerId)&&!courtIds.includes(p.playerId));const out=player(engine.state.game.court[changeOutZone]);modal(`Canvi · surt ${out.name}`,`<p>Selecciona la jugadora que entra.</p><div class="bench-grid">${bench.map(p=>`<button class="bench-card" data-in="${p.playerId}"><strong>${p.name}</strong><small>#${p.number}</small></button>`).join('')}</div>`,[{text:'Cancel·lar',action:closeModal}]);$$('#modalBody [data-in]').forEach(b=>b.onclick=()=>confirmChange(b.dataset.in));}
-function confirmChange(inId){const outId=engine.state.game.court[changeOutZone],out=player(outId),inc=player(inId);modal('Confirmar canvi',`<p><strong>${out.name} → ${inc.name}</strong></p><p>La jugadora entrant ocuparà exactament la mateixa zona.</p>`,[{text:'Cancel·lar',action:()=>{closeModal();localMode=null;changeOutZone=null;render();}},{text:'Confirmar',cls:'primary',action:async()=>{closeModal();localMode=null;changeOutZone=null;await run(()=>engine.substitute(outId,inId));tacticalLocks=T.pruneInactive(tacticalLocks,engine.state.game.court);await persistTacticalLocks();render();}}]);}
-function toggleSOS(){if(engine.state.flow.sos.status==='active'){run(()=>engine.undo());return;}run(()=>engine.activateSOS());}
+function confirmChange(inId){if(!live())return;const outId=engine.state.game.court[changeOutZone],out=player(outId),inc=player(inId);modal('Confirmar canvi',`<p><strong>${out.name} → ${inc.name}</strong></p><p>La jugadora entrant ocuparà exactament la mateixa zona.</p>`,[{text:'Cancel·lar',action:()=>{closeModal();localMode=null;changeOutZone=null;render();}},{text:'Confirmar',cls:'primary',action:async()=>{closeModal();localMode=null;changeOutZone=null;await run(()=>engine.substitute(outId,inId));tacticalLocks=T.pruneInactive(tacticalLocks,engine.state.game.court);await persistTacticalLocks();render();}}]);}
+function toggleSOS(){if(!live())return;if(engine.state.flow.sos.status==='active'){run(()=>engine.undo());return;}run(()=>engine.activateSOS());}
 function buildNextSetDraft(team){
  const s=engine.state,now=new Date().toISOString();
  return {
@@ -116,11 +120,29 @@ async function openNextSetFlow(){
  sessionStorage.setItem('StatsCastellarPro2_ResumeMatchId_v1',engine.state.identity.matchId);
  location.href='../Capa9-3/index.html';
 }
-function finishSet(){const s=engine.state;modal('Finalitzar set',`<p>Vols tancar el set ${s.game.currentSet} amb el marcador <strong>${s.game.score.team}–${s.game.score.rival}</strong>?</p>`,[{text:'Cancel·lar',action:closeModal},{text:'Finalitzar set',cls:'primary',action:async()=>{closeModal();await run(()=>engine.finishSet());if(engine.isMatchDecided()) offerFinishAfterDecidingSet();else try{await openNextSetFlow();}catch(e){toast(e.message||String(e));console.error(e);}}}]);}
+function finishSet(){if(!live())return;const s=engine.state;modal('Finalitzar set',`<p>Vols tancar el set ${s.game.currentSet} amb el marcador <strong>${s.game.score.team}–${s.game.score.rival}</strong>?</p>`,[{text:'Cancel·lar',action:closeModal},{text:'Finalitzar set',cls:'primary',action:async()=>{closeModal();await run(()=>engine.finishSet());if(engine.isMatchDecided()) offerFinishAfterDecidingSet();else try{await openNextSetFlow();}catch(e){toast(e.message||String(e));console.error(e);}}}]);}
 function offerFinishAfterDecidingSet(){const wins=engine.getSetWins();modal('Partit decidit',`<p>El partit ja té un guanyador per sets (<strong>${wins.team}–${wins.rival}</strong>).</p><p>Pots finalitzar-lo ara. No es prepararà cap set addicional.</p>`,[{text:'Desfer final de set',action:()=>{closeModal();run(()=>engine.undo());}},{text:'Finalitzar partit',cls:'danger',action:()=>{closeModal();finishMatch();}}]);}
-function finishMatch(){modal('Finalitzar partit','<p>Aquesta acció tancarà definitivament el partit i l’eliminarà de Recuperar partit.</p>',[{text:'Cancel·lar',action:closeModal},{text:'Finalitzar partit',cls:'danger',action:async()=>{try{if(engine.state.lifecycle.status!=='finished') engine.finishMatch();const archived=await storage.finalize(engine);await clearTacticalLocks();closeModal();render();finalSummary(archived);}catch(e){if(await reconcileStale(e,{forFinalize:true}))return;toast('No s’ha pogut arxivar. El partit continua segur i pots tornar-ho a provar.');console.error(e);}}}]);}
-function finalSummary(archived){modal('Partit finalitzat',`<div class="final-summary"><p>Partit arxivat correctament.</p><p><strong>Accions:</strong> ${archived.actionLog.actions.length}</p><p><strong>Jugadores amb estadística:</strong> ${archived.report.stats.players.length}</p></div>`,[{text:'Veure informe',cls:'primary',action:()=>location.href='../Informe/index.html?id='+encodeURIComponent(archived.matchId)},{text:'Inici',action:()=>location.href='../index.html'}]);}
+async function archiveMatch(){
+ if(finalizing||archivedRecord)return;
+ finalizing=true;
+ try{
+  if(live())engine.finishMatch();
+  localMode=null;positionsDraft=null;changeOutZone=null;render();
+  const archived=await storage.finalize(engine);
+  archivedRecord=archived;
+  await clearTacticalLocks();closeModal();finalSummary(archived);
+ }catch(e){
+  if(await reconcileStale(e,{forFinalize:true}))return;
+  toast('No s’ha pogut arxivar. El marcador queda bloquejat; torna a provar de finalitzar.');console.error(e);
+ }finally{finalizing=false;render();}
+}
+function finishMatch(){
+ if(archivedRecord){finalSummary(archivedRecord);return;}
+ modal('Finalitzar partit','<p>Aquesta acció tancarà definitivament el partit i l’eliminarà de Recuperar partit.</p>',[{text:'Cancel·lar',action:closeModal},{text:'Finalitzar partit',cls:'danger',action:archiveMatch}]);
+}
+function finalSummary(archived){archivedRecord=archived;modal('Partit finalitzat',`<div class="final-summary"><p>Partit arxivat correctament.</p><p><strong>Accions:</strong> ${archived.actionLog.actions.length}</p><p><strong>Jugadores amb estadística:</strong> ${archived.report.stats.players.length}</p></div>`,[{text:'Veure informe',cls:'primary',action:()=>location.href='../Informe/index.html?id='+encodeURIComponent(archived.matchId)},{text:'Inici',action:()=>location.href='../index.html'}]);}
 function home(){
+ if(!live()){if(archivedRecord)location.href='../index.html';else finishMatch();return;}
  modal('Tornar a Inici','<p>El partit es guardarà automàticament com a partit en curs i es podrà recuperar.</p>',[
   {text:'Cancel·lar',action:closeModal},
   {text:'Guardar i anar a Inici',cls:'primary',action:async()=>{try{await persist();closeModal();location.href='../index.html';}catch(e){toast(e.message||String(e));}}}

@@ -32,7 +32,12 @@ class MatchEngine {
     return { state: clone(this.state), actionLog: clone(this.log) };
   }
 
+  _assertActive() {
+    assert(this.state.lifecycle.status === 'active', 'Partit finalitzat');
+  }
+
   _checkpoint(label) {
+    this._assertActive();
     this.undoStack.push({ label, ...this.snapshot() });
     if (this.undoStack.length > 100) this.undoStack.shift();
   }
@@ -44,6 +49,9 @@ class MatchEngine {
   }
 
   _append(type, data = {}, meta = {}) {
+    if (this.state.lifecycle.status !== 'active') {
+      assert(type === ACTION.MATCH_END && !this.log.actions.some(a => a.type === ACTION.MATCH_END && a.active), 'Partit finalitzat');
+    }
     const sequence = this.log.nextSequence++;
     const occurredAt = meta.occurredAt || this._nextOccurredAt();
     const action = {
@@ -68,6 +76,7 @@ class MatchEngine {
   }
 
   _revertAction(actionId, reason) {
+    this._assertActive();
     const a = this._findAction(actionId);
     if (a && a.active) {
       a.active = false;
@@ -76,6 +85,7 @@ class MatchEngine {
   }
 
   _phaseAfterPoint() {
+    this._assertActive();
     this.state.flow.rivalTransit = false;
     this.state.flow.rivalCourtAvailable = false;
     this.state.flow.sos = { status: 'unavailable', origin: null, provisionalPointActionId: null };
@@ -83,6 +93,7 @@ class MatchEngine {
   }
 
   _rotateTeam() {
+    this._assertActive();
     const c = this.state.game.court;
     const before = clone(c);
     this.state.game.court = {
@@ -97,6 +108,7 @@ class MatchEngine {
   }
 
   _awardPoint(side, source, { provisional = false, manual = false } = {}) {
+    this._assertActive();
     assert(['team','rival'].includes(side), 'Costat de punt invàlid');
     const before = clone(this.state.game.score);
     this.state.game.score[side]++;
@@ -118,6 +130,7 @@ class MatchEngine {
   }
 
   ratePlayer(zone, value) {
+    this._assertActive();
     zone = String(zone);
     assert(ZONES.includes(zone), 'Zona invàlida');
     assert(Number.isInteger(value) && value >= 0 && value <= 3, 'Valor invàlid');
@@ -185,6 +198,7 @@ class MatchEngine {
   }
 
   activateSOS() {
+    this._assertActive();
     assert(this.state.flow.sos.status === 'available', 'SOS no disponible');
     this._checkpoint('SOS ACTIVAR');
     const sos = clone(this.state.flow.sos);
@@ -222,6 +236,7 @@ class MatchEngine {
   }
 
   rivalCourt() {
+    this._assertActive();
     assert(this.state.flow.rivalCourtAvailable, 'Camp rival no disponible');
     assert(!this.state.flow.temporaryMode, 'Mode temporal actiu');
     this._checkpoint('CAMP RIVAL');
@@ -235,6 +250,7 @@ class MatchEngine {
   }
 
   block(zone, value) {
+    this._assertActive();
     zone = String(zone);
     assert(['2','3','4'].includes(zone), 'Bloqueig només a zones davanteres 2, 3 i 4');
     assert([0,1,2].includes(value), 'Bloqueig només admet 0, 1 o 2');
@@ -256,6 +272,7 @@ class MatchEngine {
   }
 
   changePositions(newCourt) {
+    this._assertActive();
     assert(newCourt && ZONES.every(z => newCourt[z]), 'Calen sis zones');
     const ids = ZONES.map(z => newCourt[z]);
     assert(unique(ids), 'Les sis jugadores han de ser diferents');
@@ -269,6 +286,7 @@ class MatchEngine {
   }
 
   substitute(playerOutId, playerInId) {
+    this._assertActive();
     const zone = ZONES.find(z => this.state.game.court[z] === playerOutId);
     assert(zone, 'La jugadora que surt no és a pista');
     assert(this.state.roster.calledPlayerIds.includes(playerInId), 'La jugadora que entra no està convocada');
@@ -281,6 +299,7 @@ class MatchEngine {
   }
 
   manualPoint(side) {
+    this._assertActive();
     assert(['team','rival'].includes(side), 'Costat invàlid');
     this.state.scoreCorrection = this.state.scoreCorrection || { team:0, rival:0 };
     this._checkpoint(`PUNT MANUAL ${side}`);
@@ -297,6 +316,7 @@ class MatchEngine {
   }
 
   manualMinus(side) {
+    this._assertActive();
     assert(['team','rival'].includes(side), 'Costat invàlid');
     assert(this.state.game.score[side] > 0, 'No es pot baixar de zero');
     const other = side === 'team' ? 'rival' : 'team';
@@ -346,6 +366,7 @@ class MatchEngine {
   }
 
   finishSet() {
+    this._assertActive();
     assert(this.state.lifecycle.status === 'active', 'Partit finalitzat');
     assert(!this.state.flow.awaitingNextSet, 'El set ja està tancat');
     this._checkpoint(`FINAL SET ${this.state.game.currentSet}`);
@@ -366,6 +387,7 @@ class MatchEngine {
   }
 
   startNextSet({ court, servingSide }) {
+    this._assertActive();
     assert(this.state.lifecycle.status === 'active', 'Partit finalitzat');
     assert(this.state.flow.awaitingNextSet, 'No hi ha cap set pendent d\'iniciar');
     assert(!this.isMatchDecided(), 'El partit ja està decidit');
@@ -408,6 +430,7 @@ class MatchEngine {
   }
 
   undo() {
+    this._assertActive();
     assert(this.undoStack.length, 'No hi ha res per desfer');
     const previous = this.undoStack.pop();
     this.state = clone(previous.state);

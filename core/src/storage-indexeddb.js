@@ -162,6 +162,24 @@ class IndexedDBStorageAdapter {
     });
   }
 
+  async atomicReplaceCompleted(matchId, expected, next) {
+    const id=String(matchId);assert(next.matchId===id,'Identificador de partit inconsistent');
+    const db=await this._open();
+    return new Promise((resolve,reject)=>{
+      const tx=db.transaction('completedMatches','readwrite'), os=tx.objectStore('completedMatches'), req=os.get(id);
+      let conflict=null;
+      tx.oncomplete=()=>resolve(clone(next));
+      tx.onabort=()=>reject(conflict||tx.error||new Error('No s’ha pogut desar el partit'));
+      tx.onerror=()=>reject(tx.error||new Error('No s’ha pogut desar el partit'));
+      req.onsuccess=()=>{
+        if(!req.result||JSON.stringify(req.result.value)!==JSON.stringify(expected)){
+          conflict=new Error('El partit ha canviat. Recarrega’l abans de desar.');tx.abort();return;
+        }
+        os.put({id,value:clone(next)});
+      };
+    });
+  }
+
   async atomicSaveActive(matchId,record,expectedRevision=null) {
     if(expectedRevision==null && Object.prototype.hasOwnProperty.call(record||{},'parentStorageRevision')) expectedRevision=record.parentStorageRevision;
     const db=await this._open();

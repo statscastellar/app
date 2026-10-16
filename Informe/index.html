@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 
-<html lang="ca"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/><title>Stats Castellar · Informe</title><link href="style.css?v=1.1.0" rel="stylesheet"/><link href="../shared/player-scroll.css?v=1.1.0" rel="stylesheet"/></head>
+<html lang="ca"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/><title>Stats Castellar · Informe</title><link href="style.css?v=1.1.0" rel="stylesheet"/><link href="../shared/player-scroll.css?v=1.1.0" rel="stylesheet"/><style>
+#resultDialog{box-sizing:border-box;width:32rem;max-width:calc(100vw - 2rem);max-height:calc(100dvh - 2rem);overflow:auto}
+#resultDialog table{width:100%;table-layout:fixed}
+#resultDialog th{overflow-wrap:anywhere}
+#resultDialog th:first-child{width:2.5rem}
+#resultDialog input{box-sizing:border-box;width:100%;min-width:0;font-size:1rem}
+</style></head>
 <body>
 <header class="top"><button id="backBtn">← Historial</button><div><strong>INFORME DE PARTIT</strong><span id="subtitle"></span></div><div class="exports"><button class="edit" id="editBtn">Editar estadístiques</button><button id="pdfBtn">PDF</button><button id="odsBtn">ODS</button><button id="xlsxBtn">XLSX</button></div></header>
 <main hidden="" id="report">
@@ -8,7 +14,7 @@
 <div class="sheet-title">FULL D'ESTADÍSTIQUES DE PARTIT</div>
 <div class="meta-grid"><span>Equip: <strong id="team"></strong></span><span>Rival: <strong id="rival"></strong></span><span>Data: <strong id="date"></strong></span><span>Lloc: <strong id="venue"></strong></span></div>
 <div class="result-line">Resultat: <strong id="score"></strong> <span id="setScores"></span></div>
-<div class="edit-status" hidden="" id="editStatus"><span id="editStatusText">Mode edició: prem − al valor actual i després + al valor correcte.</span><button hidden="" id="cancelPendingEdit" type="button">Cancel·la canvi pendent</button></div>
+<div class="edit-status" hidden="" id="editStatus"><span id="editStatusText">Mode edició: prem − al valor actual i després + al valor correcte.</span><button hidden="" id="editResultBtn" type="button">Editar resultat</button><button hidden="" id="cancelPendingEdit" type="button">Cancel·la canvi pendent</button></div>
 <div class="table-wrap"><table class="stats-table" id="matchTable"><thead></thead><tbody></tbody></table></div>
 <div class="legend"><b>Servei:</b> 0 = Error · 1 = Fàcil · 2 = Correcte · 3 = Ace   <b>Recepció, Defensa, Col·locació i Atac:</b> 0 = Error · 1 = Dolenta · 2 = Correcte · 3 = Perfecta   <b>Bloqueig:</b> 0 = Fora · 1 = Toc · 2 = Punt   <b>Salvades:</b> 1/2/3 = qualitat; no entren en cap mitjana.</div>
 </section>
@@ -40,4 +46,9 @@
 </section>
 </main>
 <section class="error" hidden="" id="error"></section>
+<dialog id="resultDialog" aria-labelledby="resultTitle"><form id="resultForm">
+<h2 id="resultTitle">Resultat del partit</h2>
+<table><thead><tr><th>Set</th><th id="resultTeam">Equip</th><th id="resultRival">Rival</th></tr></thead><tbody id="resultInputs"></tbody></table>
+<p id="resultError" role="alert"></p><button id="resultCancel" type="button">Cancel·lar</button> <button id="resultSave" type="submit">Desar resultat</button>
+</form></dialog>
 <script src="../shared/pro2-core.bundle.js"></script><script src="../shared/export-pro2.js"></script><script src="report.js"></script><script src="../shared/player-scroll.js?v=1.1.0"></script></body></html>

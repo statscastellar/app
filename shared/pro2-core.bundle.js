@@ -156,6 +156,8 @@ function applyAction(state, action) {
       state.flow.sos = { status: 'unavailable', origin: null, provisionalPointActionId: null };
       break;
     case ACTION.MATCH_END:
+      if (Array.isArray(d.sets)) state.game.sets = clone(d.sets);
+      if (d.score) state.game.score = clone(d.score);
       state.lifecycle.status = 'finished';
       state.lifecycle.finishedAt = d.finishedAt || null;
       break;
@@ -470,26 +472,29 @@ function buildCapa7UiState(engine, options = {}) {
   assert(engine && engine.state, 'Motor de partit no disponible');
   const localMode = options.localMode || null;
   const state = engine.state;
+  const matchActive = state.lifecycle.status === 'active';
   const phase = state.game.phase;
   const sosStatus = state.flow.sos.status;
-  const sosActive = sosStatus === 'active';
+  const sosActive = matchActive && sosStatus === 'active';
   const temporaryUiMode = !!localMode;
   const undoStack = Array.isArray(engine.undoStack) ? engine.undoStack : [];
 
   const ui = {
     version: 1,
+    matchActive,
+    scoreEnabled: matchActive,
     phase,
     phaseLabel: sosActive ? 'SALVADA' : (PHASE_LABELS[phase] || phase),
     localMode,
-    ratingPhaseAllowed: RATEABLE_PHASES.includes(phase),
-    serverBallVisible: !temporaryUiMode && state.game.servingSide === 'team' && phase === PHASE.SERVEI,
-    rivalCourtEnabled: !temporaryUiMode && !!state.flow.rivalCourtAvailable,
-    sosEnabled: !temporaryUiMode && (sosStatus === 'available' || sosStatus === 'active'),
+    ratingPhaseAllowed: matchActive && RATEABLE_PHASES.includes(phase),
+    serverBallVisible: matchActive && !temporaryUiMode && state.game.servingSide === 'team' && phase === PHASE.SERVEI,
+    rivalCourtEnabled: matchActive && !temporaryUiMode && !!state.flow.rivalCourtAvailable,
+    sosEnabled: matchActive && !temporaryUiMode && (sosStatus === 'available' || sosStatus === 'active'),
     sosActive,
-    phaseSkipEnabled: !temporaryUiMode && !sosActive && [PHASE.RECEPCIO,PHASE.DEFENSA,PHASE.COLLOCACIO].includes(phase),
-    blocksEnabled: !temporaryUiMode,
-    undoEnabled: undoStack.length > 0,
-    undoLabel: undoStack.length ? (undoStack[undoStack.length - 1].label || '') : ''
+    phaseSkipEnabled: matchActive && !temporaryUiMode && !sosActive && [PHASE.RECEPCIO,PHASE.DEFENSA,PHASE.COLLOCACIO].includes(phase),
+    blocksEnabled: matchActive && !temporaryUiMode,
+    undoEnabled: matchActive && undoStack.length > 0,
+    undoLabel: matchActive && undoStack.length ? (undoStack[undoStack.length - 1].label || '') : ''
   };
 
   ui.canRate = (zone, value) => {
@@ -769,7 +774,7 @@ function normalizeLegacyMatchDocument(doc){
   const stats=calculateStats(pseudo);
   const setList=(m.completedSets||[]).map(s=>Number(s.set)).filter(Number.isInteger).sort((a,b)=>a-b);
   const legacyResult=parseLegacyResult(m.legacyResult);
-  const actualScores=(m.completedSets||[]).some(s=>Number(s?.scores?.castellar||0)!==0||Number(s?.scores?.rival||0)!==0);
+  const actualScores=(m.completedSets||[]).some(s=>Number.isSafeInteger(s.score?.team)&&Number.isSafeInteger(s.score?.rival)) || (m.completedSets||[]).some(s=>Number(s?.scores?.castellar||0)!==0||Number(s?.scores?.rival||0)!==0);
   const resultSets=(m.completedSets||[]).map(s=>{
     const c=actualScores?Number(s?.scores?.castellar??0):null, r=actualScores?Number(s?.scores?.rival??0):null;
     const winner=actualScores?(c>r?'team':r>c?'rival':null):null;
@@ -801,7 +806,7 @@ function normalizeLegacyMatchDocument(doc){
   const report={
     schemaVersion:4, matchId:String(m.id),
     metadata:{teamId,teamName:m.teamName||'Infantil A',opponent:m.opponent||'Rival',date:m.date||'',venue:m.venue||'',legacyResult:m.legacyResult||null,sourceKind:SOURCE_KIND},
-    result:{sets:resultSets,currentSet:setList.at(-1)||1,currentScore:actualScores?{team:Number(m.scores?.castellar??0),rival:Number(m.scores?.rival??0)}:{team:null,rival:null}},
+    result:clone(m.result||{sets:resultSets,currentSet:setList.at(-1)||1,currentScore:actualScores?{team:Number(m.scores?.castellar??0),rival:Number(m.scores?.rival??0)}:{team:null,rival:null}}),
     stats:{teamAnnaActions:stats.teamAnnaActions,teamAnna:clone(stats.teamAnna),teamAnnaTotal:clone(stats.teamAnnaTotal),teamSaves:clone(stats.teamSaves),teamBlocks:clone(stats.teamBlocks),participation:{byPlayer:clone(participationByPlayer),totalPoints:setList.length},players:reportPlayers,bySet},
     actions:aa.rows.map(a=>({sequence:a.sequence,actionId:`legacy:${a.sequence}`,set:a.set,type:a.type,label:a.raw?.action||a.type,playerId:playerMap[a.playerId]||a.playerId,number:players.find(p=>p.playerId===(playerMap[a.playerId]||a.playerId))?.number??null,playerName:players.find(p=>p.playerId===(playerMap[a.playerId]||a.playerId))?.name||null,value:a.value,teamScore:null,rivalScore:null,detail:'',provisional:false})),
     audit:{activeActions:aa.rows.length,revertedActions:0,sourceKind:SOURCE_KIND,setActionBreakdownAvailable:aa.reliableBySet},
@@ -830,7 +835,6 @@ function repairLegacyImportRecord(rec){
   const out=clone(rec); out.report=clone(expected); out.metadata=clone(expected.metadata); out.legacyIntegrity={version:1,algorithm:'fnv1a32-stable-json',sourceDigest:valueDigest(out.legacySource),reportDigest:valueDigest(expected)}; out.reportRecoveredAt=new Date().toISOString(); out.reportRecoverySource='legacy-source'; return out;
 }
 module.exports={SOURCE_KIND,isLegacyImportRecord,normalizeLegacyMatchDocument,makeLegacyImportRecord,verifyLegacyImportRecord,repairLegacyImportRecord};
-
 };
 modules['./maintenance-journal']=function(module,exports,require){
 'use strict';
@@ -1035,7 +1039,12 @@ class MatchEngine {
     return { state: clone(this.state), actionLog: clone(this.log) };
   }
 
+  _assertActive() {
+    assert(this.state.lifecycle.status === 'active', 'Partit finalitzat');
+  }
+
   _checkpoint(label) {
+    this._assertActive();
     this.undoStack.push({ label, ...this.snapshot() });
     if (this.undoStack.length > 100) this.undoStack.shift();
   }
@@ -1047,6 +1056,9 @@ class MatchEngine {
   }
 
   _append(type, data = {}, meta = {}) {
+    if (this.state.lifecycle.status !== 'active') {
+      assert(type === ACTION.MATCH_END && !this.log.actions.some(a => a.type === ACTION.MATCH_END && a.active), 'Partit finalitzat');
+    }
     const sequence = this.log.nextSequence++;
     const occurredAt = meta.occurredAt || this._nextOccurredAt();
     const action = {
@@ -1071,6 +1083,7 @@ class MatchEngine {
   }
 
   _revertAction(actionId, reason) {
+    this._assertActive();
     const a = this._findAction(actionId);
     if (a && a.active) {
       a.active = false;
@@ -1079,6 +1092,7 @@ class MatchEngine {
   }
 
   _phaseAfterPoint() {
+    this._assertActive();
     this.state.flow.rivalTransit = false;
     this.state.flow.rivalCourtAvailable = false;
     this.state.flow.sos = { status: 'unavailable', origin: null, provisionalPointActionId: null };
@@ -1086,6 +1100,7 @@ class MatchEngine {
   }
 
   _rotateTeam() {
+    this._assertActive();
     const c = this.state.game.court;
     const before = clone(c);
     this.state.game.court = {
@@ -1100,6 +1115,7 @@ class MatchEngine {
   }
 
   _awardPoint(side, source, { provisional = false, manual = false } = {}) {
+    this._assertActive();
     assert(['team','rival'].includes(side), 'Costat de punt invàlid');
     const before = clone(this.state.game.score);
     this.state.game.score[side]++;
@@ -1121,6 +1137,7 @@ class MatchEngine {
   }
 
   ratePlayer(zone, value) {
+    this._assertActive();
     zone = String(zone);
     assert(ZONES.includes(zone), 'Zona invàlida');
     assert(Number.isInteger(value) && value >= 0 && value <= 3, 'Valor invàlid');
@@ -1188,6 +1205,7 @@ class MatchEngine {
   }
 
   activateSOS() {
+    this._assertActive();
     assert(this.state.flow.sos.status === 'available', 'SOS no disponible');
     this._checkpoint('SOS ACTIVAR');
     const sos = clone(this.state.flow.sos);
@@ -1225,6 +1243,7 @@ class MatchEngine {
   }
 
   advancePhase() {
+    this._assertActive();
     assert(this.state.lifecycle.status === 'active', 'Partit finalitzat');
     assert(!this.state.flow.temporaryMode, 'Hi ha un mode temporal actiu');
     assert(this.state.flow.sos.status !== 'active', 'No es pot saltar fase durant una Salvada');
@@ -1245,6 +1264,7 @@ class MatchEngine {
   }
 
   rivalCourt() {
+    this._assertActive();
     assert(this.state.flow.rivalCourtAvailable, 'Camp rival no disponible');
     assert(!this.state.flow.temporaryMode, 'Mode temporal actiu');
     this._checkpoint('CAMP RIVAL');
@@ -1258,6 +1278,7 @@ class MatchEngine {
   }
 
   block(zone, value) {
+    this._assertActive();
     zone = String(zone);
     assert(['2','3','4'].includes(zone), 'Bloqueig només a zones davanteres 2, 3 i 4');
     assert([0,1,2].includes(value), 'Bloqueig només admet 0, 1 o 2');
@@ -1279,6 +1300,7 @@ class MatchEngine {
   }
 
   changePositions(newCourt) {
+    this._assertActive();
     assert(newCourt && ZONES.every(z => newCourt[z]), 'Calen sis zones');
     const ids = ZONES.map(z => newCourt[z]);
     assert(unique(ids), 'Les sis jugadores han de ser diferents');
@@ -1292,6 +1314,7 @@ class MatchEngine {
   }
 
   substitute(playerOutId, playerInId) {
+    this._assertActive();
     const zone = ZONES.find(z => this.state.game.court[z] === playerOutId);
     assert(zone, 'La jugadora que surt no és a pista');
     assert(this.state.roster.calledPlayerIds.includes(playerInId), 'La jugadora que entra no està convocada');
@@ -1304,6 +1327,7 @@ class MatchEngine {
   }
 
   manualPoint(side) {
+    this._assertActive();
     assert(['team','rival'].includes(side), 'Costat invàlid');
     this.state.scoreCorrection = this.state.scoreCorrection || { team:0, rival:0 };
     this._checkpoint(`PUNT MANUAL ${side}`);
@@ -1320,6 +1344,7 @@ class MatchEngine {
   }
 
   manualMinus(side) {
+    this._assertActive();
     assert(['team','rival'].includes(side), 'Costat invàlid');
     assert(this.state.game.score[side] > 0, 'No es pot baixar de zero');
     const other = side === 'team' ? 'rival' : 'team';
@@ -1369,6 +1394,7 @@ class MatchEngine {
   }
 
   finishSet() {
+    this._assertActive();
     assert(this.state.lifecycle.status === 'active', 'Partit finalitzat');
     assert(!this.state.flow.awaitingNextSet, 'El set ja està tancat');
     this._checkpoint(`FINAL SET ${this.state.game.currentSet}`);
@@ -1389,6 +1415,7 @@ class MatchEngine {
   }
 
   startNextSet({ court, servingSide }) {
+    this._assertActive();
     assert(this.state.lifecycle.status === 'active', 'Partit finalitzat');
     assert(this.state.flow.awaitingNextSet, 'No hi ha cap set pendent d\'iniciar');
     assert(!this.isMatchDecided(), 'El partit ja està decidit');
@@ -1431,6 +1458,7 @@ class MatchEngine {
   }
 
   undo() {
+    this._assertActive();
     assert(this.undoStack.length, 'No hi ha res per desfer');
     const previous = this.undoStack.pop();
     this.state = clone(previous.state);
@@ -2594,6 +2622,24 @@ class IndexedDBStorageAdapter {
     });
   }
 
+  async atomicReplaceCompleted(matchId, expected, next) {
+    const id=String(matchId);assert(next.matchId===id,'Identificador de partit inconsistent');
+    const db=await this._open();
+    return new Promise((resolve,reject)=>{
+      const tx=db.transaction('completedMatches','readwrite'), os=tx.objectStore('completedMatches'), req=os.get(id);
+      let conflict=null;
+      tx.oncomplete=()=>resolve(clone(next));
+      tx.onabort=()=>reject(conflict||tx.error||new Error('No s’ha pogut desar el partit'));
+      tx.onerror=()=>reject(tx.error||new Error('No s’ha pogut desar el partit'));
+      req.onsuccess=()=>{
+        if(!req.result||JSON.stringify(req.result.value)!==JSON.stringify(expected)){
+          conflict=new Error('El partit ha canviat. Recarrega’l abans de desar.');tx.abort();return;
+        }
+        os.put({id,value:clone(next)});
+      };
+    });
+  }
+
   async atomicSaveActive(matchId,record,expectedRevision=null) {
     if(expectedRevision==null && Object.prototype.hasOwnProperty.call(record||{},'parentStorageRevision')) expectedRevision=record.parentStorageRevision;
     const db=await this._open();
@@ -2620,8 +2666,18 @@ class IndexedDBStorageAdapter {
             const actualRevision=Number(existing.storageRevision||0);
             if(expectedRevision==null || actualRevision!==expectedRevision) return fail(staleActiveWriteError(id,expectedRevision,actualRevision));
           } else if(expectedRevision!=null && expectedRevision!==0) return fail(staleActiveWriteError(id,expectedRevision,null));
-          result=clone(record);
-          os.put({id,value:clone(record)});
+          const keysReq=os.getAllKeys();
+          keysReq.onerror=()=>fail(keysReq.error||new Error('No es pot comprovar el partit actiu'));
+          keysReq.onsuccess=()=>{
+            const foreign=(keysReq.result||[]).map(String).filter(k=>k!==id);
+            if(foreign.length){
+              const e=new Error('Ja hi ha un altre partit actiu. Recupera o finalitza el partit en curs abans de crear-ne un de nou.');
+              e.code='ACTIVE_MATCH_EXISTS'; e.activeMatchIds=foreign;
+              return fail(e);
+            }
+            result=clone(record);
+            os.put({id,value:clone(record)});
+          };
         };
       };
       tx.oncomplete=()=>{if(!failed)resolve(result)};
@@ -2740,7 +2796,6 @@ class IndexedDBStorageAdapter {
 }
 
 module.exports={ IndexedDBStorageAdapter, DB_NAME, DB_VERSION, STORES, MAINTENANCE_STORE, ALL_STORES };
-
 };
 modules['./storage-memory']=function(module,exports,require){
 'use strict';
@@ -2787,6 +2842,14 @@ class MemoryStorageAdapter {
   async list(store) { return [...this._store(store).values()].map(clone); }
   async listEntries(store) { return [...this._store(store).entries()].map(([id,value])=>({id:String(id),value:clone(value)})); }
 
+  async atomicReplaceCompleted(matchId, expected, next) {
+    const id=String(matchId), current=this.completed.get(id);
+    assert(next.matchId===id, 'Identificador de partit inconsistent');
+    assert(current && JSON.stringify(current)===JSON.stringify(expected), 'El partit ha canviat. Recarrega’l abans de desar.');
+    this.completed.set(id,clone(next));
+    return clone(next);
+  }
+
   async atomicSaveActive(matchId, record, expectedRevision=null) {
     assert(matchId, 'matchId obligatori');
     if(expectedRevision==null && Object.prototype.hasOwnProperty.call(record||{},'parentStorageRevision')) expectedRevision=record.parentStorageRevision;
@@ -2798,6 +2861,12 @@ class MemoryStorageAdapter {
       if(expectedRevision==null || actualRevision!==expectedRevision) throw staleActiveWriteError(id,expectedRevision,actualRevision);
     } else if(expectedRevision!=null && expectedRevision!==0) {
       throw staleActiveWriteError(id,expectedRevision,null);
+    }
+    const foreign=[...this.active.keys()].filter(k=>String(k)!==id);
+    if(foreign.length) {
+      const e=new Error('Ja hi ha un altre partit actiu. Recupera o finalitza el partit en curs abans de crear-ne un de nou.');
+      e.code='ACTIVE_MATCH_EXISTS'; e.activeMatchIds=foreign;
+      throw e;
     }
     this.active.set(id,clone(record));
     return clone(record);
@@ -2904,12 +2973,12 @@ class MemoryStorageAdapter {
 }
 
 module.exports = { MemoryStorageAdapter };
-
 };
 modules['./storage-service']=function(module,exports,require){
 'use strict';
 
 const { clone, assert } = require('./utils');
+const { replaceFinalResult } = require('./match-result');
 const { MatchEngine } = require('./match-engine');
 const { buildMatchReport } = require('./match-report');
 const { applyPostMatchEditsToReport, appendPostMatchEdit, verifyPostMatchEdits } = require('./post-match-edits');
@@ -3208,7 +3277,7 @@ class Pro2Storage {
     if(typeof this.adapter.atomicSaveActive==='function') {
       await this.adapter.atomicSaveActive(session.matchId,record,expectedRevision);
     } else {
-      // Compatibilitat amb adaptadors antics: cada matchId es desa de manera independent.
+      // Compatibilitat amb adaptadors antics: aplica igualment la invariant d'un únic partit actiu i control de versió.
       const completed=await this.adapter.get('completedMatches',session.matchId);
       if(completed) throw alreadyFinalizedError(session.matchId);
       const rows=await this.adapter.list('activeMatches');
@@ -3216,6 +3285,12 @@ class Pro2Storage {
       if(existing) {
         const actualRevision=Number(existing.storageRevision||0);
         if(expectedRevision==null || actualRevision!==expectedRevision) throw staleActiveWriteError(session.matchId,expectedRevision,actualRevision);
+      }
+      const foreign=rows.filter(r=>String(r?.matchId||'')!==String(session.matchId));
+      if(foreign.length) {
+        const e=new Error('Ja hi ha un altre partit actiu. Recupera o finalitza el partit en curs abans de crear-ne un de nou.');
+        e.code='ACTIVE_MATCH_EXISTS';
+        throw e;
       }
       await this.adapter.put('activeMatches',session.matchId,record);
     }
@@ -3237,28 +3312,13 @@ class Pro2Storage {
     return engine;
   }
 
-  async listActive() {
-    let rows=await this.adapter.list('activeMatches');
-    for(const row of rows) await this._reconcileFinalizedActive(row?.matchId||row?.session?.matchId);
-    rows=await this.adapter.list('activeMatches');
-    const out=[];
-    for(const raw of rows) {
-      const rec=migrateActiveRecord(raw);
-      this._validateActiveRecord(rec);
-      const repaired=await this._verifyOrRepairActive(rec);
-      if(Number(raw.schemaVersion)!==Number(repaired.schemaVersion)) await this.adapter.put('activeMatches',repaired.matchId,repaired);
-      out.push(clone(repaired));
-    }
-    return out.sort((a,b)=>String(b.savedAt||'').localeCompare(String(a.savedAt||'')));
-  }
-
   async getCurrentActive() {
     let list=await this.adapter.list('activeMatches');
     if(!list.length) return null;
     for(const row of list) await this._reconcileFinalizedActive(row?.matchId||row?.session?.matchId);
     list=await this.adapter.list('activeMatches');
     if(!list.length) return null;
-    // Retorna el partit pendent desat més recent; els altres continuen disponibles a Recuperar partit.
+    // V1 admet un únic partit actiu; si n'hi ha més, escull el més recent però ho considera situació anòmala.
     list.sort((a,b)=>String(b.savedAt||'').localeCompare(String(a.savedAt||'')));
     const rawCurrent=list[0];
     const current=migrateActiveRecord(rawCurrent);
@@ -3360,15 +3420,31 @@ class Pro2Storage {
     return clone(rec);
   }
 
+  async _saveHistoryUpdate(expected,next) {
+    if(typeof this.adapter.atomicReplaceCompleted==='function') return this.adapter.atomicReplaceCompleted(next.matchId,expected,next);
+    const current=await this.adapter.get('completedMatches',next.matchId);
+    assert(current && valueDigest(current)===valueDigest(expected),'El partit ha canviat. Recarrega’l abans de desar.');
+    await this.adapter.put('completedMatches',next.matchId,next);
+    return clone(next);
+  }
+
+  async editHistoryResult(matchId,sets,{confirmed=false}={}) {
+    assert(confirmed===true,'Cal confirmar el resultat abans de desar');
+    const rec=await this.getHistory(matchId);
+    assert(rec,'Partit finalitzat inexistent');
+    return this._saveHistoryUpdate(rec,replaceFinalResult(rec,sets));
+  }
+
   async editHistoryActionValue(matchId,actionId,newValue) {
     const rec=await this.getHistory(matchId);
     assert(rec,'Partit finalitzat inexistent');
+    const expected=clone(rec);
     let baseReport;
     if(isLegacyImportRecord(rec)) baseReport=rec.report;
     else baseReport=buildMatchReport(rec.finalState,rec.actionLog);
     rec.postMatchEdits=appendPostMatchEdit(baseReport,rec.postMatchEdits||null,String(actionId),Number(newValue));
     // La font segellada original no es modifica. L’edició és una capa auditada i segellada.
-    await this.adapter.put('completedMatches',rec.matchId,rec);
+    await this._saveHistoryUpdate(expected,rec);
     return clone(rec);
   }
 
@@ -3436,7 +3512,6 @@ class Pro2Storage {
 }
 
 module.exports={ Pro2Storage };
-
 };
 modules['./system-health']=function(module,exports,require){
 'use strict';
@@ -3523,6 +3598,77 @@ function unique(values) {
 module.exports = { clone, assert, unique };
 
 };
+modules['./match-result']=function(module,exports,require){
+'use strict';
+
+const { clone, assert } = require('./utils');
+const { ACTION } = require('./constants');
+const { buildMatchReport, reportFromCompletedRecord } = require('./match-report');
+const { makeIntegrity, valueDigest } = require('./session-integrity');
+const { makeReportIntegrity } = require('./report-integrity');
+const { isLegacyImportRecord, normalizeLegacyMatchDocument } = require('./legacy-import');
+
+function resultSets(report) {
+  const declared = String(report.metadata?.legacyResult || '').match(/^\s*(\d+)\s*[-–]\s*(\d+)\s*$/);
+  const count = Math.max(1, Number(report.result.currentSet) || 1,
+    ...(report.result.sets || []).map(s => Number(s.set) || 1),
+    declared ? Number(declared[1]) + Number(declared[2]) : 0);
+  assert(Number.isSafeInteger(count) && count <= 5, 'Nombre de sets invàlid');
+  return Array.from({ length: count }, (_, i) => {
+    const set = i + 1, row = (report.result.sets || []).find(s => Number(s.set) === set);
+    const score = row?.score || row || (set === count ? report.result.currentScore : null);
+    return { set, team: score?.team ?? 0, rival: score?.rival ?? 0 };
+  });
+}
+
+function replaceFinalResult(record, values) {
+  const before = reportFromCompletedRecord(record);
+  assert(before && (isLegacyImportRecord(record) || record.finalState?.lifecycle.status === 'finished'), 'Cal un partit finalitzat');
+  const expected = resultSets(before);
+  assert(Array.isArray(values) && values.length === expected.length && values.length <= 5, 'Cal indicar tots els sets del partit');
+  const sets = values.map((s, i) => {
+    assert(s && s.set === i + 1 && Number.isSafeInteger(s.team) && s.team >= 0 && Number.isSafeInteger(s.rival) && s.rival >= 0, 'Marcador de set invàlid');
+    return { set: s.set, team: s.team, rival: s.rival, score: { team: s.team, rival: s.rival },
+      winner: s.team > s.rival ? 'team' : s.team < s.rival ? 'rival' : 'tie' };
+  });
+  const next = clone(record), last = sets[sets.length - 1];
+  if (isLegacyImportRecord(next)) {
+    const match = next.legacySource.match;
+    for (const set of match.completedSets || []) {
+      const score = sets.find(s => s.set === Number(set.set));
+      assert(score, 'Set desconegut');
+      set.score = clone(score.score);
+      set.scores = { ...set.scores, castellar: score.team, rival: score.rival };
+    }
+    match.scores = { ...match.scores, castellar: last.team, rival: last.rival };
+    match.result = { sets: clone(sets), currentSet: sets.length, currentScore: clone(last.score) };
+    match.legacyResult = `${sets.filter(s => s.winner === 'team').length}-${sets.filter(s => s.winner === 'rival').length}`;
+    next.report = normalizeLegacyMatchDocument(next.legacySource).report;
+    next.metadata = clone(next.report.metadata);
+    next.legacyIntegrity.sourceDigest = valueDigest(next.legacySource);
+    next.legacyIntegrity.reportDigest = valueDigest(next.report);
+  } else {
+    next.finalState.game.sets = clone(sets);
+    next.finalState.game.score = clone(last.score);
+    for (const action of next.actionLog.actions) {
+      if (action.active === false) continue;
+      if (action.type === ACTION.SET_END) action.data = clone(sets.find(s => s.set === action.set));
+      if (action.type === ACTION.MATCH_END) {
+        action.data.sets = clone(sets);
+        action.data.score = clone(last.score);
+      }
+    }
+    next.integrity = makeIntegrity(next.finalState, next.actionLog);
+    next.report = buildMatchReport(next.finalState, next.actionLog);
+    next.reportIntegrity = makeReportIntegrity(next.report, next.finalState, next.actionLog);
+  }
+  assert(JSON.stringify(reportFromCompletedRecord(next).stats) === JSON.stringify(before.stats), 'La correcció no pot modificar les estadístiques');
+  return next;
+}
+
+module.exports = { resultSets, replaceFinalResult };
+};
+const match_result=req('./match-result');
 const action_replay=req('./action-replay');
 const anna_analytics=req('./anna-analytics');
 const backup_service=req('./backup-service');
@@ -3549,5 +3695,5 @@ const storage_memory=req('./storage-memory');
 const storage_service=req('./storage-service');
 const system_health=req('./system-health');
 const utils=req('./utils');
-global.StatsPro2={...action_replay,...anna_analytics,...backup_service,...capa7_ui_state,...constants,...cumulative_stats,...export_service,...finalization_consistency,...legacy_import,...maintenance_journal,...match_engine,...match_factory,...match_report,...participation_engine,...post_match_edits,...report_consistency,...report_integrity,...schema_migrations,...session_integrity,...simulator,...stats_engine,...storage_indexeddb,...storage_memory,...storage_service,...system_health,...utils};
+global.StatsPro2={...match_result,...action_replay,...anna_analytics,...backup_service,...capa7_ui_state,...constants,...cumulative_stats,...export_service,...finalization_consistency,...legacy_import,...maintenance_journal,...match_engine,...match_factory,...match_report,...participation_engine,...post_match_edits,...report_consistency,...report_integrity,...schema_migrations,...session_integrity,...simulator,...stats_engine,...storage_indexeddb,...storage_memory,...storage_service,...system_health,...utils};
 })(typeof window!=='undefined'?window:globalThis);

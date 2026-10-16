@@ -42,6 +42,14 @@ class MemoryStorageAdapter {
   async list(store) { return [...this._store(store).values()].map(clone); }
   async listEntries(store) { return [...this._store(store).entries()].map(([id,value])=>({id:String(id),value:clone(value)})); }
 
+  async atomicReplaceCompleted(matchId, expected, next) {
+    const id=String(matchId), current=this.completed.get(id);
+    assert(next.matchId===id, 'Identificador de partit inconsistent');
+    assert(current && JSON.stringify(current)===JSON.stringify(expected), 'El partit ha canviat. Recarrega’l abans de desar.');
+    this.completed.set(id,clone(next));
+    return clone(next);
+  }
+
   async atomicSaveActive(matchId, record, expectedRevision=null) {
     assert(matchId, 'matchId obligatori');
     if(expectedRevision==null && Object.prototype.hasOwnProperty.call(record||{},'parentStorageRevision')) expectedRevision=record.parentStorageRevision;

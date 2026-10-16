@@ -52,7 +52,7 @@ function normalizeLegacyMatchDocument(doc){
   const stats=calculateStats(pseudo);
   const setList=(m.completedSets||[]).map(s=>Number(s.set)).filter(Number.isInteger).sort((a,b)=>a-b);
   const legacyResult=parseLegacyResult(m.legacyResult);
-  const actualScores=(m.completedSets||[]).some(s=>Number(s?.scores?.castellar||0)!==0||Number(s?.scores?.rival||0)!==0);
+  const actualScores=(m.completedSets||[]).some(s=>Number.isSafeInteger(s.score?.team)&&Number.isSafeInteger(s.score?.rival)) || (m.completedSets||[]).some(s=>Number(s?.scores?.castellar||0)!==0||Number(s?.scores?.rival||0)!==0);
   const resultSets=(m.completedSets||[]).map(s=>{
     const c=actualScores?Number(s?.scores?.castellar??0):null, r=actualScores?Number(s?.scores?.rival??0):null;
     const winner=actualScores?(c>r?'team':r>c?'rival':null):null;
@@ -84,7 +84,7 @@ function normalizeLegacyMatchDocument(doc){
   const report={
     schemaVersion:4, matchId:String(m.id),
     metadata:{teamId,teamName:m.teamName||'Infantil A',opponent:m.opponent||'Rival',date:m.date||'',venue:m.venue||'',legacyResult:m.legacyResult||null,sourceKind:SOURCE_KIND},
-    result:{sets:resultSets,currentSet:setList.at(-1)||1,currentScore:actualScores?{team:Number(m.scores?.castellar??0),rival:Number(m.scores?.rival??0)}:{team:null,rival:null}},
+    result:clone(m.result||{sets:resultSets,currentSet:setList.at(-1)||1,currentScore:actualScores?{team:Number(m.scores?.castellar??0),rival:Number(m.scores?.rival??0)}:{team:null,rival:null}}),
     stats:{teamAnnaActions:stats.teamAnnaActions,teamAnna:clone(stats.teamAnna),teamAnnaTotal:clone(stats.teamAnnaTotal),teamSaves:clone(stats.teamSaves),teamBlocks:clone(stats.teamBlocks),participation:{byPlayer:clone(participationByPlayer),totalPoints:setList.length},players:reportPlayers,bySet},
     actions:aa.rows.map(a=>({sequence:a.sequence,actionId:`legacy:${a.sequence}`,set:a.set,type:a.type,label:a.raw?.action||a.type,playerId:playerMap[a.playerId]||a.playerId,number:players.find(p=>p.playerId===(playerMap[a.playerId]||a.playerId))?.number??null,playerName:players.find(p=>p.playerId===(playerMap[a.playerId]||a.playerId))?.name||null,value:a.value,teamScore:null,rivalScore:null,detail:'',provisional:false})),
     audit:{activeActions:aa.rows.length,revertedActions:0,sourceKind:SOURCE_KIND,setActionBreakdownAvailable:aa.reliableBySet},

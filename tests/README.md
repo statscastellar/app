@@ -1,6 +1,6 @@
-# Stats Castellar 1.1.0 · proves conservades
+# Stats Castellar 1.1.0 · correcció local de finalització
 
-Branca independent `qa/proves-1.1.0`, basada en `dc54ab9a749467b246d2f1600d32ec19c52ba200`. Conté només proves, fixtures artificials, captures de referència, configuració i documentació. Cap canvi funcional ni visual a l’aplicació.
+Branca local `fix/finalitzacio-partit`, basada en les proves de `qa/proves-1.1.0` (`634f3fd`) i el codi funcional 1.1.0 (`dc54ab9a749467b246d2f1600d32ec19c52ba200`). Inclou la correcció del bloqueig després de finalitzar i l’edició explícita del resultat definitiu. No està publicada. La conservació original es documenta a `records/CONSERVACIO.md`; el canvi actual, a `records/FINALITZACIO.md`.
 
 ```sh
 cd tests
@@ -8,7 +8,7 @@ npm ci --ignore-scripts
 npm test
 ```
 
-L’executor executa els 39 fitxers recuperats, les 18 proves complementàries, els 48 casos Playwright i les 9 comprovacions d’investigació. Continua després de les fallades i escriu `reports/summary.json`. Retorna 1 quan hi ha fallades, inclosos els defectes coneguts: no s’han corregit ni silenciat.
+L’executor executa els 39 fitxers recuperats, les 59 proves unitàries, els 60 casos Playwright i les 9 comprovacions d’investigació. Continua després de les fallades i escriu `reports/summary.json`. Retorna 1 quan hi ha fallades, inclosos els defectes coneguts: no s’han corregit ni silenciat.
 
 ## Entorn i aïllament
 
@@ -19,13 +19,13 @@ Cada prova disposa d’un context efímer, IndexedDB i sessionStorage independen
 ## Inventari
 
 - `audit/`: 39 fitxers recuperats, inclòs `tactical-locks-055.test.js`.
-- `unit/`: 18 casos complementaris, inclosa una regressió que falla mentre el motor admeti punts després de finalitzar.
-- `e2e/`: vuit recorreguts funcionals i vuit comprovacions visuals per perfil; 24 referències PNG inicials, pendents d’aprovació humana.
-- `investigation/`: tres comprovacions observacionals per perfil; que passin confirma la presència i els límits dels defectes descrits, no la seva correcció.
+- `unit/`: 18 casos complementaris i 41 regressions noves de finalització, resultat definitiu, integritat i estadístiques, inclòs el bundle del navegador.
+- `e2e/`: dotze recorreguts funcionals i vuit comprovacions visuals per perfil; 24 referències PNG inicials, pendents d’aprovació humana.
+- `investigation/`: tres comprovacions per perfil: bloqueig de la interfície, bloqueig entre finalització i arxivament, i mesures del selector.
 - `fixtures/`: dades artificials, rellotges fixos, inventari d’origen i versions de referència.
 - `records/`: resultats històrics i resum de la conservació, sense traces voluminoses.
 
-Els exemples personals heretats s’han substituït per noms QA. El manifest `fixtures/app-sha256.json` identifica els fitxers originals mitjançant SHA-256 de la ruta i de les dades: manté la comprovació d’integritat sense publicar noms de fitxers de partits. Les proves no llegeixen aquests partits com a fixtures.
+Els exemples personals heretats s’han substituït per noms QA. El manifest `fixtures/app-sha256.json` identifica els fitxers originals mitjançant SHA-256 de la ruta i de les dades: manté la comprovació d’integritat sense publicar noms de fitxers de partits. Les proves no llegeixen aquests partits com a fixtures. L’executor d’aquesta branca comprova `fixtures/fix-app-sha256.json`, corresponent al codi modificat; el manifest original es conserva.
 
 ## Ordres parcials
 

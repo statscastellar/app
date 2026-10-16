@@ -20,25 +20,28 @@ function buildCapa7UiState(engine, options = {}) {
   assert(engine && engine.state, 'Motor de partit no disponible');
   const localMode = options.localMode || null;
   const state = engine.state;
+  const matchActive = state.lifecycle.status === 'active';
   const phase = state.game.phase;
   const sosStatus = state.flow.sos.status;
-  const sosActive = sosStatus === 'active';
+  const sosActive = matchActive && sosStatus === 'active';
   const temporaryUiMode = !!localMode;
   const undoStack = Array.isArray(engine.undoStack) ? engine.undoStack : [];
 
   const ui = {
     version: 1,
+    matchActive,
+    scoreEnabled: matchActive,
     phase,
     phaseLabel: sosActive ? 'SALVADA' : (PHASE_LABELS[phase] || phase),
     localMode,
-    ratingPhaseAllowed: RATEABLE_PHASES.includes(phase),
-    serverBallVisible: !temporaryUiMode && state.game.servingSide === 'team' && phase === PHASE.SERVEI,
-    rivalCourtEnabled: !temporaryUiMode && !!state.flow.rivalCourtAvailable,
-    sosEnabled: !temporaryUiMode && (sosStatus === 'available' || sosStatus === 'active'),
+    ratingPhaseAllowed: matchActive && RATEABLE_PHASES.includes(phase),
+    serverBallVisible: matchActive && !temporaryUiMode && state.game.servingSide === 'team' && phase === PHASE.SERVEI,
+    rivalCourtEnabled: matchActive && !temporaryUiMode && !!state.flow.rivalCourtAvailable,
+    sosEnabled: matchActive && !temporaryUiMode && (sosStatus === 'available' || sosStatus === 'active'),
     sosActive,
-    blocksEnabled: !temporaryUiMode,
-    undoEnabled: undoStack.length > 0,
-    undoLabel: undoStack.length ? (undoStack[undoStack.length - 1].label || '') : ''
+    blocksEnabled: matchActive && !temporaryUiMode,
+    undoEnabled: matchActive && undoStack.length > 0,
+    undoLabel: matchActive && undoStack.length ? (undoStack[undoStack.length - 1].label || '') : ''
   };
 
   ui.canRate = (zone, value) => {

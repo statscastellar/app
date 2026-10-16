@@ -1,6 +1,7 @@
 'use strict';
 
 const { clone, assert } = require('./utils');
+const { replaceFinalResult } = require('./match-result');
 const { MatchEngine } = require('./match-engine');
 const { buildMatchReport } = require('./match-report');
 const { applyPostMatchEditsToReport, appendPostMatchEdit, verifyPostMatchEdits } = require('./post-match-edits');
@@ -442,15 +443,31 @@ class Pro2Storage {
     return clone(rec);
   }
 
+  async _saveHistoryUpdate(expected,next) {
+    if(typeof this.adapter.atomicReplaceCompleted==='function') return this.adapter.atomicReplaceCompleted(next.matchId,expected,next);
+    const current=await this.adapter.get('completedMatches',next.matchId);
+    assert(current && valueDigest(current)===valueDigest(expected),'El partit ha canviat. Recarrega’l abans de desar.');
+    await this.adapter.put('completedMatches',next.matchId,next);
+    return clone(next);
+  }
+
+  async editHistoryResult(matchId,sets,{confirmed=false}={}) {
+    assert(confirmed===true,'Cal confirmar el resultat abans de desar');
+    const rec=await this.getHistory(matchId);
+    assert(rec,'Partit finalitzat inexistent');
+    return this._saveHistoryUpdate(rec,replaceFinalResult(rec,sets));
+  }
+
   async editHistoryActionValue(matchId,actionId,newValue) {
     const rec=await this.getHistory(matchId);
     assert(rec,'Partit finalitzat inexistent');
+    const expected=clone(rec);
     let baseReport;
     if(isLegacyImportRecord(rec)) baseReport=rec.report;
     else baseReport=buildMatchReport(rec.finalState,rec.actionLog);
     rec.postMatchEdits=appendPostMatchEdit(baseReport,rec.postMatchEdits||null,String(actionId),Number(newValue));
     // La font segellada original no es modifica. L’edició és una capa auditada i segellada.
-    await this.adapter.put('completedMatches',rec.matchId,rec);
+    await this._saveHistoryUpdate(expected,rec);
     return clone(rec);
   }
 

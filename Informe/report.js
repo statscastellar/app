@@ -112,13 +112,34 @@ function setupEditor(report,rec){
   function baseMessage(){const n=rec.postMatchEdits?.edits?.length||0;return `Mode edició: prem − al valor actual i després + al valor correcte.${n?` · ${n} edició(ns) postpartit registrades.`:''}`;}
   function cells(){return [...table.querySelectorAll('.stat-edit-cell')];}
   function resetPreview(){for(const c of cells()){c.classList.remove('pending-source','pending-target');const x=c.querySelector('.stat-count');if(x)x.textContent=c.dataset.count;}cancel.hidden=true;statusText.textContent=baseMessage();}
-  function setMode(on){mode=!!on;document.body.classList.toggle('edit-mode',mode);status.hidden=!mode;btn.textContent=mode?'Acaba edició':'Editar estadístiques';if(!mode){pending=null;resetPreview();}else statusText.textContent=baseMessage();}
+  function setMode(on){mode=!!on;document.body.classList.toggle('edit-mode',mode);status.hidden=!mode;$('#editResultBtn').hidden=!mode;btn.textContent=mode?'Acaba edició':'Editar estadístiques';if(!mode){pending=null;resetPreview();}else statusText.textContent=baseMessage();}
   function candidates(player,type,value){return all.filter(a=>String(a.playerId)===String(player)&&a.type===type&&Number(a.value)===Number(value)).sort((a,b)=>(Number(b.sequence)||0)-(Number(a.sequence)||0));}
   function chooseSource(cell){const player=cell.dataset.player,type=cell.dataset.type,value=Number(cell.dataset.value),count=Number(cell.dataset.count)||0;if(count<1){statusText.textContent='No pots restar: aquesta casella és 0.';return;}const source=candidates(player,type,value)[0];if(!source){statusText.textContent='No s’ha trobat una acció original per reclassificar.';return;}pending={actionId:source.actionId,player,type,sourceValue:value,playerName:source.playerName||'',label:LABEL[type]||type};resetPreview();pending={actionId:source.actionId,player,type,sourceValue:value,playerName:source.playerName||'',label:LABEL[type]||type};cell.classList.add('pending-source');cell.querySelector('.stat-count').textContent=String(count-1);for(const c of cells())if(c.dataset.player===player&&c.dataset.type===type&&Number(c.dataset.value)!==value)c.classList.add('pending-target');cancel.hidden=false;statusText.textContent=`${source.playerName||'Jugadora'} · ${LABEL[type]||type}: has restat un ${value}. Ara prem + al valor correcte.`;}
   async function chooseTarget(cell){if(!pending){statusText.textContent='Primer prem − al valor que vols corregir.';return;}if(cell.dataset.player!==pending.player||cell.dataset.type!==pending.type){statusText.textContent='El + ha de ser de la mateixa jugadora i del mateix fonament.';return;}const target=Number(cell.dataset.value);if(target===pending.sourceValue){pending=null;resetPreview();return;}if(busy)return;busy=true;table.classList.add('editing-busy');try{await store.editHistoryActionValue(id,pending.actionId,target);location.reload();}catch(e){busy=false;table.classList.remove('editing-busy');statusText.textContent=e.message||String(e);}}
   table.addEventListener('click',e=>{if(!mode||busy)return;const step=e.target.closest('.count-step');if(!step)return;const cell=step.closest('.stat-edit-cell');if(!cell)return;if(step.classList.contains('minus'))chooseSource(cell);else chooseTarget(cell);});
   btn.onclick=()=>setMode(!mode);cancel.onclick=()=>{pending=null;resetPreview();};
   setMode(false);
+}
+function setupResultEditor(report){
+ const dialog=$('#resultDialog'),form=$('#resultForm'),inputs=$('#resultInputs'),error=$('#resultError');let busy=false;
+ $('#editResultBtn').onclick=()=>{
+  error.textContent='';inputs.replaceChildren();$('#resultTeam').textContent=report.metadata.teamName||'Equip';$('#resultRival').textContent=report.metadata.opponent||'Rival';
+  for(const row of P.resultSets(report)){
+   const tr=document.createElement('tr'),th=document.createElement('th');th.textContent='S'+row.set;tr.append(th);
+   for(const side of ['team','rival']){const td=document.createElement('td'),input=document.createElement('input');input.type='number';input.min='0';input.step='1';input.required=true;input.value=row[side];input.dataset.set=row.set;input.dataset.side=side;input.setAttribute('aria-label','Set '+row.set+' · '+(side==='team'?'Equip':'Rival'));td.append(input);tr.append(td);}inputs.append(tr);
+  }
+  dialog.showModal();
+ };
+ $('#resultCancel').onclick=()=>{if(!busy)dialog.close();};
+ dialog.addEventListener('cancel',event=>{if(busy)event.preventDefault();});
+ form.onsubmit=async event=>{
+  event.preventDefault();if(busy||!form.reportValidity())return;
+  const sets=P.resultSets(report).map(row=>({set:row.set,team:Number(inputs.querySelector(`[data-set="${row.set}"][data-side="team"]`).value),rival:Number(inputs.querySelector(`[data-set="${row.set}"][data-side="rival"]`).value)}));
+  if(!confirm('Vols desar aquest resultat com a resultat definitiu del partit?'))return;
+  busy=true;$('#resultSave').disabled=true;$('#resultCancel').disabled=true;error.textContent='';
+  try{await store.editHistoryResult(id,sets,{confirmed:true});location.reload();}
+  catch(e){error.textContent=e.message||String(e);busy=false;$('#resultSave').disabled=false;$('#resultCancel').disabled=false;}
+ };
 }
 const ANALYSIS_SELECTION_PREFIX='analysisSelection:';
 function canonicalTeamId(id){id=String(id||'default');return id==='infantil-a'||id==='castellar-infantil-a'?'castellar-infantil-a':id}
@@ -155,7 +176,7 @@ try{
   async function applyHistorySelection(ids){analysisReports=sameTeam.filter(r=>ids.has(String(r.matchId)));if(!analysisReports.some(r=>String(r.matchId)===String(id)))analysisReports.push(report);historyAnalytics=P.buildHistoryAnalytics(analysisReports.map(analysisReport),{teamId:currentTeam||null});renderHistory(historyAnalytics);}
   await applyHistorySelection(selectedIds);
   $('#subtitle').textContent=report.metadata?.date||'';$('#team').textContent=report.metadata?.teamName||'';$('#rival').textContent=report.metadata?.opponent||'Rival';$('#date').textContent=report.metadata?.date||'';$('#venue').textContent=report.metadata?.venue==='home'?'Casa':report.metadata?.venue==='away'?'Fora':'';$('#score').textContent=score(report);$('#setScores').textContent=(report.result?.sets||[]).map(s=>`S${s.set} ${setScore(s)}`).join('   ');
-  renderMain(report);renderPercentages(report);renderAnna(report,a);renderDetail(report,a);setupEditor(report,rec);setupAnalysisFilter(report,sameTeam,selectedIds,applyHistorySelection);$('#report').hidden=false;
+  renderMain(report);renderPercentages(report);renderAnna(report,a);renderDetail(report,a);setupEditor(report,rec);setupResultEditor(report);setupAnalysisFilter(report,sameTeam,selectedIds,applyHistorySelection);$('#report').hidden=false;
   $('#toggleAdvanced').onclick=()=>{const x=$('#advanced');x.hidden=!x.hidden;$('#toggleAdvanced').textContent=x.hidden?'Veure anàlisi completa':'Amaga anàlisi completa'};
   if(location.hash==='#advanced'||params.get('analysis')){$('#advanced').hidden=false;$('#toggleAdvanced').textContent='Amaga anàlisi completa';}
   let _advancedWasHiddenForPrint=false;addEventListener('beforeprint',()=>{const x=$('#advanced');_advancedWasHiddenForPrint=!!x?.hidden;if(x)x.hidden=false;});addEventListener('afterprint',()=>{const x=$('#advanced');if(x&&_advancedWasHiddenForPrint)x.hidden=true;_advancedWasHiddenForPrint=false;});

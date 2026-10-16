@@ -145,6 +145,8 @@ function applyAction(state, action) {
       state.flow.sos = { status: 'unavailable', origin: null, provisionalPointActionId: null };
       break;
     case ACTION.MATCH_END:
+      if (Array.isArray(d.sets)) state.game.sets = clone(d.sets);
+      if (d.score) state.game.score = clone(d.score);
       state.lifecycle.status = 'finished';
       state.lifecycle.finishedAt = d.finishedAt || null;
       break;
