@@ -177,4 +177,3 @@ class MemoryStorageAdapter {
 }
 
 module.exports = { MemoryStorageAdapter };
-

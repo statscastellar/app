@@ -65,4 +65,3 @@ try{
  else if(b.imported)toast(`${b.imported} partits antics incorporats a l’Historial.`);
 }catch(e){console.error(e);toast(e.message||String(e));$('#excelCorrectionStatus').textContent='No s’ha completat la comprovació de l’Excel. Les dades locals es conserven.';await render();}
 })();
-

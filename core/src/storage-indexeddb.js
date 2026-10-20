@@ -344,4 +344,3 @@ class IndexedDBStorageAdapter {
 }
 
 module.exports={ IndexedDBStorageAdapter, DB_NAME, DB_VERSION, STORES, MAINTENANCE_STORE, ALL_STORES };
-

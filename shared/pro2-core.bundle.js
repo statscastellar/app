@@ -3713,4 +3713,3 @@ const system_health=req('./system-health');
 const utils=req('./utils');
 global.StatsPro2={...match_result,...action_replay,...anna_analytics,...backup_service,...capa7_ui_state,...constants,...cumulative_stats,...export_service,...finalization_consistency,...legacy_import,...maintenance_journal,...match_engine,...match_factory,...match_report,...participation_engine,...post_match_edits,...report_consistency,...report_integrity,...schema_migrations,...session_integrity,...simulator,...stats_engine,...storage_indexeddb,...storage_memory,...storage_service,...system_health,...utils};
 })(typeof window!=='undefined'?window:globalThis);
-
