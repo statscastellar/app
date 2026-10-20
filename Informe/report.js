@@ -94,9 +94,20 @@ function renderHistory(h){
     mountHistoryChart($('#chartPlayerFoundationEvolution'),(p.foundationEvolution||[]).map(f=>({name:f.label||LABEL[f.type]||f.type,type:f.type,values:(f.rows||[]).map(r=>r.actions?r.efficiency:null),labels:(f.rows||[]).map(r=>r.opponent)})));
   }
   select.onchange=()=>renderSelectedPlayer(select.value);renderSelectedPlayer(select.value);
-  const hpHead=$('#historyPlayers thead');hpHead.innerHTML=`<tr><th>Jugadora</th><th>Accions</th><th>Eficiència acum.</th>${matches.map(m=>`<th>${matchLabel(m)}</th>`).join('')}<th>Evolució</th><th>Impacte*</th><th>% de 0</th><th>% de 3</th><th>Tendència</th></tr>`;
-  let tb=$('#historyPlayers tbody');tb.innerHTML='';const accScale=efficiencyScale(histPlayers.filter(p=>p.total?.actions).map(p=>p.total.efficiency)),matchScales=matches.map(m=>efficiencyScale(histPlayers.map(p=>rowForMatch(p,m.matchId)).filter(pm=>pm&&pm.actions).map(pm=>pm.efficiency)));
-  for(const p of histPlayers){const impact=totalActions?p.total.annaPoints/(totalActions*10):null,tr=document.createElement('tr');tr.innerHTML=`<td class="player">${esc(p.name)}</td><td>${fmtN(p.total.actions)}</td><td class="eff-cell">${fmt(p.total.efficiency)}</td>${matches.map(m=>{const pm=rowForMatch(p,m.matchId);return `<td class="eff-cell">${pm&&pm.actions?fmt(pm.efficiency):'—'}</td>`}).join('')}<td>${fmtPp(p.delta)}</td><td>${fmt(impact)}</td><td>${fmt(p.pct0)}</td><td>${fmt(p.pct3)}</td><td><b>${esc(p.trend)}</b></td>`;if(p.total?.actions)paintEfficiencyCell(tr.cells[2],p.total.efficiency,accScale);matches.forEach((m,idx)=>{const pm=rowForMatch(p,m.matchId);if(pm&&pm.actions)paintEfficiencyCell(tr.cells[3+idx],pm.efficiency,matchScales[idx]);});tb.appendChild(tr);}
+  const hpHead=$('#historyPlayers thead'),order=window.HistoryPlayerOrder;
+  const tablePlayers=order.tablePlayers(histPlayers,analysisPairs,P.canonicalPlayerId);
+  const columns=[['Jugadora',p=>p.name],['PJ',p=>p.pj],['Accions',p=>p.total.actions],['Eficiència acum.',p=>p.total.efficiency],...matches.map(m=>[matchLabel(m),p=>{const pm=rowForMatch(p,m.matchId);return pm&&pm.actions?pm.efficiency:null;},true]),['Evolució',p=>p.delta],['Impacte*',p=>totalActions?p.total.annaPoints/(totalActions*10):null],['% de 0',p=>p.pct0],['% de 3',p=>p.pct3],['Tendència',p=>p.trend]];
+  hpHead.innerHTML=`<tr>${columns.map(([label,,html],i)=>`<th aria-sort="${i===1?'descending':'none'}"><button type="button" class="history-sort" data-column="${i}">${html?label:esc(label)} <span aria-hidden="true">${i===1?'▼':'↕'}</span></button></th>`).join('')}</tr>`;
+  let tb=$('#historyPlayers tbody');const accScale=efficiencyScale(histPlayers.filter(p=>p.total?.actions).map(p=>p.total.efficiency)),matchScales=matches.map(m=>efficiencyScale(histPlayers.map(p=>rowForMatch(p,m.matchId)).filter(pm=>pm&&pm.actions).map(pm=>pm.efficiency)));
+  function renderPlayerRows(ordered){tb=$('#historyPlayers tbody');tb.innerHTML='';
+  for(const p of ordered){const impact=totalActions?p.total.annaPoints/(totalActions*10):null,tr=document.createElement('tr');tr.innerHTML=`<td class="player">${esc(p.name)}</td><td>${p.pj}</td><td>${fmtN(p.total.actions)}</td><td class="eff-cell">${fmt(p.total.efficiency)}</td>${matches.map(m=>{const pm=rowForMatch(p,m.matchId);return `<td class="eff-cell">${pm&&pm.actions?fmt(pm.efficiency):'—'}</td>`}).join('')}<td>${fmtPp(p.delta)}</td><td>${fmt(impact)}</td><td>${fmt(p.pct0)}</td><td>${fmt(p.pct3)}</td><td><b>${esc(p.trend)}</b></td>`;if(p.total?.actions)paintEfficiencyCell(tr.cells[3],p.total.efficiency,accScale);matches.forEach((m,idx)=>{const pm=rowForMatch(p,m.matchId);if(pm&&pm.actions)paintEfficiencyCell(tr.cells[4+idx],pm.efficiency,matchScales[idx]);});tb.appendChild(tr);}
+  }
+  renderPlayerRows(order.sorted(tablePlayers));
+  let sortColumn=1,sortDirection=-1;
+  hpHead.onclick=event=>{const button=event.target.closest('button[data-column]');if(!button)return;const col=Number(button.dataset.column);sortDirection=col===sortColumn?-sortDirection:1;sortColumn=col;
+    for(const [i,th] of [...hpHead.querySelectorAll('th')].entries()){th.setAttribute('aria-sort',i===col?(sortDirection===1?'ascending':'descending'):'none');th.querySelector('span').textContent=i===col?(sortDirection===1?'▲':'▼'):'↕';}
+    renderPlayerRows(order.sorted(tablePlayers,columns[col][1],sortDirection));
+  };
   tb=$('#historyFoundations tbody');tb.innerHTML='';const histFoundationScale=efficiencyScale((h.teamFoundations||[]).filter(f=>f.actions).map(f=>f.efficiency));for(const f of h.teamFoundations){const tr=document.createElement('tr');tr.innerHTML=`<td class="player">${esc(f.label||LABEL[f.type]||f.type||'—')}</td><td>${fmtN(f.actions)}</td><td class="eff-cell">${f.actions?fmt(f.efficiency):'Sense dades'}</td>${[0,1,2,3].map(v=>`<td class="v${v}">${f.actions?fmt(f.percentages?.[v]):'—'}</td>`).join('')}`;if(f.actions)paintEfficiencyCell(tr.cells[2],f.efficiency,histFoundationScale);tb.appendChild(tr);}
   const hfHead=$('#historyFoundationEvolution thead');hfHead.innerHTML=`<tr><th>Fonament</th>${matches.map(m=>`<th>${matchLabel(m)}</th>`).join('')}<th>Evolució</th><th>% 0 inicial</th><th>% 0 final</th><th>Reducció errors</th><th>Tendència global</th></tr>`;
   const hfBody=$('#historyFoundationEvolution tbody');hfBody.innerHTML='';const hfScales=matches.map((m,idx)=>efficiencyScale((h.teamFoundationEvolution||[]).map(f=>f.rows?.[idx]).filter(r=>r&&r.actions>0).map(r=>r.efficiency)));
@@ -144,7 +155,7 @@ function setupResultEditor(report){
 const ANALYSIS_SELECTION_PREFIX='analysisSelection:';
 function canonicalTeamId(id){id=String(id||'default');return id==='infantil-a'||id==='castellar-infantil-a'?'castellar-infantil-a':id}
 function analysisReport(r){const c=JSON.parse(JSON.stringify(r));if(c?.metadata)c.metadata.teamId=canonicalTeamId(c.metadata.teamId);return c}
-let analysisReports=[],historyAnalytics=null;
+let analysisReports=[],analysisPairs=[],historyAnalytics=null;
 function reportDateKey(r){return `${r?.metadata?.date||''}|${r?.matchId||''}`;}
 async function initialAnalysisIds(teamReports,teamId,currentId){
   const valid=new Set(teamReports.map(r=>String(r.matchId))),mode=params.get('analysis');
@@ -173,7 +184,7 @@ try{
   const reportPairs=all.map(r=>({record:r,report:P.reportFromCompletedRecord(r)})).filter(x=>x.report);const currentTeam=canonicalTeamId(report.metadata?.teamId),teamPairs=reportPairs.filter(x=>!report.metadata?.teamId||canonicalTeamId(x.report.metadata?.teamId)===currentTeam),sameTeam=teamPairs.map(x=>x.report);
   const selectedIds=await initialAnalysisIds(sameTeam,report.metadata?.teamId,id);selectedIds.add(String(id));
   const a=P.buildMatchAnalytics(report);
-  async function applyHistorySelection(ids){analysisReports=sameTeam.filter(r=>ids.has(String(r.matchId)));if(!analysisReports.some(r=>String(r.matchId)===String(id)))analysisReports.push(report);historyAnalytics=P.buildHistoryAnalytics(analysisReports.map(analysisReport),{teamId:currentTeam||null});renderHistory(historyAnalytics);}
+  async function applyHistorySelection(ids){analysisReports=sameTeam.filter(r=>ids.has(String(r.matchId)));if(!analysisReports.some(r=>String(r.matchId)===String(id)))analysisReports.push(report);analysisPairs=teamPairs.filter(x=>ids.has(String(x.report.matchId)));historyAnalytics=P.buildHistoryAnalytics(analysisReports.map(analysisReport),{teamId:currentTeam||null});renderHistory(historyAnalytics);}
   await applyHistorySelection(selectedIds);
   $('#subtitle').textContent=report.metadata?.date||'';$('#team').textContent=report.metadata?.teamName||'';$('#rival').textContent=report.metadata?.opponent||'Rival';$('#date').textContent=report.metadata?.date||'';$('#venue').textContent=report.metadata?.venue==='home'?'Casa':report.metadata?.venue==='away'?'Fora':'';$('#score').textContent=score(report);$('#setScores').textContent=(report.result?.sets||[]).map(s=>`S${s.set} ${setScore(s)}`).join('   ');
   renderMain(report);renderPercentages(report);renderAnna(report,a);renderDetail(report,a);setupEditor(report,rec);setupResultEditor(report);setupAnalysisFilter(report,sameTeam,selectedIds,applyHistorySelection);$('#report').hidden=false;

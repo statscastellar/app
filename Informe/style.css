@@ -165,3 +165,6 @@
     box-shadow:none!important;
   }
 }
+
+#historyPlayers .history-sort{font:inherit;color:inherit;background:transparent;border:0;padding:0;cursor:pointer;text-align:inherit}
+#historyPlayers .history-sort:focus-visible{outline:2px solid currentColor;outline-offset:3px}
