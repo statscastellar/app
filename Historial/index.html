@@ -38,10 +38,12 @@
         <div class="header-actions">
           <button id="cumulativeBtn" class="cum" type="button">Estadístiques acumulades</button>
           <button id="importBtn" class="import" type="button">Importa partit</button>
+          <button id="excelAuditBtn" class="import" type="button">Exporta auditoria Excel</button>
           <input id="importFile" type="file" accept="application/json,.json" multiple hidden>
         </div>
       </div>
 
+      <p id="excelCorrectionStatus" role="status" aria-live="polite">Comprovant les estadístiques de l’Excel…</p>
       <section id="selectionPanel" class="selection-panel">
         <div>
           <strong>ANÀLISI HISTÒRICA</strong>
@@ -66,6 +68,8 @@
   <div id="toast" class="toast" hidden></div>
   <script src="../shared/pro2-core.bundle.js"></script>
   <script src="../shared/team-store.js"></script>
+  <script src="../shared/excel-correction.js"></script>
   <script src="history.js"></script>
 </body>
 </html>
+

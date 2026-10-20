@@ -1,4 +1,4 @@
-const CACHE_NAME = 'stats-castellar-1.1.0-release-20261009';
+const CACHE_NAME = 'stats-castellar-1.1.0-excel-20261020-v1';
 const APP_SHELL = [
   './Informe/style.css?v=1.1.0',
   './shared/player-scroll.css?v=1.1.0',
@@ -126,3 +126,4 @@ self.addEventListener('fetch', event => {
     }
   })());
 });
+

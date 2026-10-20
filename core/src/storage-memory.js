@@ -42,10 +42,14 @@ class MemoryStorageAdapter {
   async list(store) { return [...this._store(store).values()].map(clone); }
   async listEntries(store) { return [...this._store(store).entries()].map(([id,value])=>({id:String(id),value:clone(value)})); }
 
-  async atomicReplaceCompleted(matchId, expected, next) {
+  async atomicReplaceCompleted(matchId, expected, next, backup=null) {
     const id=String(matchId), current=this.completed.get(id);
     assert(next.matchId===id, 'Identificador de partit inconsistent');
     assert(current && JSON.stringify(current)===JSON.stringify(expected), 'El partit ha canviat. Recarrega’l abans de desar.');
+    if(backup){
+      assert(backup.key && backup.value?.record && !this.settings.has(backup.key),'Ja existeix una còpia de correcció; no se sobreescriu.');
+      this.settings.set(backup.key,clone(backup.value));
+    }
     this.completed.set(id,clone(next));
     return clone(next);
   }
@@ -173,3 +177,4 @@ class MemoryStorageAdapter {
 }
 
 module.exports = { MemoryStorageAdapter };
+

@@ -2622,11 +2622,11 @@ class IndexedDBStorageAdapter {
     });
   }
 
-  async atomicReplaceCompleted(matchId, expected, next) {
+  async atomicReplaceCompleted(matchId, expected, next, backup=null) {
     const id=String(matchId);assert(next.matchId===id,'Identificador de partit inconsistent');
     const db=await this._open();
     return new Promise((resolve,reject)=>{
-      const tx=db.transaction('completedMatches','readwrite'), os=tx.objectStore('completedMatches'), req=os.get(id);
+      const tx=db.transaction(backup?['completedMatches','settings']:['completedMatches'],'readwrite'), os=tx.objectStore('completedMatches'), req=os.get(id);
       let conflict=null;
       tx.oncomplete=()=>resolve(clone(next));
       tx.onabort=()=>reject(conflict||tx.error||new Error('No s’ha pogut desar el partit'));
@@ -2635,7 +2635,15 @@ class IndexedDBStorageAdapter {
         if(!req.result||JSON.stringify(req.result.value)!==JSON.stringify(expected)){
           conflict=new Error('El partit ha canviat. Recarrega’l abans de desar.');tx.abort();return;
         }
-        os.put({id,value:clone(next)});
+        if(backup){
+          if(!backup.key||!backup.value?.record){conflict=new Error('Còpia de correcció invàlida.');tx.abort();return;}
+          const settings=tx.objectStore('settings'),readBackup=settings.get(backup.key);
+          readBackup.onsuccess=()=>{
+            if(readBackup.result){conflict=new Error('Ja existeix una còpia de correcció; no se sobreescriu.');tx.abort();return;}
+            settings.put({id:backup.key,value:clone(backup.value)});
+            os.put({id,value:clone(next)});
+          };
+        }else os.put({id,value:clone(next)});
       };
     });
   }
@@ -2796,6 +2804,8 @@ class IndexedDBStorageAdapter {
 }
 
 module.exports={ IndexedDBStorageAdapter, DB_NAME, DB_VERSION, STORES, MAINTENANCE_STORE, ALL_STORES };
+
+
 };
 modules['./storage-memory']=function(module,exports,require){
 'use strict';
@@ -2842,10 +2852,14 @@ class MemoryStorageAdapter {
   async list(store) { return [...this._store(store).values()].map(clone); }
   async listEntries(store) { return [...this._store(store).entries()].map(([id,value])=>({id:String(id),value:clone(value)})); }
 
-  async atomicReplaceCompleted(matchId, expected, next) {
+  async atomicReplaceCompleted(matchId, expected, next, backup=null) {
     const id=String(matchId), current=this.completed.get(id);
     assert(next.matchId===id, 'Identificador de partit inconsistent');
     assert(current && JSON.stringify(current)===JSON.stringify(expected), 'El partit ha canviat. Recarrega’l abans de desar.');
+    if(backup){
+      assert(backup.key && backup.value?.record && !this.settings.has(backup.key),'Ja existeix una còpia de correcció; no se sobreescriu.');
+      this.settings.set(backup.key,clone(backup.value));
+    }
     this.completed.set(id,clone(next));
     return clone(next);
   }
@@ -2973,6 +2987,8 @@ class MemoryStorageAdapter {
 }
 
 module.exports = { MemoryStorageAdapter };
+
+
 };
 modules['./storage-service']=function(module,exports,require){
 'use strict';
@@ -3697,3 +3713,4 @@ const system_health=req('./system-health');
 const utils=req('./utils');
 global.StatsPro2={...match_result,...action_replay,...anna_analytics,...backup_service,...capa7_ui_state,...constants,...cumulative_stats,...export_service,...finalization_consistency,...legacy_import,...maintenance_journal,...match_engine,...match_factory,...match_report,...participation_engine,...post_match_edits,...report_consistency,...report_integrity,...schema_migrations,...session_integrity,...simulator,...stats_engine,...storage_indexeddb,...storage_memory,...storage_service,...system_health,...utils};
 })(typeof window!=='undefined'?window:globalThis);
+

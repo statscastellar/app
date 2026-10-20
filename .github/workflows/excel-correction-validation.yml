@@ -1,0 +1,37 @@
+name: Excel correction validation
+on:
+  push:
+    branches:
+      - fix/excel-sant-cugat-20261020
+      - main
+    paths:
+      - '.github/workflows/excel-correction-validation.yml'
+      - 'core/src/**'
+      - 'shared/excel-correction.js'
+      - 'shared/pro2-core.bundle.js'
+      - 'Historial/**'
+      - 'imports/legacy/**'
+      - 'tests/**'
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: tests
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: tests/package-lock.json
+      - run: npm ci --ignore-scripts
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:unit
+      - run: npx playwright test --config excel-migration.config.cjs

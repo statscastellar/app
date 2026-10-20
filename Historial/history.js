@@ -1,7 +1,7 @@
 (async()=>{'use strict';
 const P=window.StatsPro2,$=q=>document.querySelector(q);const store=new P.Pro2Storage(new P.IndexedDBStorageAdapter());
 const BUNDLED=[
- '../imports/legacy/Stats_Castellar_Partit_2026-09-26_Sant_Cugat_Negre(2)(1).json',
+ '../imports/legacy/Stats_Castellar_Partit_2026-09-26_Sant_Cugat_Negre(2)(1).json?excel=20261020-v1',
  '../imports/legacy/Stats_Castellar_Partit_2026-10-03_Alpicat.json'
 ];
 let selectionMode=false,rowsCache=[],selected=new Set(),activeTeamFilter=null;
@@ -52,5 +52,17 @@ $('#selectNoneBtn').onclick=async()=>{selected.clear();await saveSelection();ren
 $('#analyzeSelectedBtn').onclick=()=>openAnalysis(selected,'selected');
 $('#cumulativeBtn').onclick=async()=>{const allIds=new Set(visibleRows().map(r=>String(r.matchId)));await openAnalysis(allIds,'all');};
 const importBtn=$('#importBtn'),fileInput=$('#importFile');if(importBtn&&fileInput){importBtn.onclick=()=>fileInput.click();fileInput.onchange=async()=>{try{await importFiles([...fileInput.files]);}catch(e){console.error(e);toast(e.message||String(e));}finally{fileInput.value='';}};}
-try{const b=await bootstrapBundled();await render();if(b.imported)toast(`${b.imported} partits antics incorporats a l’Historial.`);}catch(e){console.error(e);toast(e.message||String(e));await render();}
+$('#excelAuditBtn').onclick=async()=>{try{const audit=await window.StatsExcelCorrection.exportAudit(store),blob=new Blob([JSON.stringify(audit,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Stats-Castellar-auditoria-Excel.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}catch(e){toast(e.message||String(e));}};
+try{
+ const res=await fetch(BUNDLED[0],{cache:'no-store'});if(!res.ok)throw new Error('No s’ha pogut carregar la correcció Excel.');
+ const correction=await window.StatsExcelCorrection.migrate(store,await res.json());
+ // Un identificador alternatiu no pot activar una nova importació del mateix partit.
+ const b=correction.status==='blocked'?{imported:0}:await bootstrapBundled();await render();
+ const audit=await window.StatsExcelCorrection.exportAudit(store),verified=audit.records.length===2&&audit.checks.every(c=>c.verified&&c.matchesExcel);
+ $('#excelCorrectionStatus').textContent=verified?'Excel verificat: Sant Cugat 340 accions · Alpicat 240 accions.':'Cal revisar les dades locals. Exporta l’auditoria Excel; les versions locals diferents no s’han substituït.';
+ if(correction.status==='corrected')toast('Sant Cugat corregit amb les dades de l’Excel. Còpia anterior conservada.');
+ else if(correction.status==='blocked')toast('Hi ha dades locals diferents. Exporta l’auditoria Excel per revisar-les; no s’han substituït.');
+ else if(b.imported)toast(`${b.imported} partits antics incorporats a l’Historial.`);
+}catch(e){console.error(e);toast(e.message||String(e));$('#excelCorrectionStatus').textContent='No s’ha completat la comprovació de l’Excel. Les dades locals es conserven.';await render();}
 })();
+

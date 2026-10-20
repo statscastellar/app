@@ -162,11 +162,11 @@ class IndexedDBStorageAdapter {
     });
   }
 
-  async atomicReplaceCompleted(matchId, expected, next) {
+  async atomicReplaceCompleted(matchId, expected, next, backup=null) {
     const id=String(matchId);assert(next.matchId===id,'Identificador de partit inconsistent');
     const db=await this._open();
     return new Promise((resolve,reject)=>{
-      const tx=db.transaction('completedMatches','readwrite'), os=tx.objectStore('completedMatches'), req=os.get(id);
+      const tx=db.transaction(backup?['completedMatches','settings']:['completedMatches'],'readwrite'), os=tx.objectStore('completedMatches'), req=os.get(id);
       let conflict=null;
       tx.oncomplete=()=>resolve(clone(next));
       tx.onabort=()=>reject(conflict||tx.error||new Error('No s’ha pogut desar el partit'));
@@ -175,7 +175,15 @@ class IndexedDBStorageAdapter {
         if(!req.result||JSON.stringify(req.result.value)!==JSON.stringify(expected)){
           conflict=new Error('El partit ha canviat. Recarrega’l abans de desar.');tx.abort();return;
         }
-        os.put({id,value:clone(next)});
+        if(backup){
+          if(!backup.key||!backup.value?.record){conflict=new Error('Còpia de correcció invàlida.');tx.abort();return;}
+          const settings=tx.objectStore('settings'),readBackup=settings.get(backup.key);
+          readBackup.onsuccess=()=>{
+            if(readBackup.result){conflict=new Error('Ja existeix una còpia de correcció; no se sobreescriu.');tx.abort();return;}
+            settings.put({id:backup.key,value:clone(backup.value)});
+            os.put({id,value:clone(next)});
+          };
+        }else os.put({id,value:clone(next)});
       };
     });
   }
@@ -336,3 +344,4 @@ class IndexedDBStorageAdapter {
 }
 
 module.exports={ IndexedDBStorageAdapter, DB_NAME, DB_VERSION, STORES, MAINTENANCE_STORE, ALL_STORES };
+
