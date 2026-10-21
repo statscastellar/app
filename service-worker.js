@@ -1,5 +1,8 @@
-const CACHE_NAME = 'stats-castellar-1.1.0-z1-20261021-v3';
+const CACHE_NAME = 'stats-castellar-1.1.0-recover-20261021-v1';
 const APP_SHELL = [
+  './shared/pro2-core.bundle.js?v=recover-20261021-v1',
+  './Recuperar/index.html',
+  './Recuperar/recover.js?v=recover-20261021-v1',
   './Capa7/css/tactics.css?v=z1-20261021-v2',
   './Capa7/js/tactics-layout.js?v=z1-20261021-v2',
   './Capa7/js/capa7-pro2-controller.js?v=z1-20261021-v2',
