@@ -3328,6 +3328,19 @@ class Pro2Storage {
     return engine;
   }
 
+  async listActive() {
+    const rows=await this.adapter.list('activeMatches'), records=[];
+    for(const row of rows) {
+      const id=row?.matchId||row?.session?.matchId;
+      // Reuse the canonical reconciliation, migration and integrity checks.
+      const engine=await this.loadActive(id);
+      if(!engine) continue;
+      const current=await this.adapter.get('activeMatches',id);
+      if(current) records.push(clone(migrateActiveRecord(current)));
+    }
+    return records.sort((a,b)=>String(b.savedAt||'').localeCompare(String(a.savedAt||'')));
+  }
+
   async getCurrentActive() {
     let list=await this.adapter.list('activeMatches');
     if(!list.length) return null;
