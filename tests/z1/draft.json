@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "draftId": "qa-audit-draft",
+  "team": {
+    "teamId": "qa-team",
+    "name": "Equip QA",
+    "category": "Infantil",
+    "sex": "female",
+    "visualProfile": {
+      "profileId": "infantil-female",
+      "backgroundKey": "current"
+    }
+  },
+  "match": {
+    "opponent": "Rival QA",
+    "date": "2030-01-15",
+    "venue": "home"
+  },
+  "rosterSnapshot": [
+    {
+      "playerId": "qa_p3",
+      "number": 3,
+      "name": "Prova 3"
+    },
+    {
+      "playerId": "qa_p4",
+      "number": 4,
+      "name": "Prova 4"
+    },
+    {
+      "playerId": "qa_p6",
+      "number": 6,
+      "name": "Prova 6"
+    },
+    {
+      "playerId": "qa_p7",
+      "number": 7,
+      "name": "Prova 7"
+    },
+    {
+      "playerId": "qa_p8",
+      "number": 8,
+      "name": "Prova 8"
+    },
+    {
+      "playerId": "qa_p10",
+      "number": 10,
+      "name": "Prova 10"
+    },
+    {
+      "playerId": "qa_p11",
+      "number": 11,
+      "name": "Prova 11"
+    },
+    {
+      "playerId": "qa_p13",
+      "number": 13,
+      "name": "Prova 13"
+    }
+  ],
+  "calledPlayerIds": [
+    "qa_p3",
+    "qa_p4",
+    "qa_p6",
+    "qa_p7",
+    "qa_p8",
+    "qa_p10",
+    "qa_p11",
+    "qa_p13"
+  ],
+  "startingSixIds": [
+    "qa_p3",
+    "qa_p4",
+    "qa_p6",
+    "qa_p7",
+    "qa_p8",
+    "qa_p10"
+  ],
+  "positions": {
+    "1": "qa_p10",
+    "2": "qa_p6",
+    "3": "qa_p4",
+    "4": "qa_p3",
+    "5": "qa_p7",
+    "6": "qa_p8"
+  },
+  "initialServe": {
+    "side": "rival",
+    "serverPlayerId": null
+  },
+  "completedSteps": {
+    "step1": true,
+    "step2": true,
+    "step3": true,
+    "step4": true
+  },
+  "createdAt": "2030-01-15T12:00:00.000Z",
+  "updatedAt": "2030-01-15T12:00:00.000Z"
+}
+

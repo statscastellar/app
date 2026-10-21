@@ -2,12 +2,14 @@
 'use strict';
 const P=window.StatsPro2;
 const T=window.StatsPro2Tactical;
+const L=window.StatsTacticsLayout;
 if(!P) throw new Error('StatsPro2 no carregat');
 if(!T) throw new Error('StatsPro2Tactical no carregat');
+if(!L) throw new Error('Gestor de tàctiques no carregat');
 const VISUAL_ZONES=['4','3','2','5','6','1'];
 const $=q=>document.querySelector(q), $$=q=>[...document.querySelectorAll(q)];
 let finalizing=false, archivedRecord=null;
-let engine=null, storage=null, adapter=null, localMode=null, positionsDraft=null, dragIndex=null, changeOutZone=null, tacticalLocks={};
+let engine=null, storage=null, adapter=null, localMode=null, positionsDraft=null, dragIndex=null, changeOutZone=null, tacticalLocks={}, tacticsMode='3-3';
 
 function live(){return engine?.state.lifecycle.status==='active';}
 function deep(x){return JSON.parse(JSON.stringify(x));}
@@ -20,7 +22,20 @@ async function loadTacticalLocks(){const key=tacticalKey();if(!key||!adapter){ta
 async function persistTacticalLocks(){if(!live())return;const key=tacticalKey();if(!key||!adapter)return; tacticalLocks=T.sanitizeLocks(tacticalLocks,engine.state.game.court);await adapter.put('settings',key,{schemaVersion:1,matchId:engine.state.identity.matchId,locks:deep(tacticalLocks),updatedAt:new Date().toISOString()});}
 async function clearTacticalLocks(){const key=tacticalKey();if(key&&adapter)await adapter.delete('settings',key);tacticalLocks={};}
 async function persist(){if(storage&&engine.state.lifecycle.status==='active') await storage.saveActive(engine);}
-function visualCourt(){return T.deriveVisualCourt(engine.state.game.court,tacticalLocks,{servingSide:engine.state.game.servingSide,phase:engine.state.game.phase});}
+function tacticsKey(){return engine?'pro2:tactics:'+engine.state.identity.matchId:null;}
+async function loadTactics(){tacticsMode='3-3';try{const key=tacticsKey(),saved=key&&adapter?await adapter.get('settings',key):null;if(saved&&Object.prototype.hasOwnProperty.call(L.layouts,saved.mode))tacticsMode=saved.mode;}catch(err){console.warn('No s’ha pogut carregar la tàctica; es manté Habitual 3+3.',err);}}
+async function saveTactics(){const key=tacticsKey();if(key&&adapter)await adapter.put('settings',key,{schemaVersion:1,mode:tacticsMode});}
+function chooseTactics(){
+ if(!live())return;
+ if(localMode){toast('Surt primer del mode de posicions o canvis.');return;}
+ modal('Disposició tàctica', '<p>Amb Penetració Z1 · 4+2, la jugadora que ocupa la Z1 reglamentària fa de col·locadora. Avança en recepció (servei rival ja executat) i en col·locació. Després de col·locar torna a Z1, també durant l’atac. Amb servei propi es manté a Z1 fins a la fase de col·locació. Habitual 3+3 manté la distribució fixa. No modifica rotacions ni estadístiques.</p>',
+  [{text:'Habitual 3+3'+(tacticsMode==='3-3'?' ✓':''),action:()=>setTactics('3-3')},
+   {text:'Penetració Z1 · 4+2'+(tacticsMode==='penetration-z1'?' ✓':''),cls:'primary',action:()=>setTactics('penetration-z1')},
+   {text:'Cancel·lar',action:closeModal}]);
+}
+async function setTactics(mode){if(!live())return;L.assertLayout(mode);tacticsMode=mode;closeModal();render();try{await saveTactics();}catch(err){console.error(err);toast('No s’ha pogut desar la disposició.');}}
+function currentLayout(){return L.effectiveLayout(tacticsMode,engine.state.game.phase,engine.log.actions);}
+function visualCourt(){const court=engine.state.game.court,visual=T.deriveVisualCourt(court,tacticalLocks,{servingSide:engine.state.game.servingSide,phase:engine.state.game.phase});return tacticsMode==='penetration-z1'?L.placeZ1(court,visual):visual;}
 function regZoneOfPlayer(pid){return T.regulatoryZoneOf(engine.state.game.court,pid);}
 async function toggleLockFor(pid,zone){if(!live())return;if(tacticalLocks[pid]){delete tacticalLocks[pid];await persistTacticalLocks();render();toast('Fixació eliminada.');return;}const r=T.setLock(tacticalLocks,pid,zone,engine.state.game.court);if(!r.ok){toast('Aquesta zona ja està fixada per una altra jugadora.');return;}tacticalLocks=r.locks;await persistTacticalLocks();render();toast('Jugadora fixada a la zona '+zone+'.');}
 async function reconcileStale(error,{forFinalize=false}={}){
@@ -44,10 +59,12 @@ async function run(fn){if(!live())return;try{fn();render();await persist();}catc
 function renderPlayers(ui){
  const g=$('#playerGrid');g.innerHTML='';
  const shown=(localMode==='POSITIONS'&&positionsDraft)?positionsDraft:visualCourt();
- VISUAL_ZONES.forEach((zone,i)=>{
+ const layout=currentLayout();g.dataset.layout=layout;g.classList.toggle('tactics-penetration',layout==='penetration-z1');
+ L.assertLayout(layout).visualOrder.forEach(zone=>{
+   const i=VISUAL_ZONES.indexOf(zone);
    const pid=shown[zone]; const p=player(pid); const regZone=regZoneOfPlayer(pid)||zone;
    const lockZone=tacticalLocks[pid]||null; const isLocked=!!lockZone;
-   const slot=document.createElement('div');slot.className='player-slot'+(localMode==='CANVI'?' change-mode':'')+(zone==='1'?' zone-one':'')+(localMode==='POSITIONS'?' position-mode':'')+(changeOutZone===regZone?' change-selected':'')+(isLocked?' tactical-locked':'');slot.dataset.index=i;slot.dataset.zone=zone;slot.dataset.regZone=regZone;slot.dataset.playerId=pid||'';
+   const slot=document.createElement('div');slot.className='player-slot'+(localMode==='CANVI'?' change-mode':'')+(zone==='1'?' zone-one':'')+(localMode==='POSITIONS'?' position-mode':'')+(changeOutZone===regZone?' change-selected':'')+(isLocked?' tactical-locked':'');slot.dataset.index=i;slot.dataset.zone=zone;slot.dataset.regZone=regZone;slot.dataset.playerId=pid||'';slot.classList.add('tzone-'+zone);if(tacticsMode==='penetration-z1'&&regZone==='1')slot.classList.add('tactics-z1-highlight');
    const rg=document.createElement('div');rg.className='rating-grid';
    [0,1,2,3].forEach(v=>{const b=document.createElement('button');b.className='r'+v;b.textContent=v;b.type='button';
      b.disabled=!ui.canRate(regZone,v);
@@ -68,8 +85,33 @@ function renderPlayers(ui){
  });
 }
 function renderBlocks(ui){
- const g=$('#blockGrid');g.innerHTML='';const shown=visualCourt();
+ const g=$('#blockGrid');g.innerHTML='';
+ const shown=visualCourt();
+ const penetration=currentLayout()==='penetration-z1';
+ g.classList.toggle('tactics-penetration',penetration);
+ if(!penetration){
  ['4','3','2'].forEach(zone=>{const slot=document.createElement('div');slot.className='block-slot';const regZone=T.blockRegZoneForVisual(engine.state.game.court,shown,zone);const enabled=!!regZone&&ui.blocksEnabled;[['crimson',0,'0 · BLOQUEIG FORA'],['petrol',1,'1 · BLOQUEIG'],['emerald',2,'2 · BLOQUEIG + PUNT']].forEach(([c,v,t])=>{const b=document.createElement('button');b.className=c;b.textContent=t;b.disabled=!enabled;if(!regZone)b.title='La jugadora és reglamentàriament de segona línia';b.onclick=()=>run(()=>engine.block(regZone,v));slot.appendChild(b);});g.appendChild(slot);});
+ return;
+ }
+ // In 4+2 locks can move a front-row player to any visual zone.
+ // Blocking belongs to the regulatory front row, never to a visual position.
+ const entries=penetration
+   ? ['4','3','2'].map(regZone=>({regZone,visualZone:Object.keys(shown).find(z=>shown[z]===engine.state.game.court[regZone])||null}))
+   : ['4','3','2'].map(visualZone=>({visualZone,regZone:T.blockRegZoneForVisual(engine.state.game.court,shown,visualZone)}));
+ entries.forEach(({regZone,visualZone})=>{
+   const slot=document.createElement('div');slot.className='block-slot';
+   if(penetration)slot.classList.add('block-zone-'+regZone);
+   const enabled=!!regZone&&ui.blocksEnabled;
+   if(!regZone)slot.classList.add('block-ineligible');
+   const playerName=regZone?player(engine.state.game.court[regZone]).name:'';
+   const description=regZone?`Bloqueig: ${playerName}, Z${regZone} reglamentària${visualZone?' (posició visual Z'+visualZone+')':''}`:'Jugadora de segona línia: no pot bloquejar';
+   [['crimson',0,'0 · BLOQUEIG FORA'],['petrol',1,'1 · BLOQUEIG'],['emerald',2,'2 · BLOQUEIG + PUNT']].forEach(([c,v,t])=>{
+     const button=document.createElement('button');button.className=c;button.textContent=t;
+     button.disabled=!enabled;button.title=description;button.setAttribute('aria-label',description+' — '+t);
+     button.onclick=()=>run(()=>engine.block(regZone,v));slot.appendChild(button);
+   });
+   g.appendChild(slot);
+ });
 }
 function render(){
  const s=engine.state, venue=s.metadata.venue, ui=P.buildCapa7UiState(engine,{localMode});
@@ -82,6 +124,7 @@ function render(){
  const camp=$('#rivalCourtBtn');camp.disabled=!ui.rivalCourtEnabled;camp.classList.toggle('enabled',ui.rivalCourtEnabled);
  $('#sosBtn').disabled=!ui.sosEnabled;$('#sosBtn').classList.toggle('active-mode',ui.sosActive);
  $('#positionsBtn').classList.toggle('active-mode',localMode==='POSITIONS');$('#changeBtn').classList.toggle('active-mode',localMode==='CANVI');
+ $('#tacticsBtn').disabled=!ui.matchActive;$('#tacticsBtn').classList.toggle('active-mode',tacticsMode==='penetration-z1');$('#tacticsBtn').setAttribute('aria-label','Tàctiques: '+L.assertLayout(tacticsMode).label);
  renderPlayers(ui);renderBlocks(ui);
 }
 function togglePositions(){if(!live())return;if(localMode==='POSITIONS'){const next=deep(positionsDraft);localMode=null;positionsDraft=null;run(()=>engine.changePositions(next));return;}if(localMode)return;localMode='POSITIONS';positionsDraft=deep(engine.state.game.court);render();}
@@ -164,8 +207,9 @@ async function boot(){
  }
  sessionStorage.removeItem(resumeKey);
  await loadTacticalLocks();
+ await loadTactics();
  $$('[data-score-team]').forEach(b=>b.onclick=()=>run(()=>Number(b.dataset.delta)>0?engine.manualPoint(b.dataset.scoreTeam==='home'?'team':'rival'):engine.manualMinus(b.dataset.scoreTeam==='home'?'team':'rival')));
- $('#actionBox').onclick=()=>run(()=>engine.advancePhase());$('#undoBtn').onclick=()=>run(()=>engine.undo());$('#rivalCourtBtn').onclick=()=>run(()=>engine.rivalCourt());$('#sosBtn').onclick=toggleSOS;$('#positionsBtn').onclick=togglePositions;$('#changeBtn').onclick=startChange;$('#homeBtn').onclick=home;$('#finishSetBtn').onclick=finishSet;$('#finishMatchBtn').onclick=finishMatch;$('#modalLayer').onclick=e=>{if(e.target===$('#modalLayer'))closeModal();};
+ $('#actionBox').onclick=()=>run(()=>engine.advancePhase());$('#undoBtn').onclick=()=>run(()=>engine.undo());$('#rivalCourtBtn').onclick=()=>run(()=>engine.rivalCourt());$('#sosBtn').onclick=toggleSOS;$('#positionsBtn').onclick=togglePositions;$('#tacticsBtn').onclick=chooseTactics;$('#changeBtn').onclick=startChange;$('#homeBtn').onclick=home;$('#finishSetBtn').onclick=finishSet;$('#finishMatchBtn').onclick=finishMatch;$('#modalLayer').onclick=e=>{if(e.target===$('#modalLayer'))closeModal();};
  render();
 }
 boot().catch(e=>{console.error(e);alert('Error iniciant el partit: '+e.message);});

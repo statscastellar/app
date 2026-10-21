@@ -7,7 +7,11 @@
     "test:e2e": "playwright test",
     "test:visual": "playwright test --grep @visual",
     "test": "node run-all.cjs",
-    "test:audit": "node run-audit.cjs"
+    "test:audit": "node run-audit.cjs",
+    "test:z1": "node --test --test-isolation=none z1/tactics-dynamic.test.cjs",
+    "test:z1:browser": "node z1/tactics-browser.cjs",
+    "test:z1:default": "node z1/default-regression.cjs",
+    "test:z1:offline": "node z1/offline.cjs"
   },
   "devDependencies": {
     "playwright": "1.57.0"
