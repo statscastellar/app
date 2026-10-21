@@ -15,7 +15,7 @@ function live(){return engine?.state.lifecycle.status==='active';}
 function deep(x){return JSON.parse(JSON.stringify(x));}
 function player(id){return engine.state.roster.snapshot.find(p=>p.playerId===id)||{playerId:id,name:id,number:''};}
 function toast(msg){let t=$('.toast');if(!t){t=document.createElement('div');t.className='toast';document.body.appendChild(t);}t.textContent=msg;t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,1600);}
-function modal(title,body,actions=[]){$('#modalTitle').textContent=title;$('#modalBody').innerHTML=body;const box=$('#modalActions');box.innerHTML='';for(const a of actions){const b=document.createElement('button');b.textContent=a.text;b.className=a.cls||'';b.onclick=a.action;box.appendChild(b);}$('#modalLayer').hidden=false;}
+function modal(title,body,actions=[]){$('#modalTitle').textContent=title;$('#modalBody').innerHTML=body;const box=$('#modalActions');box.innerHTML='';for(const a of actions){const b=document.createElement('button');b.textContent=a.text;b.className=a.cls||'';if(a.pressed!==undefined)b.setAttribute('aria-pressed',String(a.pressed));b.onclick=a.action;box.appendChild(b);}$('#modalLayer').hidden=false;}
 function closeModal(){$('#modalLayer').hidden=true;}
 function tacticalKey(){return engine?'pro2:tactical-locks:'+engine.state.identity.matchId:null;}
 async function loadTacticalLocks(){const key=tacticalKey();if(!key||!adapter){tacticalLocks={};return;}const row=await adapter.get('settings',key);tacticalLocks=T.sanitizeLocks(row?.locks||{},engine.state.game.court);}
@@ -29,8 +29,8 @@ function chooseTactics(){
  if(!live())return;
  if(localMode){toast('Surt primer del mode de posicions o canvis.');return;}
  modal('Disposició tàctica', '<p>Amb Penetració Z1 · 4+2, la jugadora que ocupa la Z1 reglamentària fa de col·locadora. Avança en recepció (servei rival ja executat) i en col·locació. Després de col·locar torna a Z1, també durant l’atac. Amb servei propi es manté a Z1 fins a la fase de col·locació. Habitual 3+3 manté la distribució fixa. No modifica rotacions ni estadístiques.</p>',
-  [{text:'Habitual 3+3'+(tacticsMode==='3-3'?' ✓':''),action:()=>setTactics('3-3')},
-   {text:'Penetració Z1 · 4+2'+(tacticsMode==='penetration-z1'?' ✓':''),cls:'primary',action:()=>setTactics('penetration-z1')},
+  [{text:'Habitual 3+3',cls:'tactic-option'+(tacticsMode==='3-3'?' primary':''),pressed:tacticsMode==='3-3',action:()=>setTactics('3-3')},
+   {text:'Penetració Z1 · 4+2',cls:'tactic-option'+(tacticsMode==='penetration-z1'?' primary':''),pressed:tacticsMode==='penetration-z1',action:()=>setTactics('penetration-z1')},
    {text:'Cancel·lar',action:closeModal}]);
 }
 async function setTactics(mode){if(!live())return;L.assertLayout(mode);tacticsMode=mode;closeModal();render();try{await saveTactics();}catch(err){console.error(err);toast('No s’ha pogut desar la disposició.');}}

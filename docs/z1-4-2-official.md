@@ -12,7 +12,7 @@ S'afegeix el botó TÀCTIQUES en lloc del text informatiu del peu. No s'afegeixe
 
 Es conserva el controlador oficial i les seves proteccions de finalització, concurrència, multiset i arxiu. El camí dels bloqueigs de Habitual 3+3 continua utilitzant el codi anterior. Amb 4+2, els bloqueigs es vinculen a les davanteres reglamentàries, mai a Z1 per ser visualment a la xarxa.
 
-No es modifiquen core/src, el bundle del motor, les fórmules estadístiques, els informes, les exportacions, els imports històrics ni el Pas 4. La preferència de tàctica s'emmagatzema en settings, clau pro2:tactics:<matchId>, separada de l'estat del partit.
+No es modifiquen core/src, el bundle del motor, les fórmules estadístiques, els informes, les exportacions ni els imports històrics. Al Pas 4 es simplifica la confirmació de servei segons el canvi demanat: triar costat i confirmar una sola vegada. La preferència de tàctica s'emmagatzema en settings, clau pro2:tactics:<matchId>, separada de l'estat del partit.
 
 ## Màquina d'estats
 
@@ -57,7 +57,7 @@ Entorn: Node 24.19.0, Playwright 1.57.0 i Chromium local. Només perfils de nave
 | Service worker i ús fora de línia | Correctes; la tàctica persisteix i la jugada funciona fora de línia |
 | Investigació/finalització | 9/9 correctes en els tres dispositius |
 | Captures de partit | 3/3 correctes en el recontrol amb el nou control del peu normalitzat segons s'explica més amunt |
-| Integritat | git diff --check correcte; cap canvi als fitxers de core, bundle del motor, imports, informes, acumulats o Pas 4 |
+| Integritat | git diff --check correcte; cap canvi als fitxers de core, bundle del motor, imports, informes o acumulats |
 
 La primera passada dels 66 casos de navegador va donar 59 correctes i 7 incidències: tres captures de partit pel canvi del control del peu, tres captures d'historial i una comprovació de resultat a iPhone. Després d'adaptar exclusivament la captura del peu, les tres captures de partit passen. La comprovació de resultat a iPhone passa en la repetició. La repetició també va patir un timeout a Android amb diversos navegadors concurrents, per la qual cosa s'ha repetit aquest cas seqüencialment amb un límit de 90 segons.
 
@@ -70,3 +70,14 @@ La comparació exacta de píxels va tenir una discrepància transitòria amb nav
 No s'ha detectat cap regressió nova en els comportaments comprovats. Això no equival a garantir risc zero; les tres referències visuals d'historial continuen pendents de revisió com a incidència prèvia. La branca és per revisar: no s'ha integrat a main ni publicat l'oficial.
 
 Recontrol final Android: 1/1 correcte, en 37 segons de test (40,6 segons totals). Els 42 casos funcionals de la bateria de navegador han passat entre la passada completa i els recontrols; les úniques discrepàncies visuals que continuen pendents són les tres captures d'historial, reproduïdes també a la base intacta.
+
+
+## Confirmació única i selecció per color
+
+Al Pas 4 es conserven la selecció de servei, la identificació de Z1 i la cancel·lació. Una sola pulsació de CONFIRMA inicia el partit o el nou set; s’elimina la pantalla addicional. El bloqueig de creació en curs evita dos partits per un doble clic. No es canvia el model de posicions ni el motor.
+
+Al diàleg de tàctiques, Habitual 3+3 és l’opció inicial amb fons taronja. La classe de selecció i aria-pressed reflecteixen la preferència actual; en seleccionar Z1 4+2, aquesta passa a taronja i Habitual passa a negre. S’eliminen les marques ✓. Es conserva la preferència per partit en recarregar.
+
+Es versionen de nou el controlador, el CSS de tàctiques i el script del Pas 4 i s’incrementa la versió de la cache. Les proves del flux antic s’actualitzen perquè confirmin una sola vegada. S’afegeixen proves dels dos serveis, cancel·lació, doble clic, colors i persistència; es revisen també la preparació completa, el multiset i la captura del Pas 4.
+
+Validació d’aquests ajustos: 18/18 proves de navegador correctes (escriptori, iPhone i Android), incloent els dos serveis, cancel·lació, absència de duplicats amb clics repetits, preparació completa, inici del set següent, captura del Pas 4 i colors/persistència del selector. També passen les 7 proves de lògica Z1, el test real de service worker fora de línia amb cache v2 i git diff --check. No s’ha integrat ni publicat la proposta.

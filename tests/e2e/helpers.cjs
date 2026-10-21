@@ -26,5 +26,5 @@ async function seed(page,{active=false,completed=false,stage=null}={}){
  if(active) {await page.goto('/Capa7/index.html');await expect(page.locator('#rivalName')).toHaveText('Rival QA');}
  if(stage) await page.goto(`/Capa9-${stage}/index.html`);
 }
-async function confirmServe(page){await page.locator('#save').click();await page.locator('[data-side="rival"]').click();await page.locator('#serveAccept').click();await page.locator('#serveConfirm').click();await expect(page).toHaveURL(/Capa7/);await expect(page.locator('#rivalName')).toHaveText('Rival QA')}
+async function confirmServe(page){await page.locator('#save').click();await page.locator('[data-side="rival"]').click();await page.locator('#serveAccept').click();await expect(page).toHaveURL(/Capa7/);await expect(page.locator('#rivalName')).toHaveText('Rival QA')}
 module.exports={test,expect,seed,confirmServe};

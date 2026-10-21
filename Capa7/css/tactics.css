@@ -56,3 +56,7 @@
 .player-grid.tactics-penetration :is(.tzone-4,.tzone-2) .r1{grid-row:3;}
 .player-grid.tactics-penetration :is(.tzone-4,.tzone-2) .r0{grid-row:4;}
 
+
+/* El fons indica l’opció seleccionada; la resta queda negra. */
+.modal-actions .tactic-option{background:#05090d;}
+.modal-actions .tactic-option.primary{background:#6f461b;border-color:#a86e2d;}

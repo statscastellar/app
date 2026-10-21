@@ -1,8 +1,8 @@
-const CACHE_NAME = 'stats-castellar-1.1.0-z1-20261021-v1';
+const CACHE_NAME = 'stats-castellar-1.1.0-z1-20261021-v2';
 const APP_SHELL = [
-  './Capa7/css/tactics.css?v=z1-20261021',
-  './Capa7/js/tactics-layout.js?v=z1-20261021',
-  './Capa7/js/capa7-pro2-controller.js?v=z1-20261021',
+  './Capa7/css/tactics.css?v=z1-20261021-v2',
+  './Capa7/js/tactics-layout.js?v=z1-20261021-v2',
+  './Capa7/js/capa7-pro2-controller.js?v=z1-20261021-v2',
   './Capa7/index.html',
   './Informe/style.css?v=1.1.0',
   './shared/player-scroll.css?v=1.1.0',
@@ -24,7 +24,7 @@ const APP_SHELL = [
   './shared/draft-store.js',
   './Capa9-4/index.html',
   './Capa9-4/layout-final.css?v=1.0.14',
-  './Capa9-4/step4-pro2.js?v=1.0.14',
+  './Capa9-4/step4-pro2.js?v=z1-20261021-v2',
   './assets/escut-club.png',
   './assets/fons-horitzontal.png',
   './assets/fons-vertical.png'
