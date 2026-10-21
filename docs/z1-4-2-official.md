@@ -8,7 +8,7 @@ Branca: feat/z1-4-2-official. Proposta pendent d'autorització d'integració i p
 
 L'oficial no tenia el selector de tàctica del LAB. Es porta la geometria i la selecció per partit, mantenint Habitual 3+3 com a opció predeterminada. Els partits existents sense preferència continuen en 3+3: no hi ha migració de dades ni canvis al seu registre d'accions.
 
-S'afegeix el botó TÀCTIQUES en lloc del text informatiu del peu. No s'afegeixen columnes al peu ni es redistribueixen els altres controls. El CSS de 4+2 només afecta els elements amb la classe tactics-penetration: no s'importen els ajustos generals del peu ni de la capçalera del LAB.
+El peu té vuit espais segons la referència visual de l’usuari: INICI, SOS, POSICIONS, TÀCTIQUES, informació del partit, CANVI JUG., FINALITZAR SET i FINALITZAR PARTIT. TÀCTIQUES és independent i té la mateixa amplada que POSICIONS; la informació es conserva al centre. El CSS de 4+2 només afecta els elements amb la classe tactics-penetration: no s'importen els ajustos generals del peu ni de la capçalera del LAB.
 
 Es conserva el controlador oficial i les seves proteccions de finalització, concurrència, multiset i arxiu. El camí dels bloqueigs de Habitual 3+3 continua utilitzant el codi anterior. Amb 4+2, els bloqueigs es vinculen a les davanteres reglamentàries, mai a Z1 per ser visualment a la xarxa.
 
@@ -39,7 +39,7 @@ Les ordres específiques es poden executar dins tests:
 
 La comparació default-regression confronta la base oficial amb la branca en 1440×900, 844×390 i 390×844: mateixa geometria dels controls, mateix estat del partit i mateixos píxels de la pista. El nou botó del peu és el canvi visual intencionat.
 
-Les captures històriques completes de partit conserven els PNG de referència. Durant aquesta captura únicament es restitueix el text informatiu original al lloc del nou botó; abans s'asserta que el botó TÀCTIQUES existeix. Això manté estricta la comparació de tota la resta de pantalla. Els tests de Z1 comproven el botó real, l'activació, la persistència i la geometria de la tàctica.
+Les captures completes de partit mostren la interfície real, sense substituir ni ocultar controls durant la captura. S’han actualitzat les tres referències de partit després de restaurar el peu segons la imatge de l’usuari. Les captures de les altres pantalles es conserven. El test del peu comprova els vuit espais, l’ordre exacte, la informació visible, la igualtat d’amplada de POSICIONS i TÀCTIQUES i l’absència de solapaments. La comparació amb la base original de Habitual limita la identitat exacta a pista i controls de joc; el peu ara té vuit espais per disseny.
 
 El llançador històric tests/run-all.cjs comprova hashes d'una altra branca abans d'executar res i rebutja aquest codi modificat. No s'actualitza ni es relaxa aquest inventari: s'executen directament els quatre grups que conté (auditoria, unitàries, navegador i investigació) i es documenten els resultats.
 
@@ -81,3 +81,15 @@ Al diàleg de tàctiques, Habitual 3+3 és l’opció inicial amb fons taronja. 
 Es versionen de nou el controlador, el CSS de tàctiques i el script del Pas 4 i s’incrementa la versió de la cache. Les proves del flux antic s’actualitzen perquè confirmin una sola vegada. S’afegeixen proves dels dos serveis, cancel·lació, doble clic, colors i persistència; es revisen també la preparació completa, el multiset i la captura del Pas 4.
 
 Validació d’aquests ajustos: 18/18 proves de navegador correctes (escriptori, iPhone i Android), incloent els dos serveis, cancel·lació, absència de duplicats amb clics repetits, preparació completa, inici del set següent, captura del Pas 4 i colors/persistència del selector. També passen les 7 proves de lògica Z1, el test real de service worker fora de línia amb cache v2 i git diff --check. No s’ha integrat ni publicat la proposta.
+
+## Peu restaurat segons la referència de l'usuari
+
+TÀCTIQUES deixa d'ocupar el lloc de la informació. El peu té vuit espais en l'ordre INICI, SOS, POSICIONS, TÀCTIQUES, informació, CANVI JUG., FINALITZAR SET i FINALITZAR PARTIT. POSICIONS i TÀCTIQUES comparteixen amplada; la informació ocupa l'espai central ampli. En vertical es mantenen vuit columnes adaptades a la pantalla.
+
+Validació: 9/9 proves correctes del peu, captures completes reals i selector de tàctiques en escriptori, iPhone i Android. S'han revisat visualment les captures d'escriptori i iPhone. S'actualitzen només les tres referències PNG de partit, generades amb Equip QA, Rival QA i jugadores fictícies Prova 1–8; l'usuari ha autoritzat explícitament pujar aquestes captures al repositori. No es pugen les imatges reals adjuntades al xat.
+
+No se substitueix ni s'oculta cap control durant les captures. La comparació addicional amb l'oficial base comprova l'arena, la geometria dels controls de joc i l'estat del partit; el peu s'exclou d'aquesta comparació perquè ara té vuit espais per disseny. La comprovació inicial incloïa la capçalera i hi va observar una variació de rasterització d'un nivell RGB en una vora de dos píxels, fora de la pista. El test de pista ara delimita estrictament l'arena, sense afegir tolerància als seus píxels.
+
+La cache nova i l'ús fora de línia també passen. No es canvia el motor, la tàctica ni les dades de partits. No s'ha integrat ni publicat aquesta correcció.
+
+La comparació final de l'arena passa en 1440×900, 844×390 i 390×844 amb coincidència exacta de píxels, geometria dels controls de joc i estat del partit. git diff --check correcte.
