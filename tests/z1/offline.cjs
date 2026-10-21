@@ -7,7 +7,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),draf
  await page.goto('http://127.0.0.1:4173/');
  await page.evaluate(()=>navigator.serviceWorker.register('/service-worker.js'));
  await page.evaluate(()=>navigator.serviceWorker.ready);
- assert.ok(await page.evaluate(async()=>(await caches.keys()).includes('stats-castellar-1.1.0-z1-20261021-v2')));
+ assert.ok(await page.evaluate(async()=>(await caches.keys()).includes('stats-castellar-1.1.0-z1-20261021-v3')));
  await page.goto('http://127.0.0.1:4173/Capa9-1/index.html');
  await page.evaluate(async d=>{const m=StatsPro2.createMatchFromDraft(d,{matchId:'offline-qa',now:'2030-01-15T12:00:00Z'});await new StatsPro2.Pro2Storage(new StatsPro2.IndexedDBStorageAdapter()).saveActive(new StatsPro2.MatchEngine(m.state,m.actionLog));sessionStorage.setItem('StatsCastellarPro2_ResumeMatchId_v1','offline-qa');},draft);
  await page.goto('http://127.0.0.1:4173/Capa7/index.html');await page.waitForSelector('.player-slot');
