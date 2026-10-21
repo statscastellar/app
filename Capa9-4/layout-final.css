@@ -52,3 +52,7 @@
 .serve-confirm-step[hidden]{display:none!important}
 .serve-confirm-step p{margin:0 0 14px;font-size:14px;line-height:1.4;color:#fff}
 @media (display-mode:standalone) and (orientation:portrait) and (max-width:600px){:root{--safe-top:max(env(safe-area-inset-top,0px),44px)}}
+
+#serveError{color:#ffbf85;border:1px solid #ad6b35;border-radius:8px;padding:10px;}
+#serveRecover{color:#ffbf85;text-decoration:underline;}
+#serveError[hidden],#serveRecover[hidden]{display:none;}

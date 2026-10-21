@@ -60,6 +60,7 @@ function setServeSelection(side){
  serveAccept.disabled=!side;
 }
 function resetServeDialog(){
+ $('serveError').hidden=true;$('serveRecover').hidden=true;
  setServeSelection(null);
  serveChoices.hidden=false;
  serveAccept.parentElement.hidden=false;
@@ -72,16 +73,18 @@ function openServeDialog(){
  serveDialog.hidden=false;
  requestAnimationFrame(()=>serveDialog.classList.add('open'));
 }
-function closeServeDialog(){serveDialog.classList.remove('open');setTimeout(()=>{serveDialog.hidden=true;resetServeDialog()},120)}
+function closeServeDialog(){if(startingMatch)return;serveDialog.classList.remove('open');setTimeout(()=>{serveDialog.hidden=true;resetServeDialog()},120)}
 async function startMatch(serveSide){
  if(startingMatch)return;
- startingMatch=true;serveAccept.disabled=true;
- closeServeDialog();
+ startingMatch=true;serveAccept.disabled=true;serveAccept.textContent='INICIANT…';
+ $('serveError').hidden=true;$('serveRecover').hidden=true;
+ serveDialog.querySelectorAll('[data-side]').forEach(b=>b.disabled=true);
+ $('serveCancel').disabled=true;
+ try{
  d.positions=Object.fromEntries(Object.entries(spots));
  d.initialServe={side:serveSide,serverPlayerId:serveSide==='team'?spots['1']:null};
  d.completedSteps.step4=true;
  Pro2DraftStore.save(d);
- try{
   const storage=new P.Pro2Storage(new P.IndexedDBStorageAdapter());
   if(d.flowMode==='nextSet'){
    if(!d.activeMatchId) throw new Error('Falta l’identificador del partit actiu.');
@@ -101,7 +104,12 @@ async function startMatch(serveSide){
   sessionStorage.setItem('StatsCastellarPro2_ResumeMatchId_v1',made.state.identity.matchId);
   Pro2DraftStore.clear();
   location.href='../Capa7/index.html';
- }catch(e){startingMatch=false;$('done').textContent=(d.flowMode==='nextSet'?'No s’ha pogut iniciar el set següent: ':'No s’ha pogut crear el partit: ')+e.message;$('done').hidden=false;}
+ }catch(e){
+  startingMatch=false;serveAccept.disabled=!selectedServeSide;serveAccept.textContent='CONFIRMA';
+  serveDialog.querySelectorAll('[data-side]').forEach(b=>b.disabled=false);$('serveCancel').disabled=false;
+  const error=$('serveError');error.textContent=(d.flowMode==='nextSet'?'No s’ha pogut iniciar el set següent: ':'No s’ha pogut crear el partit: ')+(e.message||String(e));error.hidden=false;
+  $('serveRecover').hidden=e.code!=='ACTIVE_MATCH_EXISTS';error.focus();
+ }
 }
 $('save').onclick=openServeDialog;
 serveDialog.querySelectorAll('[data-side]').forEach(b=>b.onclick=()=>setServeSelection(b.dataset.side));
