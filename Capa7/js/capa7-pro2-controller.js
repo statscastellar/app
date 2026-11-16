@@ -29,9 +29,9 @@ function chooseTactics(){
  if(!live())return;
  if(localMode){toast('Surt primer del mode de posicions o canvis.');return;}
  modal('Disposició tàctica','<p>La penetració comença només a COL·LOCACIÓ, si la col·locadora no ha fet la primera recepció o defensa.</p>',[
-  {text:'Habitual 3+3',action:()=>setTactics('3-3')},
-  {text:'Penetració Z1 · 4+2',action:()=>setTactics('penetration-z1')},
-  {text:'6-2 · Dues col·locadores',action:chooseSetters},
+  {text:'Habitual 3+3',cls:'tactic-option'+(tacticsMode==='3-3'?' primary':''),pressed:tacticsMode==='3-3',action:()=>setTactics('3-3')},
+  {text:'Penetració Z1 · 4+2',cls:'tactic-option'+(tacticsMode==='penetration-z1'?' primary':''),pressed:tacticsMode==='penetration-z1',action:()=>setTactics('penetration-z1')},
+  {text:'6-2 · Dues col·locadores',cls:'tactic-option'+(tacticsMode==='6-2'?' primary':''),pressed:tacticsMode==='6-2',action:chooseSetters},
   {text:'Cancel·lar',action:closeModal}]);
 }
 function chooseSetters(){
@@ -162,7 +162,7 @@ function togglePositions(){if(!live())return;if(localMode==='POSITIONS'){const n
 function startChange(){if(!live())return;if(localMode==='CANVI'){localMode=null;changeOutZone=null;render();return;}if(localMode)return;localMode='CANVI';changeOutZone=null;render();}
 function chooseCourtForChange(zone){if(!live())return;if(localMode!=='CANVI')return;changeOutZone=zone;openBench();}
 function openBench(){const courtIds=Object.values(engine.state.game.court);const bench=engine.state.roster.snapshot.filter(p=>engine.state.roster.calledPlayerIds.includes(p.playerId)&&!courtIds.includes(p.playerId));const out=player(engine.state.game.court[changeOutZone]);modal(`Canvi · surt ${out.name}`,`<p>Selecciona la jugadora que entra.</p><div class="bench-grid">${bench.map(p=>`<button class="bench-card" data-in="${p.playerId}"><strong>${p.name}</strong><small>#${p.number}</small></button>`).join('')}</div>`,[{text:'Cancel·lar',action:closeModal}]);$$('#modalBody [data-in]').forEach(b=>b.onclick=()=>confirmChange(b.dataset.in));}
-function confirmChange(inId){if(!live())return;const outId=engine.state.game.court[changeOutZone],out=player(outId),inc=player(inId);modal('Confirmar canvi',`<p><strong>${out.name} → ${inc.name}</strong></p><p>La jugadora entrant ocuparà exactament la mateixa zona.</p>`,[{text:'Cancel·lar',action:()=>{closeModal();localMode=null;changeOutZone=null;render();}},{text:'Confirmar',cls:'primary',action:async()=>{closeModal();localMode=null;changeOutZone=null;await run(()=>engine.substitute(outId,inId));tacticalLocks=T.pruneInactive(tacticalLocks,engine.state.game.court);await persistTacticalLocks();render();}}]);}
+function confirmChange(inId){if(!live())return;const outId=engine.state.game.court[changeOutZone],out=player(outId),inc=player(inId);modal('Confirmar canvi',`<p><strong>${out.name} → ${inc.name}</strong></p><p>La jugadora entrant ocuparà exactament la mateixa zona.</p>`,[{text:'Cancel·lar',action:()=>{closeModal();localMode=null;changeOutZone=null;render();}},{text:'Confirmar',cls:'primary',action:async()=>{closeModal();localMode=null;changeOutZone=null;await run(()=>engine.substitute(outId,inId));tacticalLocks=T.pruneInactive(tacticalLocks,engine.state.game.court);await persistTacticalLocks();if(tacticsMode==='6-2'&&tacticSetters.includes(outId)){tacticSetters=tacticSetters.map(id=>id===outId?inId:id);await saveTactics();}render();}}]);}
 function toggleSOS(){if(!live())return;if(engine.state.flow.sos.status==='active'){run(()=>engine.undo());return;}run(()=>engine.activateSOS());}
 function buildNextSetDraft(team){
  const s=engine.state,now=new Date().toISOString();
