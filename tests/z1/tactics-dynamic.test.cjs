@@ -2,8 +2,9 @@ const {test}=require('node:test'),a=require('node:assert/strict');
 const L=require('../../Capa7/js/tactics-layout'),T=require('../../Capa7/js/tactical-locks');
 const {createMatchFromDraft}=require('../../core/src/match-factory'),{MatchEngine}=require('../../core/src/match-engine');
 const court={'1':'a','2':'b','3':'c','4':'d','5':'e','6':'f'};
-test('tàctica activa: penetració en R/C i retorn en A/D/B/S',()=>{
- for(const p of ['RECEPCIO','COLLOCACIO'])a.equal(L.effectiveLayout('penetration-z1',p),'penetration-z1');
+test('tàctica activa: penetració només en col·locació i retorn en la resta',()=>{
+ a.equal(L.effectiveLayout('penetration-z1','COLLOCACIO',{court}),'penetration-z1');
+ a.equal(L.effectiveLayout('penetration-z1','RECEPCIO',{court}),'3-3');
  for(const p of ['ATAC','DEFENSA','BLOQUEIG','SERVEI',null,'unknown'])a.equal(L.effectiveLayout('penetration-z1',p),'3-3');
  a.throws(()=>L.effectiveLayout('invalid','DEFENSA'));
 });
@@ -14,13 +15,13 @@ test('Z1 reglamentària arriba al lloc correcte amb cadenats, sense alterar les 
  const locks={a:'5',e:'1'},visual=T.deriveVisualCourt(court,locks),before=JSON.stringify({court,locks,visual});
  const shown=L.placeZ1(court,visual);a.equal(shown['1'],'a');a.equal(new Set(Object.values(shown)).size,6);
  a.equal(JSON.stringify({court,locks,visual}),before);
- for(const phase of ['COLLOCACIO','ATAC','DEFENSA']){const d=L.describe(L.effectiveLayout('penetration-z1',phase),court,shown);a.equal(L.validate(d),true);a.equal(d.slots.find(s=>s.playerId==='a').row,phase==='COLLOCACIO'?'front':'behind');a.equal(L.canBlock(d.slots.find(s=>s.playerId==='a')),false);}
+ for(const phase of ['COLLOCACIO','ATAC','DEFENSA']){const d=L.describe(L.effectiveLayout('penetration-z1',phase,{court}),court,shown);a.equal(L.validate(d),true);a.equal(d.slots.find(s=>s.playerId==='a').row,phase==='COLLOCACIO'?'front':'behind');a.equal(L.canBlock(d.slots.find(s=>s.playerId==='a')),false);}
  const rotated={'1':'b','2':'c','3':'d','4':'e','5':'f','6':'a'};a.equal(L.placeZ1(rotated,T.deriveVisualCourt(rotated,locks))['1'],'b');
 });
 test('cicle real del motor, desfer, rotació i substitució mantenen dades intactes',()=>{
  const made=createMatchFromDraft(require('./draft.json'),{matchId:'tactic-qa',now:'2030-01-15T12:00:00Z'}),e=new MatchEngine(made.state,made.actionLog);
- function layout(expected){const before=JSON.stringify(e.exportSession());a.equal(L.effectiveLayout('penetration-z1',e.state.game.phase,e.log.actions),expected);L.placeZ1(e.state.game.court,T.deriveVisualCourt(e.state.game.court,{}));a.equal(JSON.stringify(e.exportSession()),before);}
- a.equal(e.state.game.phase,'RECEPCIO');layout('penetration-z1');
+ function layout(expected){const before=JSON.stringify(e.exportSession());a.equal(L.effectiveLayout('penetration-z1',e.state.game.phase,{court:e.state.game.court,actions:e.log.actions}),expected);L.placeZ1(e.state.game.court,T.deriveVisualCourt(e.state.game.court,{}));a.equal(JSON.stringify(e.exportSession()),before);}
+ a.equal(e.state.game.phase,'RECEPCIO');layout('3-3');
  e.ratePlayer('6',2);a.equal(e.state.game.phase,'COLLOCACIO');layout('penetration-z1');
  e.ratePlayer('1',2);a.equal(e.state.game.phase,'ATAC');layout('3-3');
  e.ratePlayer('4',2);a.equal(e.state.game.phase,'DEFENSA');layout('3-3');
@@ -38,7 +39,7 @@ test('serveis 1 i 2 mantenen Z1 al darrere fins a col·locació; desfer i recàr
   a.equal(layout(),'3-3');e.ratePlayer('1',value);a.equal(e.state.game.phase,'DEFENSA');a.equal(layout(),'3-3');
   a.equal(e.log.actions.filter(x=>x.active!==false&&x.type==='DEFENSA').length,0);
   a.equal(L.effectiveLayout('3-3',e.state.game.phase,e.log.actions),'3-3');
-  const restored=new MatchEngine(e.exportSession().state,e.exportSession().actionLog);a.equal(L.effectiveLayout('penetration-z1',restored.state.game.phase,restored.log.actions),'3-3');
+  const restored=new MatchEngine(e.exportSession().state,e.exportSession().actionLog);a.equal(L.effectiveLayout('penetration-z1',restored.state.game.phase,{court:restored.state.game.court,actions:restored.log.actions}),'3-3');
   e.undo();a.equal(layout(),'3-3');e.ratePlayer('1',value);e.ratePlayer('6',2);a.equal(layout(),'penetration-z1');
   e.ratePlayer('1',2);e.ratePlayer('4',2);a.equal(e.state.game.phase,'DEFENSA');a.equal(layout(),'3-3');
  }
@@ -70,12 +71,12 @@ test('substituir Z1 en servei, recepció, col·locació i defensa; desfer i rec�
   if(['ATAC','DEFENSA'].includes(target))e.ratePlayer('1',2);
   if(target==='DEFENSA')e.ratePlayer('4',2);
   a.equal(e.state.game.phase,target);
-  const before=e.exportSession(),out=e.state.game.court['1'],expected=L.effectiveLayout('penetration-z1',target);
+  const before=e.exportSession(),out=e.state.game.court['1'],expected=L.effectiveLayout('penetration-z1',target,{court:e.state.game.court,actions:e.log.actions});
   e.substitute(out,'qa_p11');
   function verify(engine,id){
    const snapshot=JSON.stringify(engine.exportSession()),court=engine.state.game.court;
    const shown=L.placeZ1(court,T.deriveVisualCourt(court,{[out]:'5'}));
-   a.equal(shown['1'],id);a.equal(L.effectiveLayout('penetration-z1',engine.state.game.phase,engine.log.actions),expected);
+   a.equal(shown['1'],id);a.equal(L.effectiveLayout('penetration-z1',engine.state.game.phase,{court:engine.state.game.court,actions:engine.log.actions}),expected);
    a.equal(L.validate(L.describe(expected,court,shown)),true);
    a.equal(JSON.stringify(engine.exportSession()),snapshot);
   }
