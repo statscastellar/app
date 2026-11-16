@@ -41,7 +41,7 @@ test('finalitzar partit tanca quart set obert i no perd estadístiques',async({p
     }
     e.ratePlayer('1',2);e.ratePlayer('2',2);e.ratePlayer('3',3);
     for(let i=0;i<5;i++)e.manualPoint('rival');
-    for(let i=0;i<25;i++)e.manualPoint('team');
+    for(let i=0;i<24;i++)e.manualPoint('team');
     await storage.saveActive(e);
   });
   await page.reload();
