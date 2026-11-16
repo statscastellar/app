@@ -20,7 +20,7 @@ jobs:
       - run: node tests/tactics-z1-6-2.test.js
       - run: npm ci --ignore-scripts
         working-directory: tests
-      - run: npm run test:unit
+      - run: node --require ./fixtures/clock.cjs --test --test-isolation=none unit/final-result.test.cjs unit/player-order.test.cjs unit/recover-active.test.cjs unit/supplemental.test.cjs
         working-directory: tests
       - run: npm run test:z1
         working-directory: tests
