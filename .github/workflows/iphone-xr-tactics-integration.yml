@@ -1,0 +1,51 @@
+name: iPhone XR and tactics integration regression
+on:
+  push:
+    branches:
+      - statslab/iphone-xr-integration
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  unit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: tests
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: tests/package-lock.json
+      - run: npm ci --ignore-scripts
+      - run: node ../tests/tactics-z1-6-2.test.js
+      - run: npm run test:unit
+      - run: npm run test:z1
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: tests
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: tests/package-lock.json
+      - run: npm ci --ignore-scripts
+      - run: npx playwright install --with-deps chromium
+      - run: echo "QA_CHROMIUM=$(node -p 'require("playwright").chromium.executablePath()')" >> "$GITHUB_ENV"
+      - run: npx playwright test --project=desktop-chromium --grep-invert @visual
+      - run: npx playwright test e2e/iphone-xr-finalization.spec.cjs e2e/tactics-6-2.spec.cjs --project=iphone-chromium
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: iphone-xr-tactics-integration-failures
+          path: tests/reports/
