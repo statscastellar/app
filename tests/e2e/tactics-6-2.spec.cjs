@@ -86,3 +86,32 @@ test('6-2: si rep la col·locadora activa, es manté en 3-3',async({page})=>{
  await page.locator('.player-slot[data-reg-zone="1"] .r2').click();
  await expect(page.locator('#actionValue')).toHaveText('COL·LOCACIÓ');await assertLayout(page,'3-3');
 });
+
+test('6-2: la substitució d’una col·locadora actualitza la configuració sense canviar la zona',async({page})=>{
+ await seed(page,{active:true});await tactic(page,'6-2');
+ await page.locator('#changeBtn').click();
+ await page.getByRole('button',{name:'Canviar Prova 1',exact:true}).click();
+ await page.locator('[data-in="qa-player-7"]').click();
+ await page.locator('#modalActions').getByRole('button',{name:'Confirmar',exact:true}).click();
+ await expect(page.locator('.player-slot[data-player-id="qa-player-7"]')).toHaveAttribute('data-reg-zone','1');
+ await expect.poll(async()=>page.evaluate(async()=>{
+  const a=new StatsPro2.IndexedDBStorageAdapter();
+  return (await a.get('settings','pro2:tactics:qa-match'))?.setters;
+ })).toEqual(['qa-player-7','qa-player-4']);
+ await page.reload();await assertLayout(page,'3-3');
+ await page.locator('.player-slot[data-reg-zone="5"] .r2').click();
+ await assertLayout(page,'penetration-z1');
+ await expect(page.locator('.player-slot[data-player-id="qa-player-7"]')).toHaveAttribute('data-reg-zone','1');
+});
+test('6-2: pantalla horitzontal tipus iPhone XR manté sis jugadores i botons accessibles',async({page})=>{
+ await page.setViewportSize({width:896,height:414});await seed(page,{active:true});await tactic(page,'6-2');
+ await page.locator('.player-slot[data-reg-zone="5"] .r2').click();
+ await assertLayout(page,'penetration-z1');
+ const info=await page.locator('.player-slot').evaluateAll(nodes=>nodes.map(el=>{
+  const r=el.getBoundingClientRect();
+  return {width:r.width,height:r.height,buttons:el.querySelectorAll('.rating-grid button').length};
+ }));
+ expect(info).toHaveLength(6);
+ for(const slot of info){expect(slot.width).toBeGreaterThan(20);expect(slot.height).toBeGreaterThan(20);expect(slot.buttons).toBe(4);}
+ await page.locator('.player-slot[data-reg-zone="1"] .r2').click();await assertLayout(page,'3-3');
+});
