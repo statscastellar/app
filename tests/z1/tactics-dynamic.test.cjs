@@ -35,7 +35,7 @@ test('serveis 1 i 2 mantenen Z1 al darrere fins a col·locació; desfer i recàr
  for(const value of [1,2]){
   const draft=structuredClone(require('./draft.json'));draft.initialServe={side:'team',serverPlayerId:draft.positions['1']};
   const made=createMatchFromDraft(draft,{matchId:'serve-qa-'+value,now:'2030-01-15T12:00:00Z'}),e=new MatchEngine(made.state,made.actionLog);
-  const layout=()=>L.effectiveLayout('penetration-z1',e.state.game.phase,e.log.actions);
+  const layout=()=>L.effectiveLayout('penetration-z1',e.state.game.phase,{court:e.state.game.court,actions:e.log.actions});
   a.equal(layout(),'3-3');e.ratePlayer('1',value);a.equal(e.state.game.phase,'DEFENSA');a.equal(layout(),'3-3');
   a.equal(e.log.actions.filter(x=>x.active!==false&&x.type==='DEFENSA').length,0);
   a.equal(L.effectiveLayout('3-3',e.state.game.phase,e.log.actions),'3-3');
