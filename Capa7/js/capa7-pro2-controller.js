@@ -200,6 +200,8 @@ async function archiveMatch(){
  if(finalizing||archivedRecord)return;
  finalizing=true;
  try{
+  // Tancar el set encara obert abans d'arxivar, sense duplicar-ne cap de tancat.
+  if(live() && !engine.state.flow.awaitingNextSet) engine.finishSet();
   if(live())engine.finishMatch();
   localMode=null;positionsDraft=null;changeOutZone=null;render();
   const archived=await storage.finalize(engine);
@@ -212,7 +214,12 @@ async function archiveMatch(){
 }
 function finishMatch(){
  if(archivedRecord){finalSummary(archivedRecord);return;}
- modal('Finalitzar partit','<p>Aquesta acció tancarà definitivament el partit i l’eliminarà de Recuperar partit.</p>',[{text:'Cancel·lar',action:closeModal},{text:'Finalitzar partit',cls:'danger',action:archiveMatch}]);
+ const state=engine.state;
+ const pending=state.lifecycle.status==='active' && !state.flow.awaitingNextSet;
+ const description=pending
+  ? `<p>Es tancarà també el set ${state.game.currentSet} amb el marcador <strong>${state.game.score.team}–${state.game.score.rival}</strong> i després es finalitzarà el partit.</p>`
+  : '<p>L’últim set ja està tancat. No es tornarà a comptar.</p>';
+ modal('Finalitzar partit',description+'<p>El partit s’arxivarà i deixarà de sortir a Recuperar partit.</p>',[{text:'Cancel·lar',action:closeModal},{text:'Finalitzar partit',cls:'danger',action:archiveMatch}]);
 }
 function finalSummary(archived){archivedRecord=archived;modal('Partit finalitzat',`<div class="final-summary"><p>Partit arxivat correctament.</p><p><strong>Accions:</strong> ${archived.actionLog.actions.length}</p><p><strong>Jugadores amb estadística:</strong> ${archived.report.stats.players.length}</p></div>`,[{text:'Veure informe',cls:'primary',action:()=>location.href='../Informe/index.html?id='+encodeURIComponent(archived.matchId)},{text:'Inici',action:()=>location.href='../index.html'}]);}
 function home(){
