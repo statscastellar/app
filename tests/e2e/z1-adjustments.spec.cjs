@@ -23,7 +23,16 @@ test('tàctiques: el fons taronja segueix la selecció, sense marques, i persist
   await expect(selected==='3-3'?habitual:z1).toHaveCSS('background-color','rgb(111, 70, 27)');await expect(selected==='3-3'?z1:habitual).toHaveCSS('background-color','rgb(5, 9, 13)');
   await expect(page.locator('#modalActions')).not.toContainText('✓');return {habitual,z1};
  }
- let options=await open('3-3');await options.z1.click();await page.reload();
- options=await open('penetration-z1');await options.habitual.click();await page.reload();
+ async function waitForSavedTactic(mode){
+  await expect.poll(async()=>{
+   return page.evaluate(async()=>{
+    const a=new StatsPro2.IndexedDBStorageAdapter();
+    const row=await a.get('settings','pro2:tactics:qa-match');
+    return row?.mode||null;
+   });
+  },{message:'La selecció tàctica s’ha de desar abans de recarregar'}).toBe(mode);
+ }
+ let options=await open('3-3');await options.z1.click();await waitForSavedTactic('penetration-z1');await page.reload();
+ options=await open('penetration-z1');await options.habitual.click();await waitForSavedTactic('3-3');await page.reload();
  await open('3-3');
 });
