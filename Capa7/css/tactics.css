@@ -60,3 +60,11 @@
 /* El fons indica l’opció seleccionada; la resta queda negra. */
 .modal-actions .tactic-option{background:#05090d;}
 .modal-actions .tactic-option.primary{background:#6f461b;border-color:#a86e2d;}
+
+/* La posició activa del 6-2 pot ser Z5 o Z6. Es dibuixa en el lloc
+ * de penetració del 4+2, sense alterar l'associació jugadora/zona. */
+.player-grid[data-layout="penetration-z5"] .tzone-5,
+.player-grid[data-layout="penetration-z6"] .tzone-6{grid-column:4/6;grid-row:1/3;}
+.player-grid[data-layout="penetration-z5"] .tzone-1{grid-column:2/4;grid-row:3/5;}
+.player-grid[data-layout="penetration-z6"] .tzone-1{grid-column:4/6;grid-row:3/5;}
+.player-grid[data-layout="penetration-z6"] .tzone-5{grid-column:2/4;grid-row:3/5;}
