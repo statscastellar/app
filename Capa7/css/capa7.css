@@ -526,3 +526,16 @@ body.position-dragging{overflow:hidden;touch-action:none}
 .zone.action.skip-enabled:active{transform:translateY(1px);filter:brightness(1.12)}
 .zone.action.skip-enabled .header-title:after{content:' · TOCA PER SALTAR';font-size:.72em;color:#e6a24a}
 @media(orientation:portrait){.zone.action.skip-enabled .header-title:after{content:' · SALT';}}
+
+/* iPhone XR / pantalles horitzontals baixes: el text no ha de quedar tallat verticalment. */
+@media (orientation:landscape) and (max-height:450px){
+  .score-zone{min-height:0;gap:0;justify-content:space-evenly;padding:2px 3px;overflow:hidden}
+  .score-zone .team-identity{flex:0 0 auto;min-height:0;gap:0;justify-content:center;max-height:48%}
+  .score-zone .team-crest,.score-zone .rival-crest-slot{height:clamp(10px,3vh,14px);flex:0 0 auto}
+  .score-zone .team-identity .header-title{
+    display:block;flex:0 0 auto;min-height:14px;
+    line-height:14px;font-size:clamp(10px,1.15vw,13px);
+    padding-block:0;letter-spacing:0;overflow:visible;text-overflow:clip;
+  }
+  .score-zone .score-row{flex:0 0 auto;min-height:26px}
+}
