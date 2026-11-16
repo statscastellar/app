@@ -43,7 +43,7 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npx playwright install --with-deps chromium
       - run: echo "QA_CHROMIUM=$(node -p 'require("playwright").chromium.executablePath()')" >> "$GITHUB_ENV"
-      - run: npx playwright test --project=desktop-chromium e2e/iphone-xr-finalization.spec.cjs e2e/flows.spec.cjs e2e/match-footer.spec.cjs
+      - run: npx playwright test --project=desktop-chromium --grep-invert @visual
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
