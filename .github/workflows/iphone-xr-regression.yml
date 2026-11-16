@@ -8,29 +8,33 @@ permissions:
   contents: read
 jobs:
   unit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     defaults:
       run:
         working-directory: tests
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
           cache: npm
           cache-dependency-path: tests/package-lock.json
       - run: npm ci --ignore-scripts
-      - run: npm run test:unit
+      - run: node --require ./fixtures/clock.cjs --test --test-isolation=none unit/final-result.test.cjs unit/player-order.test.cjs unit/recover-active.test.cjs unit/supplemental.test.cjs
       - run: npm run test:z1
   mobile-regression:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     defaults:
       run:
         working-directory: tests
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
@@ -38,6 +42,7 @@ jobs:
           cache-dependency-path: tests/package-lock.json
       - run: npm ci --ignore-scripts
       - run: npx playwright install --with-deps chromium
+      - run: echo "QA_CHROMIUM=$(node -e \"process.stdout.write(require('playwright').chromium.executablePath())\")" >> "$GITHUB_ENV"
       - run: npx playwright test --project=desktop-chromium e2e/iphone-xr-finalization.spec.cjs e2e/flows.spec.cjs e2e/match-footer.spec.cjs
       - uses: actions/upload-artifact@v4
         if: failure()
