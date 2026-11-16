@@ -1,0 +1,67 @@
+name: Version release validation
+on:
+  push:
+    branches:
+      - 'release/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  version-and-unit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: tests/package-lock.json
+      - run: npm ci --ignore-scripts
+        working-directory: tests
+      - name: Check visible version, release metadata and PWA cache
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),assert=require('assert');
+          const config=fs.readFileSync('Configuracio/index.html','utf8');
+          const sw=fs.readFileSync('service-worker.js','utf8');
+          const packageData=require('./tests/package.json'),lock=require('./tests/package-lock.json');
+          assert.match(config,/Versió<\/div><div class="value">1\.2\.0<\/div>/);
+          assert.match(config,/Última actualització<\/div><div class="value">16\/11\/2026<\/div>/);
+          assert.match(sw,/stats-castellar-1\.2\.0-20261116/);
+          assert.match(sw,/capa7-pro2-controller\.js\?v=tactics-iphone-xr-20261116/);
+          assert.equal(packageData.version,'1.2.0');
+          assert.equal(lock.version,'1.2.0');
+          assert.equal(lock.packages[''].version,'1.2.0');
+          assert.ok(fs.existsSync('RELEASE_NOTES_1.2.0.txt'));
+          console.log('Version 1.2.0 OK');
+          NODE
+      - run: node --test ../tests/tactics-z1-6-2.test.js
+        working-directory: tests
+      - run: node --require ./fixtures/clock.cjs --test --test-isolation=none unit/final-result.test.cjs unit/player-order.test.cjs unit/recover-active.test.cjs unit/supplemental.test.cjs
+        working-directory: tests
+      - run: npm run test:z1
+        working-directory: tests
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: tests
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: tests/package-lock.json
+      - run: npm ci --ignore-scripts
+      - run: npx playwright install --with-deps chromium
+      - run: echo "QA_CHROMIUM=$(node -p 'require("playwright").chromium.executablePath()')" >> "$GITHUB_ENV"
+      - run: npx playwright test --project=desktop-chromium --grep-invert @visual
+      - run: npx playwright test e2e/iphone-xr-finalization.spec.cjs e2e/tactics-6-2.spec.cjs --project=iphone-chromium
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: release-version-failures
+          path: tests/reports/

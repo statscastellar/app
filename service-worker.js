@@ -1,12 +1,12 @@
-const CACHE_NAME = 'stats-castellar-1.1.0-footer-20261021-v1';
+const CACHE_NAME = 'stats-castellar-1.2.0-20261116';
 const APP_SHELL = [
-  './Capa7/css/capa7.css?v=footer-20261021-v1',
+  './Capa7/css/capa7.css?v=iphone-xr-20261116',
   './shared/pro2-core.bundle.js?v=recover-20261021-v1',
   './Recuperar/index.html',
   './Recuperar/recover.js?v=recover-20261021-v1',
   './Capa7/css/tactics.css?v=z1-20261021-v2',
   './Capa7/js/tactics-layout.js?v=z1-20261021-v2',
-  './Capa7/js/capa7-pro2-controller.js?v=z1-20261021-v2',
+  './Capa7/js/capa7-pro2-controller.js?v=tactics-iphone-xr-20261116',
   './Capa7/index.html',
   './Informe/style.css?v=1.1.0',
   './shared/player-scroll.css?v=1.1.0',

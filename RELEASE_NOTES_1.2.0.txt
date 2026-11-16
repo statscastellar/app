@@ -1,0 +1,19 @@
+Stats Castellar 1.2.0
+Data de publicació: 16/11/2026
+Versió anterior: 1.1.0
+Base estable de referència: 1.0.15
+
+Canvis principals:
+- Tàctica Z1 (4-2 amb penetració): 3-3 en recepció i defensa, 4-2 només durant la col·locació.
+- Si la col·locadora de Z1 fa el primer toc, no penetra per col·locar.
+- Nova tàctica 6-2: selecció de dues col·locadores oposades i identificació de la col·locadora de segona línia.
+- Canvi visual de 3-3 a 4-2, retorn després de col·locar i manteniment de la zona reglamentària per a les estadístiques.
+- Correccions en iPhone XR horitzontal per als noms i la llista d'historial.
+- Finalització del partit des del botó únic, tancant el set encara obert sense duplicar-ne cap.
+- Versió visible a Configuració i memòria cau PWA actualitzades a 1.2.0.
+
+Validació anterior a aquesta publicació:
+- Proves de tàctiques i rotacions, navegació escriptori i mòbil.
+- Proves de compatibilitat amb correccions de l'iPhone XR.
+- Comprovació de desplegament i validació d'Excel.
+- Sense migració ni alteració de dades de partits.
