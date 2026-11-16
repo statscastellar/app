@@ -36,3 +36,13 @@ button,select{font:inherit}
     .stage{height:calc(100dvh - 56px - var(--sc-iphone-safe-top))!important}
   }
 }
+
+/* Historial usable en mòbils horitzontals: la llista no pot desaparèixer
+   sota els filtres quan l'alçada disponible és reduïda. */
+@media (orientation:landscape) and (max-height:500px){
+  html,body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .stage{height:auto;min-height:calc(100dvh - 52px);overflow:visible}
+  .history-shell{flex:0 0 auto;min-height:200px}
+  .history-scroll{flex:0 0 auto;min-height:155px;max-height:55dvh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .history-list{min-height:0}
+}
