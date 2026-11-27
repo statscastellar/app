@@ -16,3 +16,8 @@ jobs:
       - run: node --check shared/pro2-core.bundle.js
       - run: node --require ./tests/fixtures/audit-clock.cjs tests/audit/scoring-migration-130.test.js
       - run: npm --prefix tests run test:audit
+      - uses: actions/upload-artifact@v4
+        with:
+          name: scoring-engine-validation
+          path: shared/pro2-core.bundle.js
+          if-no-files-found: error
