@@ -36,4 +36,4 @@ for(const token of ['Informe','Estadístiques','Dades partit','Salvades','Partit
  assert(Buffer.from(xlsx).includes(Buffer.from(token)),`XLSX sense ${token}`);
  assert(Buffer.from(ods).includes(Buffer.from(token)),`ODS sense ${token}`);
 }
-console.log('PASS golden stats Pro.2: 14 accions Anna, 97 punts, Salvades/Bloqueig separats i exports coherents');
+console.log('PASS golden stats Pro.2: 14 accions Anna, 88 punts, Salvades/Bloqueig separats i exports coherents');
