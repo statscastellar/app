@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - statslab/iphone-xr-integration
+      - fix/safe-match-finalization-20261127
   workflow_dispatch:
 permissions:
   contents: read

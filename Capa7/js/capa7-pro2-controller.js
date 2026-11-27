@@ -8,7 +8,7 @@ if(!T) throw new Error('StatsPro2Tactical no carregat');
 if(!L) throw new Error('Gestor de tàctiques no carregat');
 const VISUAL_ZONES=['4','3','2','5','6','1'];
 const $=q=>document.querySelector(q), $$=q=>[...document.querySelectorAll(q)];
-let finalizing=false, archivedRecord=null;
+let finalizing=false, archivedRecord=null, pendingSave=Promise.resolve();
 let engine=null, storage=null, adapter=null, localMode=null, positionsDraft=null, dragIndex=null, changeOutZone=null, tacticalLocks={}, tacticsMode='3-3', tacticSetters=[];
 
 function live(){return engine?.state.lifecycle.status==='active';}
@@ -21,7 +21,10 @@ function tacticalKey(){return engine?'pro2:tactical-locks:'+engine.state.identit
 async function loadTacticalLocks(){const key=tacticalKey();if(!key||!adapter){tacticalLocks={};return;}const row=await adapter.get('settings',key);tacticalLocks=T.sanitizeLocks(row?.locks||{},engine.state.game.court);}
 async function persistTacticalLocks(){if(!live())return;const key=tacticalKey();if(!key||!adapter)return; tacticalLocks=T.sanitizeLocks(tacticalLocks,engine.state.game.court);await adapter.put('settings',key,{schemaVersion:1,matchId:engine.state.identity.matchId,locks:deep(tacticalLocks),updatedAt:new Date().toISOString()});}
 async function clearTacticalLocks(){const key=tacticalKey();if(key&&adapter)await adapter.delete('settings',key);tacticalLocks={};}
-async function persist(){if(storage&&engine.state.lifecycle.status==='active') await storage.saveActive(engine);}
+function persist(){
+ const task=pendingSave.catch(()=>{}).then(async()=>{if(storage&&engine.state.lifecycle.status==='active') await storage.saveActive(engine);});
+ pendingSave=task;return task;
+}
 function tacticsKey(){return engine?'pro2:tactics:'+engine.state.identity.matchId:null;}
 async function loadTactics(){tacticsMode='3-3';tacticSetters=[];try{const key=tacticsKey(),saved=key&&adapter?await adapter.get('settings',key):null;if(saved&&Object.prototype.hasOwnProperty.call(L.layouts,saved.mode))tacticsMode=saved.mode;if(saved?.mode==='6-2'&&Array.isArray(saved.setters))tacticSetters=saved.setters;}catch(err){console.warn('No s’ha pogut carregar la tàctica; es manté Habitual 3+3.',err);}}
 async function saveTactics(){const key=tacticsKey();if(key&&adapter)await adapter.put('settings',key,{schemaVersion:2,mode:tacticsMode,setters:tacticSetters});}
@@ -85,7 +88,7 @@ async function reconcileStale(error,{forFinalize=false}={}){
    return false;
  }catch(syncError){console.error(syncError);return false;}
 }
-async function run(fn){if(!live())return;try{fn();render();await persist();}catch(e){if(await reconcileStale(e))return;toast(e.message||String(e));console.error(e);}}
+async function run(fn){if(!live()||finalizing)return;try{fn();render();await persist();}catch(e){if(await reconcileStale(e))return;toast(e.message||String(e));console.error(e);}}
 
 function renderPlayers(ui){
  const g=$('#playerGrid');g.innerHTML='';
@@ -196,20 +199,45 @@ async function openNextSetFlow(){
 }
 function finishSet(){if(!live())return;const s=engine.state;modal('Finalitzar set',`<p>Vols tancar el set ${s.game.currentSet} amb el marcador <strong>${s.game.score.team}–${s.game.score.rival}</strong>?</p>`,[{text:'Cancel·lar',action:closeModal},{text:'Finalitzar set',cls:'primary',action:async()=>{closeModal();await run(()=>engine.finishSet());if(engine.isMatchDecided()) offerFinishAfterDecidingSet();else try{await openNextSetFlow();}catch(e){toast(e.message||String(e));console.error(e);}}}]);}
 function offerFinishAfterDecidingSet(){const wins=engine.getSetWins();modal('Partit decidit',`<p>El partit ja té un guanyador per sets (<strong>${wins.team}–${wins.rival}</strong>).</p><p>Pots finalitzar-lo ara. No es prepararà cap set addicional.</p>`,[{text:'Desfer final de set',action:()=>{closeModal();run(()=>engine.undo());}},{text:'Finalitzar partit',cls:'danger',action:()=>{closeModal();finishMatch();}}]);}
+function exportEmergencySession(){
+ const session=engine.exportSession();
+ const blob=new Blob([JSON.stringify({format:'statscastellar-emergency-session-v1',exportedAt:new Date().toISOString(),session},null,2)],{type:'application/json'});
+ const url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='statscastellar-recuperacio-'+session.matchId+'.json';document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),60000);
+}
+function showArchiveFailure(e,checkpoint){
+ modal('No s’ha pogut arxivar','<p id="archiveCheckpoint"></p><p id="archiveError"></p>',[
+  {text:'Exportar còpia de recuperació',action:exportEmergencySession},
+  {text:'Tornar a provar',cls:'primary',action:archiveMatch},
+  {text:'Cancel·lar',action:closeModal}
+ ]);
+ $('#archiveCheckpoint').textContent=checkpoint?'El set i les accions s’han desat com a partit recuperable abans de finalitzar.':'No s’ha pogut confirmar el desament de totes les accions. Exporta una còpia abans de sortir.';
+ $('#archiveError').textContent='Detall: '+(e?.code?e.code+' · ':'')+(e?.message||String(e));
+}
+let finalizationCheckpoint=false;
 async function archiveMatch(){
  if(finalizing||archivedRecord)return;
  finalizing=true;
  try{
-  // Tancar el set encara obert abans d'arxivar, sense duplicar-ne cap de tancat.
-  if(live() && !engine.state.flow.awaitingNextSet) engine.finishSet();
-  if(live())engine.finishMatch();
+  // Acabar els desaments previs abans de modificar el cicle de vida.
+  await pendingSave.catch(()=>{});
+  if(live()){
+   if(!engine.state.flow.awaitingNextSet) engine.finishSet();
+   // Desar el set tancat amb totes les accions mentre el partit encara és recuperable.
+   await persist();
+   finalizationCheckpoint=true;
+   engine.finishMatch();
+  }
   localMode=null;positionsDraft=null;changeOutZone=null;render();
   const archived=await storage.finalize(engine);
   archivedRecord=archived;
-  await clearTacticalLocks();closeModal();finalSummary(archived);
+  // La neteja tàctica no ha de convertir un arxivament correcte en un error.
+  try{await clearTacticalLocks();}catch(e){console.warn('No s’han pogut netejar les fixacions tàctiques',e);}
+  closeModal();finalSummary(archived);
  }catch(e){
   if(await reconcileStale(e,{forFinalize:true}))return;
-  toast('No s’ha pogut arxivar. El marcador queda bloquejat; torna a provar de finalitzar.');console.error(e);
+  console.error(e);showArchiveFailure(e,finalizationCheckpoint);
  }finally{finalizing=false;render();}
 }
 function finishMatch(){

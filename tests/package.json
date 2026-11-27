@@ -1,7 +1,7 @@
 {
   "name": "stats-castellar-isolated-tests",
   "private": true,
-  "version": "1.2.0",
+  "version": "1.2.1",
   "scripts": {
     "test:unit": "node --require ./fixtures/clock.cjs --test --test-isolation=none unit/*.test.cjs",
     "test:e2e": "playwright test",

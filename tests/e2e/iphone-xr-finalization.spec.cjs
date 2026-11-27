@@ -83,3 +83,51 @@ test('set prèviament tancat no es duplica en finalitzar partit',async({page})=>
   });
   expect(info).toEqual({sets:1,ends:1});
 });
+
+
+test('fallada d’arxivament conserva el darrer set i permet recuperar i reintentar',async({page})=>{
+  await seed(page,{active:true});
+  await page.evaluate(async()=>{
+    const s=new StatsPro2.Pro2Storage(new StatsPro2.IndexedDBStorageAdapter());
+    const e=await s.loadActive('qa-match');
+    e.manualPoint('team');await s.saveActive(e);
+  });
+  await page.reload();
+  await page.evaluate(()=>{
+    const p=StatsPro2.IndexedDBStorageAdapter.prototype;
+    const original=p.atomicFinalize;
+    p.atomicFinalize=async function(...args){
+      p.atomicFinalize=original;
+      throw new Error('Fallada de prova abans de la transacció');
+    };
+  });
+  await page.locator('#finishMatchBtn').click();
+  await page.locator('#modalActions').getByRole('button',{name:'Finalitzar partit',exact:true}).click();
+  await expect(page.locator('#modalTitle')).toHaveText('No s’ha pogut arxivar');
+  await expect(page.locator('#archiveCheckpoint')).toContainText('partit recuperable');
+  await expect(page.locator('#archiveError')).toContainText('Fallada de prova');
+  const checkpoint=await page.evaluate(async()=>{
+    const a=new StatsPro2.IndexedDBStorageAdapter();
+    const row=await a.get('activeMatches','qa-match');
+    return {state:row.session.state,actions:row.session.actionLog.actions,completed:await a.get('completedMatches','qa-match')};
+  });
+  expect(checkpoint.state.lifecycle.status).toBe('active');
+  expect(checkpoint.state.game.sets).toHaveLength(1);
+  expect(checkpoint.state.game.sets[0]).toMatchObject({team:1,rival:0});
+  expect(checkpoint.actions.filter(a=>a.type==='SET_END')).toHaveLength(1);
+  expect(checkpoint.completed).toBeNull();
+  await page.reload();
+  await expect(page.locator('#rivalName')).toHaveText('Rival QA');
+  await page.locator('#finishMatchBtn').click();
+  await page.locator('#modalActions').getByRole('button',{name:'Finalitzar partit',exact:true}).click();
+  await expect(page.locator('#modalTitle')).toHaveText('Partit finalitzat');
+  const final=await page.evaluate(async()=>{
+    const s=new StatsPro2.Pro2Storage(new StatsPro2.IndexedDBStorageAdapter());
+    const r=await s.getHistory('qa-match');
+    return {sets:r.finalState.game.sets,actions:r.actionLog.actions,active:await s.adapter.get('activeMatches','qa-match')};
+  });
+  expect(final.sets).toEqual(checkpoint.state.game.sets);
+  expect(final.actions.slice(0,-1)).toEqual(checkpoint.actions);
+  expect(final.actions.at(-1).type).toBe('MATCH_END');
+  expect(final.active).toBeNull();
+});
