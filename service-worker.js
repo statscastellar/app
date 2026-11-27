@@ -1,4 +1,4 @@
-const CACHE_NAME = 'stats-castellar-1.2.1-20261127';
+const CACHE_NAME = 'stats-castellar-1.2.2-20261127';
 const APP_SHELL = [
   './Capa7/css/capa7.css?v=iphone-xr-20261116',
   './shared/pro2-core.bundle.js?v=recover-20261021-v1',

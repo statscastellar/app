@@ -99,7 +99,8 @@ function applyAction(state, action) {
     }
     case ACTION.SOS_AVAILABLE:
       state.flow.sos = { status: 'available', origin: clone(d.origin), provisionalPointActionId: d.provisionalPointActionId };
-      state.game.phase = d.origin.phase;
+      // Availability preserves the phase after the provisional point; activation restores the origin.
+      state.game.phase = state.game.servingSide === 'team' ? PHASE.SERVEI : PHASE.RECEPCIO;
       state.flow.rivalTransit = false;
       state.flow.rivalCourtAvailable = false;
       break;

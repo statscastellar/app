@@ -52,3 +52,13 @@ for(const [name,P] of [['Node',core],['navegador',context.StatsPro2]]){
  });
 
 }
+
+for(const [name,P] of [['Node',core],['navegador',context.StatsPro2]]){
+ test(name+': defensa 0, SOS pendent i arxivament de tres sets',async()=>{
+ const m=P.createMatchFromDraft(draft(),{matchId:'qa-defense-final',now:NOW}),e=new P.MatchEngine(m.state,m.actionLog),s=new P.Pro2Storage(new P.MemoryStorageAdapter());
+ for(let i=0;i<2;i++){for(let j=0;j<25;j++)e.manualPoint('rival');e.finishSet();e.startNextSet({court:draft().positions,servingSide:'rival'});}
+ for(let j=0;j<24;j++)e.manualPoint('rival');e.ratePlayer('2',2);e.ratePlayer('3',2);e.ratePlayer('4',2);e.ratePlayer('5',0);
+ a.equal(e.state.game.phase,'RECEPCIO');a.equal(e.state.flow.sos.status,'available');await s.saveActive(e);e.finishSet();await s.saveActive(e);const prefix=json(e.log.actions);e.finishMatch();const rec=await s.finalize(e);a.equal(json(rec.actionLog.actions.slice(0,-1)),prefix);a.equal(rec.finalState.game.sets[2].rival,25);
+ const stats=json(rec.report.stats);const edited=await s.editHistoryResult('qa-defense-final',[{set:1,team:1,rival:25},{set:2,team:0,rival:25},{set:3,team:0,rival:25}],{confirmed:true});a.equal(json(edited.report.stats),stats);a.equal(edited.report.result.sets[0].team,1);
+ });
+}

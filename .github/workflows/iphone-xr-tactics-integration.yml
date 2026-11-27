@@ -4,6 +4,7 @@ on:
     branches:
       - statslab/iphone-xr-integration
       - fix/safe-match-finalization-20261127
+      - fix/sos-replay-1.2.2
   workflow_dispatch:
 permissions:
   contents: read
