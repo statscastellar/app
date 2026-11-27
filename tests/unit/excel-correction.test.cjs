@@ -10,7 +10,7 @@ function original(){return JSON.parse(process.env.STATS_EXCEL_BASELINE?fs.readFi
 function expectedRows(m){return m.expectedCounts.flatMap(c=>Array.from({length:c.count},()=>c));}
 function checkBucket(bucket,rows){
  const counts=Object.fromEntries([0,1,2,3].map(v=>[v,rows.filter(a=>a.value===v).length]));
- const points=counts[1]*5+counts[2]*8+counts[3]*10;
+ const points=counts[1]*2+counts[2]*8+counts[3]*10;
  assert.deepEqual(JSON.parse(JSON.stringify(bucket.counts)),counts);assert.equal(bucket.actions,rows.length);assert.equal(bucket.annaPoints,points);assert.equal(bucket.efficiency,rows.length?points/(rows.length*10):null);
  for(const v of [0,1,2,3])assert.equal(bucket.percentages[v],rows.length?counts[v]/rows.length:null);
 }
