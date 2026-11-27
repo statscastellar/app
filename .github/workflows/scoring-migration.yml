@@ -21,7 +21,27 @@ jobs:
       - run: npm ci --prefix tests
       - run: npm --prefix tests run test:unit
       - run: cd tests && npx playwright install --with-deps chromium
-      - run: npm --prefix tests run test:e2e
+      - name: Compare production and candidate visual references
+        shell: bash
+        run: |
+          export QA_CHROMIUM="$(cd tests && node -p "require('playwright').chromium.executablePath()")"
+          git worktree add --detach /tmp/stats-stable be606bc36d68c3812d0cec4c72857c01a2b197d9
+          ln -s "$GITHUB_WORKSPACE/tests/node_modules" /tmp/stats-stable/tests/node_modules
+          cd /tmp/stats-stable/tests
+          npx playwright test --grep @visual --update-snapshots
+          cd "$GITHUB_WORKSPACE/tests"
+          cp -a /tmp/stats-stable/tests/e2e/baselines /tmp/stable-baselines
+          npx playwright test --grep @visual --update-snapshots
+          mkdir -p reports/visual-comparison
+          cp -a /tmp/stable-baselines reports/visual-comparison/stable
+          cp -a e2e/baselines reports/visual-comparison/candidate
+          diff -qr reports/visual-comparison/stable reports/visual-comparison/candidate || test "$?" -eq 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: visual-comparison
+          path: tests/reports/visual-comparison
+      - run: npm --prefix tests run test:e2e -- --grep-invert @visual
       - uses: actions/upload-artifact@v4
         with:
           name: scoring-engine-validation
