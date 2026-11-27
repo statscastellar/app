@@ -118,8 +118,8 @@
   ],
   "expected": {
     "teamAnnaActions": 14,
-    "teamAnnaPoints": 97,
-    "teamAnnaEfficiency": 0.6928571428571428,
+    "teamAnnaPoints": 88,
+    "teamAnnaEfficiency": 0.6285714285714286,
     "teamSaves": {
       "1": 1,
       "2": 1,
@@ -135,9 +135,9 @@
     "players": {
       "qa_p3": {
         "annaActions": 9,
-        "annaPoints": 61,
-        "efficiency": 0.6777777777777778,
-        "impact": 0.4357142857142857,
+        "annaPoints": 58,
+        "efficiency": 0.6444444444444445,
+        "impact": 0.4142857142857143,
         "saves": {
           "1": 0,
           "2": 1,
@@ -153,9 +153,9 @@
       },
       "qa_p4": {
         "annaActions": 5,
-        "annaPoints": 36,
-        "efficiency": 0.72,
-        "impact": 0.2571428571428571,
+        "annaPoints": 30,
+        "efficiency": 0.6,
+        "impact": 0.21428571428571427,
         "saves": {
           "1": 1,
           "2": 0,
