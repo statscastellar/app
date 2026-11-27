@@ -195,7 +195,7 @@ module.exports = { canReplayActionLog, replayActionLog };
 };
 modules['./anna-analytics']=function(module,exports,require){
 'use strict';
-const { ANNA_TYPES } = require('./stats-engine');
+const { ANNA_TYPES, ANNA_SCORE } = require('./stats-engine');
 
 const LABELS=Object.freeze({SERVEI:'Servei',RECEPCIO:'Recepció',DEFENSA:'Defensa',COLLOCACIO:'Col·locació',ATAC:'Atac',BLOQUEIG:'Bloqueig',SALVADA:'Salvada'});
 const TREND_THRESHOLD=0.03;
@@ -230,7 +230,7 @@ function buildMatchAnalytics(report){
   };
 }
 function mergeBucket(target,b){if(!b)return;for(const k of [0,1,2,3])target.counts[k]+=Number(b.counts?.[k]||0);}
-function finalizeBucket(b){b.actions=[0,1,2,3].reduce((s,k)=>s+b.counts[k],0);b.annaPoints=b.counts[1]*5+b.counts[2]*8+b.counts[3]*10;b.efficiency=b.actions?b.annaPoints/(b.actions*10):null;b.percentages={};for(const k of [0,1,2,3])b.percentages[k]=b.actions?b.counts[k]/b.actions:null;return b;}
+function finalizeBucket(b){b.actions=[0,1,2,3].reduce((s,k)=>s+b.counts[k],0);b.annaPoints=[0,1,2,3].reduce((sum,k)=>sum+b.counts[k]*ANNA_SCORE[k],0);b.efficiency=b.actions?b.annaPoints/(b.actions*10):null;b.percentages={};for(const k of [0,1,2,3])b.percentages[k]=b.actions?b.counts[k]/b.actions:null;return b;}
 function newBucket(){return {counts:{0:0,1:0,2:0,3:0},actions:0,annaPoints:0,efficiency:null,percentages:{0:null,1:null,2:null,3:null}};}
 function canonicalTeamId(id){id=String(id||'');return id==='infantil-a'||id==='castellar-infantil-a'?'castellar-infantil-a':id;}
 function canonicalPlayerId(p,teamId){const id=String(p?.playerId||'');if(canonicalTeamId(teamId)==='castellar-infantil-a'){const m=id.match(/^(?:ia-|p)(\d+)$/);if(m)return `p${Number(m[1])}`;}return id;}
@@ -269,7 +269,6 @@ function buildHistoryAnalytics(reports,options={}){
   return {teamId:teamId||arr[0]?.metadata?.teamId||null,teamName:arr[0]?.metadata?.teamName||'',matches:arr.length,perMatch,players,teamFoundations:Object.entries(teamFoundations).map(([type,b])=>({type,label:LABELS[type]||type,...b})),teamTotal:total,teamFoundationEvolution};
 }
 module.exports={LABELS,TREND_THRESHOLD,trendLabel,scoreText,buildMatchAnalytics,buildHistoryAnalytics,canonicalTeamId,canonicalPlayerId};
-
 };
 modules['./backup-service']=function(module,exports,require){
 'use strict';
@@ -277,7 +276,10 @@ modules['./backup-service']=function(module,exports,require){
 const { clone, assert } = require('./utils');
 const { CURRENT, MIGRATION_VERSION, migrateBackup, migrateTeam, migrateActiveRecord, migrateCompletedRecord, normalizeStaleConflict } = require('./schema-migrations');
 const { valueDigest, verifyIntegrity } = require('./session-integrity');
-const { verifyReportIntegrity } = require('./report-integrity');
+const { isLegacyImportRecord, verifyLegacyImportRecord, repairLegacyImportRecord } = require('./legacy-import');
+const { verifyPostMatchEdits } = require('./post-match-edits');
+const { stableStringify } = require('./session-integrity');
+const { verifyReportIntegrity, makeReportIntegrity } = require('./report-integrity');
 const { buildMatchReport } = require('./match-report');
 const { MAINTENANCE_JOURNAL_KEY, makeMaintenanceJournal, classifyMaintenanceRecovery, transitionMaintenanceJournal, verifyMaintenanceJournal, maintenanceStatus, canCompactMaintenanceJournal, DEFAULT_MAINTENANCE_RETENTION_MS } = require('./maintenance-journal');
 
@@ -318,11 +320,34 @@ function validateRestorableStores(stores) {
     const rec=migrateActiveRecord(value);
     verifyIntegrity(rec.integrity,rec.session.state,rec.session.actionLog);
   }
-  for(const {value} of stores.completedMatches) {
-    const rec=migrateCompletedRecord(value);
-    verifyIntegrity(rec.integrity,rec.finalState,rec.actionLog);
-    const expected=buildMatchReport(rec.finalState,rec.actionLog);
-    verifyReportIntegrity(rec.reportIntegrity,rec.report,rec.finalState,rec.actionLog,expected);
+  for(const entry of stores.completedMatches) {
+    let rec=migrateCompletedRecord(entry.value);
+    if(isLegacyImportRecord(rec)) {
+      // Authenticate the stored source and report before recalculating derived statistics.
+      assert(rec.legacyIntegrity?.version===1 && rec.legacyIntegrity?.algorithm==='fnv1a32-stable-json','Integritat de partit importat desconeguda');
+      assert(valueDigest(rec.legacySource)===rec.legacyIntegrity.sourceDigest,'Font del partit importat modificada');
+      assert(valueDigest(rec.report)===rec.legacyIntegrity.reportDigest,'Informe importat modificat');
+      const updated=repairLegacyImportRecord(rec);
+      assert(stableStringify(rec.report.actions)===stableStringify(updated.report.actions),'Accions importades inconsistents');
+      if(stableStringify(rec.report)!==stableStringify(updated.report)) {
+        // Preserve all non-derived fields, including post-match edits.
+        rec.report=updated.report;
+        rec.legacyIntegrity=updated.legacyIntegrity;
+      }
+      verifyLegacyImportRecord(rec);
+    } else {
+      verifyIntegrity(rec.integrity,rec.finalState,rec.actionLog);
+      verifyReportIntegrity(rec.reportIntegrity,rec.report,rec.finalState,rec.actionLog);
+      const expected=buildMatchReport(rec.finalState,rec.actionLog);
+      assert(stableStringify(rec.report.actions)===stableStringify(expected.actions),'Accions del partit inconsistents');
+      if(stableStringify(rec.report)!==stableStringify(expected)) {
+        rec.report=expected;
+        rec.reportIntegrity=makeReportIntegrity(expected,rec.finalState,rec.actionLog);
+      }
+      verifyReportIntegrity(rec.reportIntegrity,rec.report,rec.finalState,rec.actionLog,expected);
+    }
+    verifyPostMatchEdits(rec.postMatchEdits||null,rec.report);
+    entry.value=rec;
   }
   for(const {id,value} of stores.settings) {
     if(String(id).startsWith('__staleConflict__:')) normalizeStaleConflict(value);
@@ -401,6 +426,7 @@ class Pro2BackupService {
     verifyBackupIntegrity(raw,options);
     const backup=migrateBackup(raw);
     validateRestorableStores(backup.stores);
+    if(backup.backupIntegrity) backup.backupIntegrity=makeBackupIntegrity(backup);
     return {ok:true,schemaVersion:backup.schemaVersion,legacy:!raw?.backupIntegrity,backup:clone(backup)};
   }
 
@@ -448,7 +474,6 @@ class Pro2BackupService {
 }
 
 module.exports = { Pro2BackupService, BACKUP_STORES, BACKUP_INTEGRITY_VERSION, BACKUP_INTEGRITY_ALGORITHM, backupPayload, makeBackupIntegrity, verifyBackupIntegrity, validateRestorableStores };
-
 };
 modules['./capa7-ui-state']=function(module,exports,require){
 'use strict';
@@ -2382,7 +2407,7 @@ modules['./stats-engine']=function(module,exports,require){
 
 const { ACTION, STAT_ACTIONS_ANNA } = require('./constants');
 
-const ANNA_SCORE = Object.freeze({0:0,1:5,2:8,3:10});
+const ANNA_SCORE = Object.freeze({0:0,1:2,2:8,3:10});
 const ANNA_TYPES = [ACTION.SERVEI, ACTION.RECEPCIO, ACTION.COLLOCACIO, ACTION.ATAC, ACTION.DEFENSA];
 
 function blankAnnaBucket() {
@@ -2390,7 +2415,7 @@ function blankAnnaBucket() {
 }
 function finalizeAnna(b) {
   b.actions = b.counts[0]+b.counts[1]+b.counts[2]+b.counts[3];
-  b.annaPoints = b.counts[1]*5+b.counts[2]*8+b.counts[3]*10;
+  b.annaPoints = [0,1,2,3].reduce((sum,k)=>sum+b.counts[k]*ANNA_SCORE[k],0);
   b.efficiency = b.actions ? b.annaPoints/(b.actions*10) : null;
   for(const k of [0,1,2,3]) b.percentages[k] = b.actions ? b.counts[k]/b.actions : null;
   return b;
@@ -2456,7 +2481,6 @@ function calculateStats(actionLog) {
 }
 
 module.exports = { ANNA_SCORE, ANNA_TYPES, calculateStats };
-
 };
 modules['./storage-indexeddb']=function(module,exports,require){
 'use strict';
