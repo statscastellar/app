@@ -1,5 +1,5 @@
 'use strict';
-const { ANNA_TYPES } = require('./stats-engine');
+const { ANNA_TYPES, ANNA_SCORE } = require('./stats-engine');
 
 const LABELS=Object.freeze({SERVEI:'Servei',RECEPCIO:'Recepció',DEFENSA:'Defensa',COLLOCACIO:'Col·locació',ATAC:'Atac',BLOQUEIG:'Bloqueig',SALVADA:'Salvada'});
 const TREND_THRESHOLD=0.03;
@@ -34,7 +34,7 @@ function buildMatchAnalytics(report){
   };
 }
 function mergeBucket(target,b){if(!b)return;for(const k of [0,1,2,3])target.counts[k]+=Number(b.counts?.[k]||0);}
-function finalizeBucket(b){b.actions=[0,1,2,3].reduce((s,k)=>s+b.counts[k],0);b.annaPoints=b.counts[1]*5+b.counts[2]*8+b.counts[3]*10;b.efficiency=b.actions?b.annaPoints/(b.actions*10):null;b.percentages={};for(const k of [0,1,2,3])b.percentages[k]=b.actions?b.counts[k]/b.actions:null;return b;}
+function finalizeBucket(b){b.actions=[0,1,2,3].reduce((s,k)=>s+b.counts[k],0);b.annaPoints=[0,1,2,3].reduce((sum,k)=>sum+b.counts[k]*ANNA_SCORE[k],0);b.efficiency=b.actions?b.annaPoints/(b.actions*10):null;b.percentages={};for(const k of [0,1,2,3])b.percentages[k]=b.actions?b.counts[k]/b.actions:null;return b;}
 function newBucket(){return {counts:{0:0,1:0,2:0,3:0},actions:0,annaPoints:0,efficiency:null,percentages:{0:null,1:null,2:null,3:null}};}
 function canonicalTeamId(id){id=String(id||'');return id==='infantil-a'||id==='castellar-infantil-a'?'castellar-infantil-a':id;}
 function canonicalPlayerId(p,teamId){const id=String(p?.playerId||'');if(canonicalTeamId(teamId)==='castellar-infantil-a'){const m=id.match(/^(?:ia-|p)(\d+)$/);if(m)return `p${Number(m[1])}`;}return id;}
