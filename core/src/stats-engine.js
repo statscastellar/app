@@ -2,7 +2,7 @@
 
 const { ACTION, STAT_ACTIONS_ANNA } = require('./constants');
 
-const ANNA_SCORE = Object.freeze({0:0,1:5,2:8,3:10});
+const ANNA_SCORE = Object.freeze({0:0,1:2,2:8,3:10});
 const ANNA_TYPES = [ACTION.SERVEI, ACTION.RECEPCIO, ACTION.COLLOCACIO, ACTION.ATAC, ACTION.DEFENSA];
 
 function blankAnnaBucket() {
@@ -10,7 +10,7 @@ function blankAnnaBucket() {
 }
 function finalizeAnna(b) {
   b.actions = b.counts[0]+b.counts[1]+b.counts[2]+b.counts[3];
-  b.annaPoints = b.counts[1]*5+b.counts[2]*8+b.counts[3]*10;
+  b.annaPoints = [0,1,2,3].reduce((sum,k)=>sum+b.counts[k]*ANNA_SCORE[k],0);
   b.efficiency = b.actions ? b.annaPoints/(b.actions*10) : null;
   for(const k of [0,1,2,3]) b.percentages[k] = b.actions ? b.counts[k]/b.actions : null;
   return b;
