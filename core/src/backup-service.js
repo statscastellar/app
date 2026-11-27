@@ -3,7 +3,10 @@
 const { clone, assert } = require('./utils');
 const { CURRENT, MIGRATION_VERSION, migrateBackup, migrateTeam, migrateActiveRecord, migrateCompletedRecord, normalizeStaleConflict } = require('./schema-migrations');
 const { valueDigest, verifyIntegrity } = require('./session-integrity');
-const { verifyReportIntegrity } = require('./report-integrity');
+const { isLegacyImportRecord, verifyLegacyImportRecord, repairLegacyImportRecord } = require('./legacy-import');
+const { verifyPostMatchEdits } = require('./post-match-edits');
+const { stableStringify } = require('./session-integrity');
+const { verifyReportIntegrity, makeReportIntegrity } = require('./report-integrity');
 const { buildMatchReport } = require('./match-report');
 const { MAINTENANCE_JOURNAL_KEY, makeMaintenanceJournal, classifyMaintenanceRecovery, transitionMaintenanceJournal, verifyMaintenanceJournal, maintenanceStatus, canCompactMaintenanceJournal, DEFAULT_MAINTENANCE_RETENTION_MS } = require('./maintenance-journal');
 
@@ -44,11 +47,34 @@ function validateRestorableStores(stores) {
     const rec=migrateActiveRecord(value);
     verifyIntegrity(rec.integrity,rec.session.state,rec.session.actionLog);
   }
-  for(const {value} of stores.completedMatches) {
-    const rec=migrateCompletedRecord(value);
-    verifyIntegrity(rec.integrity,rec.finalState,rec.actionLog);
-    const expected=buildMatchReport(rec.finalState,rec.actionLog);
-    verifyReportIntegrity(rec.reportIntegrity,rec.report,rec.finalState,rec.actionLog,expected);
+  for(const entry of stores.completedMatches) {
+    let rec=migrateCompletedRecord(entry.value);
+    if(isLegacyImportRecord(rec)) {
+      // Authenticate the stored source and report before recalculating derived statistics.
+      assert(rec.legacyIntegrity?.version===1 && rec.legacyIntegrity?.algorithm==='fnv1a32-stable-json','Integritat de partit importat desconeguda');
+      assert(valueDigest(rec.legacySource)===rec.legacyIntegrity.sourceDigest,'Font del partit importat modificada');
+      assert(valueDigest(rec.report)===rec.legacyIntegrity.reportDigest,'Informe importat modificat');
+      const updated=repairLegacyImportRecord(rec);
+      assert(stableStringify(rec.report.actions)===stableStringify(updated.report.actions),'Accions importades inconsistents');
+      if(stableStringify(rec.report)!==stableStringify(updated.report)) {
+        // Preserve all non-derived fields, including post-match edits.
+        rec.report=updated.report;
+        rec.legacyIntegrity=updated.legacyIntegrity;
+      }
+      verifyLegacyImportRecord(rec);
+    } else {
+      verifyIntegrity(rec.integrity,rec.finalState,rec.actionLog);
+      verifyReportIntegrity(rec.reportIntegrity,rec.report,rec.finalState,rec.actionLog);
+      const expected=buildMatchReport(rec.finalState,rec.actionLog);
+      assert(stableStringify(rec.report.actions)===stableStringify(expected.actions),'Accions del partit inconsistents');
+      if(stableStringify(rec.report)!==stableStringify(expected)) {
+        rec.report=expected;
+        rec.reportIntegrity=makeReportIntegrity(expected,rec.finalState,rec.actionLog);
+      }
+      verifyReportIntegrity(rec.reportIntegrity,rec.report,rec.finalState,rec.actionLog,expected);
+    }
+    verifyPostMatchEdits(rec.postMatchEdits||null,rec.report);
+    entry.value=rec;
   }
   for(const {id,value} of stores.settings) {
     if(String(id).startsWith('__staleConflict__:')) normalizeStaleConflict(value);
@@ -127,6 +153,7 @@ class Pro2BackupService {
     verifyBackupIntegrity(raw,options);
     const backup=migrateBackup(raw);
     validateRestorableStores(backup.stores);
+    if(backup.backupIntegrity) backup.backupIntegrity=makeBackupIntegrity(backup);
     return {ok:true,schemaVersion:backup.schemaVersion,legacy:!raw?.backupIntegrity,backup:clone(backup)};
   }
 
