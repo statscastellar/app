@@ -9,13 +9,13 @@ const draft=JSON.parse(fs.readFileSync(path.join(__dirname,'../fixtures/draft.js
 function engine(){const x=createMatchFromDraft(draft,{matchId:'m-stats',now:'2026-10-05T10:00:00Z'});return new MatchEngine(x.state,x.actionLog);}
 function test(n,f){try{f();console.log('PASS',n)}catch(e){console.error('FAIL',n,'\n ',e.stack||e);process.exitCode=1}}
 
-test('Anna 0-1-2-3 calcula 0-5-8-10 sense pesos',()=>{
+test('Anna 0-1-2-3 calcula 0-2-8-10 sense pesos',()=>{
  const e=engine();
  // Generem accions Anna sintètiques directament al log per provar la fórmula aïllada.
  for(const value of [0,1,2,3]) e._append(ACTION.RECEPCIO,{playerId:'qa_p3',zone:'4',value});
  const s=calculateStats(e.log); const r=s.players.qa_p3.anna.RECEPCIO;
  assert.deepEqual(r.counts,{0:1,1:1,2:1,3:1});
- assert.equal(r.actions,4); assert.equal(r.annaPoints,23); assert.equal(r.efficiency,23/40);
+ assert.equal(r.actions,4); assert.equal(r.annaPoints,20); assert.equal(r.efficiency,20/40);
  assert.equal(r.percentages[0],0.25); assert.equal(r.percentages[3],0.25);
 });
 
