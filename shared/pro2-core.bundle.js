@@ -587,7 +587,7 @@ module.exports = { PHASE, ACTION, STAT_ACTIONS_ANNA };
 };
 modules['./cumulative-stats']=function(module,exports,require){
 'use strict';
-const { ANNA_TYPES }=require('./stats-engine');
+const { ANNA_TYPES, ANNA_SCORE }=require('./stats-engine');
 const { reportFromCompletedRecord, buildMatchReport }=require('./match-report');
 const { verifyIntegrity, sessionDigest, valueDigest }=require('./session-integrity');
 const { verifyReportIntegrity }=require('./report-integrity');
@@ -595,7 +595,7 @@ const { assert, clone }=require('./utils');
 const { isLegacyImportRecord, verifyLegacyImportRecord }=require('./legacy-import');
 const { verifyPostMatchEdits, applyPostMatchEditsToReport }=require('./post-match-edits');
 function bucket(){return {counts:{0:0,1:0,2:0,3:0},actions:0,annaPoints:0,efficiency:null,percentages:{0:null,1:null,2:null,3:null}}}
-function finalize(b){b.actions=b.counts[0]+b.counts[1]+b.counts[2]+b.counts[3];b.annaPoints=b.counts[1]*5+b.counts[2]*8+b.counts[3]*10;b.efficiency=b.actions?b.annaPoints/(b.actions*10):null;for(const k of [0,1,2,3])b.percentages[k]=b.actions?b.counts[k]/b.actions:null;return b;}
+function finalize(b){b.actions=b.counts[0]+b.counts[1]+b.counts[2]+b.counts[3];b.annaPoints=[0,1,2,3].reduce((sum,k)=>sum+b.counts[k]*ANNA_SCORE[k],0);b.efficiency=b.actions?b.annaPoints/(b.actions*10):null;for(const k of [0,1,2,3])b.percentages[k]=b.actions?b.counts[k]/b.actions:null;return b;}
 function emptyPlayer(p){return {playerId:p.playerId,number:p.number??'',name:p.name??'',matches:0,anna:Object.fromEntries(ANNA_TYPES.map(t=>[t,bucket()])),annaTotal:bucket(),impact:null,saves:{counts:{1:0,2:0,3:0},total:0},blocks:{counts:{0:0,1:0,2:0},total:0},participation:{points:0,totalPoints:0,participation:null}}}
 function canonicalTeamId(id){id=String(id||'');return id==='infantil-a'||id==='castellar-infantil-a'?'castellar-infantil-a':id;}
 function canonicalPlayerId(p,teamId){const id=String(p?.playerId||'');if(canonicalTeamId(teamId)==='castellar-infantil-a'){const m=id.match(/^(?:ia-|p)(\d+)$/);if(m)return `p${Number(m[1])}`;}return id;}
@@ -651,7 +651,6 @@ function calculateVerifiedCumulativeByTeam(records){
  return out;
 }
 module.exports={calculateCumulative,calculateCumulativeByTeam,groupCompletedByTeam,teamIdOfRecord,verifyCompletedSource,calculateVerifiedCumulative,calculateVerifiedCumulativeByTeam,canonicalTeamId,canonicalPlayerId};
-
 };
 modules['./export-service']=function(module,exports,require){
 'use strict';
